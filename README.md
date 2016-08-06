@@ -16,7 +16,7 @@ python cutflowtable.py
 
 shape_plots.py is designed to create .pdf file for each histogram from several different MC and data files, so that shapes of different kinematic variables can be compared for different samples:
 
-shape_plots.py
+python shape_plots.py
 
 VH/ttreeAnalyzer_vh_alphabet.py runs over the miniTrees to produce ttrees that will be ready to be passed to Alphabet, namely identifying a V and H jet and applying the V mass cut:
 

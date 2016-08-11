@@ -230,6 +230,10 @@ jet1ID = array('f', [-100.0])
 jet2ID = array('f', [-100.0])
 jet1eta = array('f', [-100.0])
 jet2eta = array('f', [-100.0])
+jet1phi = array('f', [-100.0])
+jet2phi = array('f', [-100.0])
+jet1mass = array('f', [-100.0])
+jet2mass = array('f', [-100.0])
 etadiff = array('f', [-100.0])
 dijetmass = array('f', [-100.0])
 dijetmass_corr = array('f', [-100.0])
@@ -442,6 +446,10 @@ myTree.Branch('jet1NJcmva', jet1NJcmva, 'jet1NJcmva')
 myTree.Branch('jet2NJcmva', jet2NJcmva, 'jet2NJcmva')
 myTree.Branch('jet1eta', jet1eta, 'jet1eta/F')
 myTree.Branch('jet2eta', jet2eta, 'jet2eta/F')
+myTree.Branch('jet1phi', jet1phi, 'jet1phi/F')
+myTree.Branch('jet2phi', jet2phi, 'jet2phi/F')
+myTree.Branch('jet1mass', jet1mass, 'jet1mass/F')
+myTree.Branch('jet2mass', jet2mass, 'jet2mass/F')
 myTree.Branch('etadiff', etadiff, 'etadiff/F')
 myTree.Branch('dijetmass', dijetmass, 'dijetmass/F')
 myTree.Branch('dijetmass_corr', dijetmass_corr, 'dijetmass_corr/F')
@@ -1196,14 +1204,14 @@ for i in range(num1, num2):
                     mincmva1 = cmva
             if jets[idxH2].DeltaR(jettemp) > math.pi/2:
                 jet2FoundNearby = 1
-                if csv < mincsv2:
+                if abs(csv) < mincsv2:
                     jet2NearbyJetcsvpt = treeMine.Jet_pt[j]
                     jet2NearbyJetcsveta = treeMine.Jet_eta[j]
                     jet2NearbyJetcsvphi = treeMine.Jet_phi[j]
                     jet2NearbyJetcsvmass = treeMine.Jet_mass[j]
                     jet2NJCSV = csv
                     mincsv2 = csv
-                if cmva < mincmva2:
+                if abs(cmva) < mincmva2:
                     jet2NearbyJetcmvapt = treeMine.Jet_pt[j]
                     jet2NearbyJetcmvaeta = treeMine.Jet_eta[j]
                     jet2NearbyJetcmvaphi = treeMine.Jet_phi[j]
@@ -1563,6 +1571,10 @@ for i in range(num1, num2):
 	jet2pt[0] = jets[idxH2].Pt()
 	jet1eta[0] = jets[idxH1].Eta()
 	jet2eta[0] = jets[idxH2].Eta()
+        jet1phi[0] = jets[idxH1].Phi()
+        jet2phi[0] = jets[idxH2].Phi()
+        jet1mass[0] = jets[idxH1].M()
+        jet2mass[0] = jets[idxH2].M()
 	etadiff[0] = abs(jets[idxH1].Eta() - jets[idxH2].Eta())
 	dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
 	dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)

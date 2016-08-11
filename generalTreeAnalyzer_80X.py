@@ -1167,8 +1167,10 @@ for i in range(num1, num2):
                     if h2 > -1:
                         nHiggsTags[0] += 1
         
-        mincsv = 100
-        mincmva = 100
+        mincsv1 = 100
+        mincmva1 = 100
+	mincsv2 = 100
+	mincmva2 = 100
         jet1FoundNearby = 0
         jet2FoundNearby = 0
         for j in range(len(treeMine.Jet_pt)):
@@ -1178,36 +1180,36 @@ for i in range(num1, num2):
             csv = treeMine.Jet_btagCSVV0[j]
             if jets[idxH1].DeltaR(jettemp) > math.pi/2:
                 jet1FoundNearby = 1
-                if abs(csv) < mincsv:
+                if abs(csv) < mincsv1:
                     jet1NearbyJetcsvpt = treeMine.Jet_pt[j]
                     jet1NearbyJetcsveta = treeMine.Jet_eta[j]
                     jet1NearbyJetcsvphi = treeMine.Jet_phi[j]
                     jet1NearbyJetcsvmass = treeMine.Jet_mass[j]
                     jet1NJCSV = csv
-                    mincsv = csv
-                if abs(cmva) < mincmva:
+                    mincsv1 = csv
+                if abs(cmva) < mincmva1:
                     jet1NearbyJetcmvapt = treeMine.Jet_pt[j]
                     jet1NearbyJetcmvaeta = treeMine.Jet_eta[j]
                     jet1NearbyJetcmvaphi = treeMine.Jet_phi[j]
                     jet1NearbyJetcmvamass = treeMine.Jet_mass[j]
                     jet1NJCMVA = cmva
-                    mincmva = cmva
+                    mincmva1 = cmva
             if jets[idxH2].DeltaR(jettemp) > math.pi/2:
                 jet2FoundNearby = 1
-                if csv < mincsv:
+                if csv < mincsv2:
                     jet2NearbyJetcsvpt = treeMine.Jet_pt[j]
                     jet2NearbyJetcsveta = treeMine.Jet_eta[j]
                     jet2NearbyJetcsvphi = treeMine.Jet_phi[j]
                     jet2NearbyJetcsvmass = treeMine.Jet_mass[j]
                     jet2NJCSV = csv
-                    mincsv = csv
-                if cmva < mincmva:
+                    mincsv2 = csv
+                if cmva < mincmva2:
                     jet2NearbyJetcmvapt = treeMine.Jet_pt[j]
                     jet2NearbyJetcmvaeta = treeMine.Jet_eta[j]
                     jet2NearbyJetcmvaphi = treeMine.Jet_phi[j]
                     jet2NearbyJetcmvamass = treeMine.Jet_mass[j]
                     jet2NJCMVA = cmva
-                    mincmva = cmva
+                    mincmva2 = cmva
                 
         if jet1FoundNearby == 1:
             jet1NearbyJetcsvArray[0] = jet1NearbyJetcsvpt

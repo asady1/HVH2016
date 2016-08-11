@@ -49,6 +49,9 @@ parser.add_option("-m", "--isMC", dest="isMC",
 parser.add_option("-q", "--is2p1", dest="is2p1",
                   help="bool to retain ak4 jet info and other 2p1 things")
 
+parser.add_option("-y", "--saveTrig", dest="saveTrig",
+                  help="bool to not save triggers for background")
+
 parser.add_option("-x", "--xsec", dest="xsec", 
 		  help="cross section")
 
@@ -215,6 +218,14 @@ myTree =  ROOT.TTree('myTree', 'myTree')
 #creating the tree objects we need
 jet1pt = array('f', [-100.0])
 jet2pt = array('f', [-100.0])
+jet1NearbyJetcsvArray = array('f', [-100.0, -100.0, -100.0, -100.0])
+jet2NearbyJetcsvArray = array('f', [-100.0, -100.0, -100.0, -100.0])
+jet1NearbyJetcmvaArray = array('f', [-100.0, -100.0, -100.0, -100.0])
+jet2NearbyJetcmvaArray = array('f', [-100.0, -100.0, -100.0, -100.0])
+jet1NJcsv = array('f', [-100.0])
+jet2NJcsv = array('f', [-100.0]) 
+jet1NJcmva = array('f', [-100.0])  
+jet2NJcmva = array('f', [-100.0])  
 jet1ID = array('f', [-100.0])
 jet2ID = array('f', [-100.0])
 jet1eta = array('f', [-100.0])
@@ -318,7 +329,7 @@ DeltaPhi4 = array('f', [-100.0])
 nAK04btagsMWP = array('f', [-100.0])
 nLooseEle = array('f', [-100.0])
 nLooseMu = array('f', [-100.0])
-tPtSum = array('f', [-100.0])
+tPtsum = array('f', [-100.0])
 if options.is2p1 == 'True':
     ak4jet_pt = vector('double')()
     ak4jet_eta = vector('double')()
@@ -360,66 +371,75 @@ if options.is2p1 == 'True':
     ak4genJetEta = vector('double')()
     ak4genJetMass = vector('double')()
     ak4genJetID = vector('double')()
-HLT_AK8PFJet360_V = array('f', [-100.0])
-HLT_PFHT350_v = array('f', [-100.0])
-HLT_PFHT400_SixJet30_v = array('f', [-100.0])
-HLT_PFHT450_SixJet40_v = array('f', [-100.0])
-HLT_PFMET120_Mu5_v = array('f', [-100.0])
-HLT_PFHT800_v = array('f', [-100.0])
-HLT_PFHT750_4JetPt50_v = array('f', [-100.0])
-HLT_PFHT350_PFMET100_v = array('f', [-100.0])
-HLT_PFMET170_NoiseCleaned_v = array('f', [-100.0])
-HLT_PFMET120_PFMHT120_IDTight_v =  array('f', [-100.0])
-HLT_PFMET110_PFMHT110_IDTight_v = array('f', [-100.0])
-HLT_PFMET100_PFMHT100_IDTight_v = array('f', [-100.0])
-HLT_PFMET90_PFMHT90_IDTight_v = array('f', [-100.0])
-HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v = array('f', [-100.0])
-HLT_PFHT450_SixJet40_BTagCSV_p056_v = array('f', [-100.0])
-HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v = array('f', [-100.0])
-HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
-HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
-HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
-HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v = array('f', [-100.0])
-HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v = array('f', [-100.0])
-HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v = array('f', [-100.0])
-HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v = array('f', [-100.0])
-HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v = array('f', [-100.0])
-HLT_QuadPFJet_VBF_v = array('f', [-100.0])
-HLT_L1_TripleJet_VBF_v = array('f', [-100.0])
-HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v  = array('f', [-100.0])
-HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v = array('f', [-100.0])
-HLT_PFJet40_v = array('f', [-100.0])
-HLT_PFJet60_v  = array('f', [-100.0])
-HLT_PFJet80_v = array('f', [-100.0])
-HLT_PFJet140_v = array('f', [-100.0])
-HLT_PFJet200_v = array('f', [-100.0])
-HLT_PFJet260_v  = array('f', [-100.0])
-HLT_PFJet320_v  = array('f', [-100.0])
-HLT_PFJet400_v  = array('f', [-100.0])
-HLT_PFJet450_v  = array('f', [-100.0])
-HLT_DiPFJetAve40_v  = array('f', [-100.0])
-HLT_DiPFJetAve60_v = array('f', [-100.0])
-HLT_DiPFJetAve80_v = array('f', [-100.0])
-HLT_DiPFJetAve140_v  = array('f', [-100.0])
-HLT_DiPFJetAve200_v = array('f', [-100.0])
-HLT_DiPFJetAve260_v = array('f', [-100.0])
-HLT_DiPFJetAve320_v = array('f', [-100.0])
-HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v = array('f', [-100.0])
-HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v = array('f', [-100.0])
-HLT_QuadJet45_TripleBTagCSV_p087_v = array('f', [-100.0])
-HLT_QuadJet45_DoubleBTagCSV_p087_v = array('f', [-100.0])
-HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v = array('f', [-100.0])
-HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v = array('f', [-100.0])
-HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
-HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
-HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v = array('f', [-100.0])
-HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
-HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
-HLT_Mu20_v = array('f', [-100.0])
+if options.saveTrig == 'True':
+    HLT_AK8PFJet360_V = array('f', [-100.0])
+    HLT_PFHT350_v = array('f', [-100.0])
+    HLT_PFHT400_SixJet30_v = array('f', [-100.0])
+    HLT_PFHT450_SixJet40_v = array('f', [-100.0])
+    HLT_PFMET120_Mu5_v = array('f', [-100.0])
+    HLT_PFHT800_v = array('f', [-100.0])
+    HLT_PFHT750_4JetPt50_v = array('f', [-100.0])
+    HLT_PFHT350_PFMET100_v = array('f', [-100.0])
+    HLT_PFMET170_NoiseCleaned_v = array('f', [-100.0])
+    HLT_PFMET120_PFMHT120_IDTight_v =  array('f', [-100.0])
+    HLT_PFMET110_PFMHT110_IDTight_v = array('f', [-100.0])
+    HLT_PFMET100_PFMHT100_IDTight_v = array('f', [-100.0])
+    HLT_PFMET90_PFMHT90_IDTight_v = array('f', [-100.0])
+    HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v = array('f', [-100.0])
+    HLT_PFHT450_SixJet40_BTagCSV_p056_v = array('f', [-100.0])
+    HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v = array('f', [-100.0])
+    HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
+    HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
+    HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
+    HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v = array('f', [-100.0])
+    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v = array('f', [-100.0])
+    HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v = array('f', [-100.0])
+    HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v = array('f', [-100.0])
+    HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v = array('f', [-100.0])
+    HLT_QuadPFJet_VBF_v = array('f', [-100.0])
+    HLT_L1_TripleJet_VBF_v = array('f', [-100.0])
+    HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v  = array('f', [-100.0])
+    HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v = array('f', [-100.0])
+    HLT_PFJet40_v = array('f', [-100.0])
+    HLT_PFJet60_v  = array('f', [-100.0])
+    HLT_PFJet80_v = array('f', [-100.0])
+    HLT_PFJet140_v = array('f', [-100.0])
+    HLT_PFJet200_v = array('f', [-100.0])
+    HLT_PFJet260_v  = array('f', [-100.0])
+    HLT_PFJet320_v  = array('f', [-100.0])
+    HLT_PFJet400_v  = array('f', [-100.0])
+    HLT_PFJet450_v  = array('f', [-100.0])
+    HLT_DiPFJetAve40_v  = array('f', [-100.0])
+    HLT_DiPFJetAve60_v = array('f', [-100.0])
+    HLT_DiPFJetAve80_v = array('f', [-100.0])
+    HLT_DiPFJetAve140_v  = array('f', [-100.0])
+    HLT_DiPFJetAve200_v = array('f', [-100.0])
+    HLT_DiPFJetAve260_v = array('f', [-100.0])
+    HLT_DiPFJetAve320_V = array('f', [-100.0])
+    HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v = array('f', [-100.0])
+    HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v = array('f', [-100.0])
+    HLT_QuadJet45_TripleBTagCSV_p087_v = array('f', [-100.0])
+    HLT_QuadJet45_DoubleBTagCSV_p087_v = array('f', [-100.0])
+    HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v = array('f', [-100.0])
+    HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v = array('f', [-100.0])
+    HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
+    HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
+    HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v = array('f', [-100.0])
+    HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
+    HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
+    HLT_Mu20_v = array('f', [-100.0])
 
 #creating the tree branches we need
 myTree.Branch('jet1pt', jet1pt, 'jet1pt/F')
 myTree.Branch('jet2pt', jet2pt, 'jet2pt/F')
+myTree.Branch('jet1NearbyJetcsv', jet1NearbyJetcsvArray, 'pt/F:eta/F:phi/F:mass/F')
+myTree.Branch('jet2NearbyJetcsv', jet2NearbyJetcsvArray, 'pt/F:eta/F:phi/F:mass/F')
+myTree.Branch('jet1NearbyJetcmva', jet1NearbyJetcmvaArray, 'pt/F:eta/F:phi/F:mass/F')
+myTree.Branch('jet2NearbyJetcmva', jet2NearbyJetcmvaArray, 'pt/F:eta/F:phi/F:mass/F')
+myTree.Branch('jet1NJcsv', jet1NJcsv, 'jet1NJcsv')
+myTree.Branch('jet2NJcsv', jet2NJcsv, 'jet2NJcsv')
+myTree.Branch('jet1NJcmva', jet1NJcmva, 'jet1NJcmva')
+myTree.Branch('jet2NJcmva', jet2NJcmva, 'jet2NJcmva')
 myTree.Branch('jet1eta', jet1eta, 'jet1eta/F')
 myTree.Branch('jet2eta', jet2eta, 'jet2eta/F')
 myTree.Branch('etadiff', etadiff, 'etadiff/F')
@@ -498,7 +518,7 @@ else:
     myTree.Branch('SF3sj', SF3sj, 'SF3sj/F')
     myTree.Branch('SF3sjUp', SF3sjUp, 'SF3sjUp/F')
     myTree.Branch('SF3sjDown', SF3sjDown, 'SF3sjDown/F')
-myTree.Branch('tPtSum', tPtSum, 'tPtSum/F')
+myTree.Branch('tPtsum', tPtsum, 'tPtsum/F')
 myTree.Branch('trigWeight', trigWeight, 'trigWeight/F')
 myTree.Branch('trigWeightUp', trigWeightUp, 'trigWeightUp/F')
 myTree.Branch('trigWeightDown', trigWeightDown, 'trigWeightDown/F')
@@ -565,65 +585,66 @@ if options.is2p1 == 'True':
     myTree.Branch('ak4genJetEta', ak4genJetEta)
     myTree.Branch('ak4genJetMass', ak4genJetMass)
     myTree.Branch('ak4genJetID', ak4genJetID)
-myTree.Branch('HLT_AK8PFJet360_V', HLT_AK8PFJet360_V, 'HLT_AK8PFJet360_V/F')
-myTree.Branch('HLT_PFHT350_v', HLT_PFHT350_v, 'HLT_PFHT350_v/F')
-myTree.Branch('HLT_PFHT400_SixJet30_v', HLT_PFHT400_SixJet30_v, 'HLT_PFHT400_SixJet30_v/F')
-myTree.Branch('HLT_PFHT450_SixJet40_v', HLT_PFHT450_SixJet40_v, 'HLT_PFHT450_SixJet40_v/F')
-myTree.Branch('HLT_PFMET120_Mu5_v', HLT_PFMET120_Mu5_v, 'HLT_PFMET120_Mu5_v/F')
-myTree.Branch('HLT_PFHT800_v', HLT_PFHT800_v, 'HLT_PFHT800_v/F')
-myTree.Branch('HLT_PFHT750_4JetPt50_v', HLT_PFHT750_4JetPt50_v, 'HLT_PFHT750_4JetPt50_v/F')
-myTree.Branch('HLT_PFHT350_PFMET100_v', HLT_PFHT350_PFMET100_v, 'HLT_PFHT350_PFMET100_v/F')
-myTree.Branch('HLT_PFMET170_NoiseCleaned_v', HLT_PFMET170_NoiseCleaned_v, 'HLT_PFMET170_NoiseCleaned_v/F')
-myTree.Branch('HLT_PFMET120_PFMHT120_IDTight_v', HLT_PFMET120_PFMHT120_IDTight_v, 'HLT_PFMET120_PFMHT120_IDTight_v/F')
-myTree.Branch('HLT_PFMET110_PFMHT110_IDTight_v', HLT_PFMET110_PFMHT110_IDTight_v, 'HLT_PFMET110_PFMHT110_IDTight_v/F')
-myTree.Branch('HLT_PFMET100_PFMHT100_IDTight_v', HLT_PFMET100_PFMHT100_IDTight_v, 'HLT_PFMET100_PFMHT100_IDTight_v/F')
-myTree.Branch('HLT_PFMET90_PFMHT90_IDTight_v', HLT_PFMET90_PFMHT90_IDTight_v, 'HLT_PFMET90_PFMHT90_IDTight_v/F')
-myTree.Branch('HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v', HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v, 'HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v/F')
-myTree.Branch('HLT_PFHT450_SixJet40_BTagCSV_p056_v', HLT_PFHT450_SixJet40_BTagCSV_p056_v, 'HLT_PFHT450_SixJet40_BTagCSV_p056_v/F')
-myTree.Branch('HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v', HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v, 'HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v/F')
-myTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
-myTree.Branch('HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v/F')
-myTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
-myTree.Branch('HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v/F')
-myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v', HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v, 'HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v/F')
-myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v', HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v, 'HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v/F')
-myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v', HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v, 'HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v/F') 
-myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v', HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v, 'HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v/F')
-myTree.Branch('HLT_QuadPFJet_VBF_v', HLT_QuadPFJet_VBF_v, 'HLT_QuadPFJet_VBF_v/F')
-myTree.Branch('HLT_L1_TripleJet_VBF_v', HLT_L1_TripleJet_VBF_v, 'HLT_L1_TripleJet_VBF_v/F')
-myTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F') 
-myTree.Branch('HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v/F')
-myTree.Branch('HLT_PFJet40_v', HLT_PFJet40_v, 'HLT_PFJet40_v/F')
-myTree.Branch('HLT_PFJet60_v', HLT_PFJet60_v, 'HLT_PFJet60_v/F')
-myTree.Branch('HLT_PFJet80_v', HLT_PFJet80_v, 'HLT_PFJet80_v/F')
-myTree.Branch('HLT_PFJet140_v', HLT_PFJet140_v, 'HLT_PFJet140_v/F')
-myTree.Branch('HLT_PFJet200_v', HLT_PFJet200_v, 'HLT_PFJet200_v/F')
-myTree.Branch('HLT_PFJet260_v', HLT_PFJet260_v, 'HLT_PFJet260_v/F')
-myTree.Branch('HLT_PFJet320_v', HLT_PFJet320_v, 'HLT_PFJet320_v/F')
-myTree.Branch('HLT_PFJet400_v', HLT_PFJet400_v, 'HLT_PFJet400_v/F')
-myTree.Branch('HLT_PFJet450_v', HLT_PFJet450_v, 'HLT_PFJet450_v/F')
-myTree.Branch('HLT_DiPFJetAve40_v', HLT_DiPFJetAve40_v, 'HLT_DiPFJetAve40_v/F')
-myTree.Branch('HLT_DiPFJetAve60_v', HLT_DiPFJetAve60_v, 'HLT_DiPFJetAve60_v/F')
-myTree.Branch('HLT_DiPFJetAve80_v', HLT_DiPFJetAve80_v, 'HLT_DiPFJetAve80_v/F')
-myTree.Branch('HLT_DiPFJetAve140_v', HLT_DiPFJetAve140_v, 'HLT_DiPFJetAve140_v/F')
-myTree.Branch('HLT_DiPFJetAve200_v', HLT_DiPFJetAve200_v, 'HLT_DiPFJetAve200_v/F')
-myTree.Branch('HLT_DiPFJetAve260_v', HLT_DiPFJetAve260_v, 'HLT_DiPFJetAve260_v/F')
-myTree.Branch('HLT_DiPFJetAve320_v', HLT_DiPFJetAve320_v, 'HLT_DiPFJetAve320_v/F')
-myTree.Branch('HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v', HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v, 'HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v/F')
-myTree.Branch('HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v', HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v, 'HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v/F')
-myTree.Branch('HLT_QuadJet45_TripleBTagCSV_p087_v', HLT_QuadJet45_TripleBTagCSV_p087_v, 'HLT_QuadJet45_TripleBTagCSV_p087_v/F')
-myTree.Branch('HLT_QuadJet45_DoubleBTagCSV_p087_v', HLT_QuadJet45_DoubleBTagCSV_p087_v, 'HLT_QuadJet45_DoubleBTagCSV_p087_v/F')
-myTree.Branch('HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v', HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v, 'HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v/F')
-myTree.Branch('HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v', HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v, 'HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v/F')
-myTree.Branch('HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v/F')
-myTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
-myTree.Branch('HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v', HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v, 'HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v/F')
-myTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
-myTree.Branch('HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v/F')
-myTree.Branch('HLT_Mu20_v', HLT_Mu20_v, 'HLT_Mu20_v/F')
+if options.saveTrig == 'True':
+    myTree.Branch('HLT_AK8PFJet360_V', HLT_AK8PFJet360_V, 'HLT_AK8PFJet360_V/F')
+    myTree.Branch('HLT_PFHT350_v', HLT_PFHT350_v, 'HLT_PFHT350_v/F')
+    myTree.Branch('HLT_PFHT400_SixJet30_v', HLT_PFHT400_SixJet30_v, 'HLT_PFHT400_SixJet30_v/F')
+    myTree.Branch('HLT_PFHT450_SixJet40_v', HLT_PFHT450_SixJet40_v, 'HLT_PFHT450_SixJet40_v/F')
+    myTree.Branch('HLT_PFMET120_Mu5_v', HLT_PFMET120_Mu5_v, 'HLT_PFMET120_Mu5_v/F')
+    myTree.Branch('HLT_PFHT800_v', HLT_PFHT800_v, 'HLT_PFHT800_v/F')
+    myTree.Branch('HLT_PFHT750_4JetPt50_v', HLT_PFHT750_4JetPt50_v, 'HLT_PFHT750_4JetPt50_v/F')
+    myTree.Branch('HLT_PFHT350_PFMET100_v', HLT_PFHT350_PFMET100_v, 'HLT_PFHT350_PFMET100_v/F')
+    myTree.Branch('HLT_PFMET170_NoiseCleaned_v', HLT_PFMET170_NoiseCleaned_v, 'HLT_PFMET170_NoiseCleaned_v/F')
+    myTree.Branch('HLT_PFMET120_PFMHT120_IDTight_v', HLT_PFMET120_PFMHT120_IDTight_v, 'HLT_PFMET120_PFMHT120_IDTight_v/F')
+    myTree.Branch('HLT_PFMET110_PFMHT110_IDTight_v', HLT_PFMET110_PFMHT110_IDTight_v, 'HLT_PFMET110_PFMHT110_IDTight_v/F')
+    myTree.Branch('HLT_PFMET100_PFMHT100_IDTight_v', HLT_PFMET100_PFMHT100_IDTight_v, 'HLT_PFMET100_PFMHT100_IDTight_v/F')
+    myTree.Branch('HLT_PFMET90_PFMHT90_IDTight_v', HLT_PFMET90_PFMHT90_IDTight_v, 'HLT_PFMET90_PFMHT90_IDTight_v/F')
+    myTree.Branch('HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v', HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v, 'HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v/F')
+    myTree.Branch('HLT_PFHT450_SixJet40_BTagCSV_p056_v', HLT_PFHT450_SixJet40_BTagCSV_p056_v, 'HLT_PFHT450_SixJet40_BTagCSV_p056_v/F')
+    myTree.Branch('HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v', HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v, 'HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v/F')
+    myTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
+    myTree.Branch('HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v/F')
+    myTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
+    myTree.Branch('HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v/F')
+    myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v', HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v, 'HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v/F')
+    myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v', HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v, 'HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v/F')
+    myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v', HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v, 'HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v/F') 
+    myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v', HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v, 'HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v/F')
+    myTree.Branch('HLT_QuadPFJet_VBF_v', HLT_QuadPFJet_VBF_v, 'HLT_QuadPFJet_VBF_v/F')
+    myTree.Branch('HLT_L1_TripleJet_VBF_v', HLT_L1_TripleJet_VBF_v, 'HLT_L1_TripleJet_VBF_v/F')
+    myTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F') 
+    myTree.Branch('HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v/F')
+    myTree.Branch('HLT_PFJet40_v', HLT_PFJet40_v, 'HLT_PFJet40_v/F')
+    myTree.Branch('HLT_PFJet60_v', HLT_PFJet60_v, 'HLT_PFJet60_v/F')
+    myTree.Branch('HLT_PFJet80_v', HLT_PFJet80_v, 'HLT_PFJet80_v/F')
+    myTree.Branch('HLT_PFJet140_v', HLT_PFJet140_v, 'HLT_PFJet140_v/F')
+    myTree.Branch('HLT_PFJet200_v', HLT_PFJet200_v, 'HLT_PFJet200_v/F')
+    myTree.Branch('HLT_PFJet260_v', HLT_PFJet260_v, 'HLT_PFJet260_v/F')
+    myTree.Branch('HLT_PFJet320_v', HLT_PFJet320_v, 'HLT_PFJet320_v/F')
+    myTree.Branch('HLT_PFJet400_v', HLT_PFJet400_v, 'HLT_PFJet400_v/F')
+    myTree.Branch('HLT_PFJet450_v', HLT_PFJet450_v, 'HLT_PFJet450_v/F')
+    myTree.Branch('HLT_DiPFJetAve40_v', HLT_DiPFJetAve40_v, 'HLT_DiPFJetAve40_v/F')
+    myTree.Branch('HLT_DiPFJetAve60_v', HLT_DiPFJetAve60_v, 'HLT_DiPFJetAve60_v/F')
+    myTree.Branch('HLT_DiPFJetAve80_v', HLT_DiPFJetAve80_v, 'HLT_DiPFJetAve80_v/F')
+    myTree.Branch('HLT_DiPFJetAve140_v', HLT_DiPFJetAve140_v, 'HLT_DiPFJetAve140_v/F')
+    myTree.Branch('HLT_DiPFJetAve200_v', HLT_DiPFJetAve200_v, 'HLT_DiPFJetAve200_v/F')
+    myTree.Branch('HLT_DiPFJetAve260_v', HLT_DiPFJetAve260_v, 'HLT_DiPFJetAve260_v/F')
+    myTree.Branch('HLT_DiPFJetAve320_V', HLT_DiPFJetAve320_V, 'HLT_DiPFJetAve320_V/F')
+    myTree.Branch('HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v', HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v, 'HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v/F')
+    myTree.Branch('HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v', HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v, 'HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v/F')
+    myTree.Branch('HLT_QuadJet45_TripleBTagCSV_p087_v', HLT_QuadJet45_TripleBTagCSV_p087_v, 'HLT_QuadJet45_TripleBTagCSV_p087_v/F')
+    myTree.Branch('HLT_QuadJet45_DoubleBTagCSV_p087_v', HLT_QuadJet45_DoubleBTagCSV_p087_v, 'HLT_QuadJet45_DoubleBTagCSV_p087_v/F')
+    myTree.Branch('HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v', HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v, 'HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v/F')
+    myTree.Branch('HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v', HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v, 'HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v/F')
+    myTree.Branch('HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v/F')
+    myTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
+    myTree.Branch('HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v', HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v, 'HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v/F')
+    myTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
+    myTree.Branch('HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v/F')
+    myTree.Branch('HLT_Mu20_v', HLT_Mu20_v, 'HLT_Mu20_v/F')
 
 
-files_list	= open_files( inputfile )
+Files_list	= open_files( inputfile )
 
 #list of histograms that may be useful
 bbj = ROOT.TH1F("bbj", "Before any cuts", 3, -0.5, 1.5)
@@ -636,10 +657,10 @@ if options.is2p1 == 'False':
 if options.isMC == 'True':
     CountMC = ROOT.TH1F("Count","Count",1,0,2)
     CountFullWeightedMC = ROOT.TH1F("CountFullWeighted","Count with gen weight and pu weight",1,0,2)
-    CountWeightedMC = ROOT.TH1F("CountWeighted","Count with sign(gen weight) and pu weight",1,0,2)
+    CountWeightedmc = ROOT.TH1F("CountWeighted","Count with sign(gen weight) and pu weight",1,0,2)
     CountPosWeightMC = ROOT.TH1F("CountPosWeight","Count genWeight>0",1,0,2)
     CountNegWeightMC = ROOT.TH1F("CountNegWeight","Count genWeight<0",1,0,2)
-    CountWeightedLHEWeightScaleMC = ROOT.TH1F("CountWeightedLHEWeightScale","Count with gen weight x LHE_weights_scale and pu weight", 6, -0.5, 5.5)
+    CountWeightedLHEWeightScalemc = ROOT.TH1F("CountWeightedLHEWeightScale","Count with gen weight x LHE_weights_scale and pu weight", 6, -0.5, 5.5)
     CountWeightedLHEWeightPdfMC = ROOT.TH1F("CountWeightedLHEWeightPdf","Count with gen weight x LHE_weights_pdf and pu weight", 103, -0.5, 102.5)
 
 #btag SF calculation
@@ -668,7 +689,7 @@ gSystem.Load("DrawFunctions_h.so")
 count = 0
 #loop over files
 for i in range(num1, num2):
-    files = files_list[i]
+    files = Files_list[i]
     print files
     f1 = ROOT.TFile.Open(files, "READ")
     treeMine  = f1.Get('tree')
@@ -681,10 +702,10 @@ for i in range(num1, num2):
         norm[0]=histo_weight.GetBinContent(1)
 	CountMC.Add(f1.Get("Count"))
 	CountFullWeightedMC.Add(f1.Get("CountFullWeighted"))
-	CountWeightedMC.Add(f1.Get("CountWeighted"))
+	CountWeightedmc.Add(f1.Get("CountWeighted"))
 	CountPosWeightMC.Add(f1.Get("CountPosWeight"))
 	CountNegWeightMC.Add(f1.Get("CountNegWeight"))
-	CountWeightedLHEWeightScaleMC.Add(f1.Get("CountWeightedLHEWeightScale"))
+	CountWeightedLHEWeightScalemc.Add(f1.Get("CountWeightedLHEWeightScale"))
 	CountWeightedLHEWeightPdfMC.Add(f1.Get("CountWeightedLHEWeightPdf"))
     else:
         norm[0] = 1
@@ -722,7 +743,7 @@ for i in range(num1, num2):
                 fJetCMVALSF_Down = treeMine.Jet_btagCMVAV2L_SF_down
                 fJetCMVAMSF = treeMine.Jet_btagCMVAV2M_SF
                 fJetCMVAMSF_Up = treeMine.Jet_btagCMVAV2M_SF_up
-                fJetCMVAMSF_Down = treeMine.Jet_btagCMVAV2M_SF_down
+                fJetCMVAMSF_down = treeMine.Jet_btagCMVAV2M_SF_down
                 fJetCMVATSF = treeMine.Jet_btagCMVAV2T_SF
                 fJetCMVATSF_Up = treeMine.Jet_btagCMVAV2T_SF_up
                 fJetCMVATSF_Down = treeMine.Jet_btagCMVAV2T_SF_down
@@ -741,14 +762,16 @@ for i in range(num1, num2):
         genEta = treeMine.GenJet_eta
         genPhi = treeMine.GenJet_phi
         genMass = treeMine.GenJet_mass
-	genBH = treeMine.GenJet_numBHadrons	
-	genCH = treeMine.GenJet_numCHadrons
 	htJet30[0] = treeMine.htJet30
         if options.isMC == 'True':
+            genBH = treeMine.GenJet_numBHadrons	
+            genCH = treeMine.GenJet_numCHadrons
             genjet1BH[0] = genBH[0]
-            genjet2BH[0] = genBH[1]
             genjet1CH[0] = genCH[0]
-            genjet2CH[0] = genCH[1]
+            if len(genBH) > 1:
+                genjet2BH[0] = genBH[1]
+            if len(genCH) > 1:
+                genjet2CH[0] = genCH[1]
 	MET[0] = treeMine.met_pt
 	fjUngroomedN = treeMine.nFatjetAK08ungroomed
 	nAK08Jets[0] = fjUngroomedN
@@ -784,6 +807,7 @@ for i in range(num1, num2):
             hEta = treeMine.GenHiggsBoson_eta
             hPhi = treeMine.GenHiggsBoson_phi
             hMass = treeMine.GenHiggsBoson_mass
+        if options.isMC == 'True' and options.saveTrig == 'True':
             HLT_AK8PFJet360_V[0] = treeMine.HLT2_BIT_HLT_AK8PFJet360_TrimMass30_v
             HLT_PFHT350_v[0] = treeMine.HLT2_BIT_HLT_PFHT350_v
             HLT_PFHT400_SixJet30_v[0] = treeMine.HLT2_BIT_HLT_PFHT400_SixJet30_v
@@ -827,7 +851,7 @@ for i in range(num1, num2):
             HLT_DiPFJetAve140_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve140_v 
             HLT_DiPFJetAve200_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve200_v
             HLT_DiPFJetAve260_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve260_v
-            HLT_DiPFJetAve320_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve320_v
+            HLT_DiPFJetAve320_V[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve320_v
             HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v[0] = treeMine.HLT2_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v
             HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v[0] = treeMine.HLT2_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v
             HLT_QuadJet45_TripleBTagCSV_p087_v[0] = treeMine.HLT2_BIT_HLT_QuadJet45_TripleBTagCSV_p087_v
@@ -841,7 +865,7 @@ for i in range(num1, num2):
             HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT2_BIT_HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v
             HLT_Mu20_v[0] = treeMine.HLT2_BIT_HLT_Mu20_v
 
-        else:
+        elif options.saveTrig == 'True' and options.isMC == 'False':
             HLT_AK8PFJet360_V[0] = treeMine.HLT_BIT_HLT_AK8PFJet360_TrimMass30_v
             HLT_PFHT350_v[0] = treeMine.HLT_BIT_HLT_PFHT350_v
             HLT_PFHT400_SixJet30_v[0] = treeMine.HLT_BIT_HLT_PFHT400_SixJet30_v
@@ -885,7 +909,7 @@ for i in range(num1, num2):
             HLT_DiPFJetAve140_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve140_v 
             HLT_DiPFJetAve200_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve200_v
             HLT_DiPFJetAve260_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve260_v
-            HLT_DiPFJetAve320_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve320_v
+            HLT_DiPFJetAve320_V[0] = treeMine.HLT_BIT_HLT_DiPFJetAve320_v
             HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v[0] = treeMine.HLT_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v
             HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v[0] = treeMine.HLT_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v
             HLT_QuadJet45_TripleBTagCSV_p087_v[0] = treeMine.HLT_BIT_HLT_QuadJet45_TripleBTagCSV_p087_v
@@ -907,23 +931,26 @@ for i in range(num1, num2):
         JSON = treeMine.json
         
 	#saving whether an event passes desired trigger (bb = HT800 pass, sj = pass any of the five saved triggers
-        matched = 0    
-	if HLT_PFHT800_v[0] > 0:
-            matched += 1
-        triggerpassbb[0] = matched
+        matched = 0
+        matchedsj = 0  
+        if options.saveTrig == 'True':
+            if HLT_PFHT800_v[0] > 0:
+                matched += 1
         
-        matchedsj = 0
-        if HLT_PFHT800_v[0] > 0:
-            matchedsj += 1
-        if HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] > 0:
-            matchedsj += 1
-        if HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v[0] > 0:
-            matchedsj += 1
-        if HLT_AK8PFJet360_V[0] > 0:
-            matchedsj += 1
-        if HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] > 0:
-            matchedsj += 1
+            if HLT_PFHT800_v[0] > 0:
+                matchedsj += 1
+            if HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] > 0:
+                matchedsj += 1
+            if HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v[0] > 0:
+                matchedsj += 1
+            if HLT_AK8PFJet360_V[0] > 0:
+                matchedsj += 1
+            if HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] > 0:
+                matchedsj += 1
         triggerpasssj[0] = matchedsj
+
+        triggerpassbb[0] = matched
+
 
         #trigger weights
 	hT =0
@@ -1100,9 +1127,9 @@ for i in range(num1, num2):
                             
                         
         
-	if options.jets and len(jets) < 1: # one jet with pt > 100 and |eta| < 2.4
+	if options.jets == 'True'  and len(jets) < 1: # one jet with pt > 100 and |eta| < 2.4
 		continue
-        if options.is2p1 == 'False' and options.jets and len(jets) < 2: #2 if not 2p1
+        if options.is2p1 == 'False' and options.jets == 'True' and len(jets) < 2: #2 if not 2p1
             continue
         
  
@@ -1139,6 +1166,72 @@ for i in range(num1, num2):
                 if len(jets) > 1:
                     if h2 > -1:
                         nHiggsTags[0] += 1
+        
+        mincsv = 100
+        mincmva = 100
+        jet1FoundNearby = 0
+        jet2FoundNearby = 0
+        for j in range(len(treeMine.Jet_pt)):
+            jettemp = ROOT.TLorentzVector()
+            jettemp.SetPtEtaPhiM(treeMine.Jet_pt[j], treeMine.Jet_eta[j], treeMine.Jet_phi[j], treeMine.Jet_mass[j])
+            cmva = treeMine.Jet_btagCMVAV2[j]
+            csv = treeMine.Jet_btagCSVV0[j]
+            if jets[idxH1].DeltaR(jettemp) > math.pi/2:
+                jet1FoundNearby = 1
+                if abs(csv) < mincsv:
+                    jet1NearbyJetcsvpt = treeMine.Jet_pt[j]
+                    jet1NearbyJetcsveta = treeMine.Jet_eta[j]
+                    jet1NearbyJetcsvphi = treeMine.Jet_phi[j]
+                    jet1NearbyJetcsvmass = treeMine.Jet_mass[j]
+                    jet1NJCSV = csv
+                    mincsv = csv
+                if abs(cmva) < mincmva:
+                    jet1NearbyJetcmvapt = treeMine.Jet_pt[j]
+                    jet1NearbyJetcmvaeta = treeMine.Jet_eta[j]
+                    jet1NearbyJetcmvaphi = treeMine.Jet_phi[j]
+                    jet1NearbyJetcmvamass = treeMine.Jet_mass[j]
+                    jet1NJCMVA = cmva
+                    mincmva = cmva
+            if jets[idxH2].DeltaR(jettemp) > math.pi/2:
+                jet2FoundNearby = 1
+                if csv < mincsv:
+                    jet2NearbyJetcsvpt = treeMine.Jet_pt[j]
+                    jet2NearbyJetcsveta = treeMine.Jet_eta[j]
+                    jet2NearbyJetcsvphi = treeMine.Jet_phi[j]
+                    jet2NearbyJetcsvmass = treeMine.Jet_mass[j]
+                    jet2NJCSV = csv
+                    mincsv = csv
+                if cmva < mincmva:
+                    jet2NearbyJetcmvapt = treeMine.Jet_pt[j]
+                    jet2NearbyJetcmvaeta = treeMine.Jet_eta[j]
+                    jet2NearbyJetcmvaphi = treeMine.Jet_phi[j]
+                    jet2NearbyJetcmvamass = treeMine.Jet_mass[j]
+                    jet2NJCMVA = cmva
+                    mincmva = cmva
+                
+        if jet1FoundNearby == 1:
+            jet1NearbyJetcsvArray[0] = jet1NearbyJetcsvpt
+            jet1NearbyJetcsvArray[1] = jet1NearbyJetcsveta
+            jet1NearbyJetcsvArray[2] = jet1NearbyJetcsvphi
+            jet1NearbyJetcsvArray[3] = jet1NearbyJetcsvmass
+            jet1NJcsv[0] = jet1NJCSV
+            jet1NearbyJetcmvaArray[0] = jet1NearbyJetcmvapt
+            jet1NearbyJetcmvaArray[1] = jet1NearbyJetcmvaeta
+            jet1NearbyJetcmvaArray[2] = jet1NearbyJetcmvaphi
+            jet1NearbyJetcmvaArray[3] = jet1NearbyJetcmvamass
+            jet1NJcmva[0] = jet1NJCMVA
+        if jet2FoundNearby == 1:
+            jet2NearbyJetcsvArray[0] = jet2NearbyJetcsvpt
+            jet2NearbyJetcsvArray[1] = jet2NearbyJetcsveta
+            jet2NearbyJetcsvArray[2] = jet2NearbyJetcsvphi
+            jet2NearbyJetcsvArray[3] = jet2NearbyJetcsvmass
+            jet2NJcsv[0] = jet2NJCSV
+            jet2NearbyJetcmvaArray[0] = jet2NearbyJetcmvapt
+            jet2NearbyJetcmvaArray[1] = jet2NearbyJetcmvaeta
+            jet2NearbyJetcmvaArray[2] = jet2NearbyJetcmvaphi
+            jet2NearbyJetcmvaArray[3] = jet2NearbyJetcmvamass
+            jet2NJcmva[0] = jet2NJCMVA
+            
 
         #filling jet variables
         jet1pmass[0] = jet_pmass[idxH1]
@@ -1205,7 +1298,7 @@ for i in range(num1, num2):
         if options.isMC == 'True':
             for pt in treeMine.GenTop_pt:
                 tPtSums = tPtSums + pt
-        tPtSum[0] = tPtSums
+        tPtsum[0] = tPtSums
 
 	#filling bbtag
 	jet1bbtag[0] = jet_bbtag[idxH1] #fjUngroomedBbTag[j1]
@@ -1686,7 +1779,7 @@ for i in range(num1, num2):
                         ak4jetCMVALSF_Down.push_back(fJetCMVALSF_Down[j])
                         ak4jetCMVAMSF.push_back(fJetCMVAMSF[j])
                         ak4jetCMVAMSF_Up.push_back(fJetCMVAMSF_Up[j])
-                        ak4jetCMVAMSF_Down.push_back(fJetCMVAMSF_Down[j])
+                        ak4jetCMVAMSF_Down.push_back(fJetCMVAMSF_down[j])
                         ak4jetCMVATSF.push_back(fJetCMVATSF[j])
                         ak4jetCMVATSF_Up.push_back(fJetCMVATSF_Up[j])
                         ak4jetCMVATSF_Down.push_back(fJetCMVATSF_Down[j])

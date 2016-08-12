@@ -319,7 +319,7 @@ sjSF = array('f', [-100.0])
 sjSFup = array('f', [-100.0])
 sjSFdown = array('f', [-100.0])
 if options.isMC == 'True':
-    genjet1BH = array('f', [-100.0])
+    genjet1bH = array('f', [-100.0])
     genjet2BH = array('f', [-100.0])
     genjet1CH = array('f', [-100.0])
     genjet2CH = array('f', [-100.0])
@@ -546,7 +546,7 @@ myTree.Branch('jetSJpt', jetSJpt,'jetSJpt[4]/F')
 myTree.Branch('jetSJcsv',jetSJcsv,'jetSJcsv[4]/F')
 myTree.Branch('jetSJeta',jetSJeta,'jetSJeta[4]/F')
 if options.isMC == 'True':
-    myTree.Branch('genjet1BH', genjet1BH, 'genjet1BH/F')
+    myTree.Branch('genjet1bH', genjet1bH, 'genjet1bH/F')
     myTree.Branch('genjet2BH', genjet2BH, 'genjet2BH/F')
     myTree.Branch('genjet1CH', genjet1CH, 'genjet1CH/F')
     myTree.Branch('genjet2CH', genjet2CH, 'genjet2CH/F')
@@ -661,6 +661,8 @@ bb1 = ROOT.TH1F("bb1", "After Trigger", 3, -0.5, 1.5)
 bb2 = ROOT.TH1F("bb2", "After jet cuts", 3, -0.5, 1.5)
 if options.is2p1 == 'False':
     bb3 = ROOT.TH1F("bb3", "After Delta Eta Cuts", 3, -0.5, 1.5)
+if options.is2p1 == 'True':
+    bb3 = ROOT.TH1F("bb3", "After AK4 Jet Cuts", 3, -0.5, 1.5)
 
 if options.isMC == 'True':
     CountMC = ROOT.TH1F("Count","Count",1,0,2)
@@ -774,7 +776,7 @@ for i in range(num1, num2):
         if options.isMC == 'True':
             genBH = treeMine.GenJet_numBHadrons	
             genCH = treeMine.GenJet_numCHadrons
-            genjet1BH[0] = genBH[0]
+            genjet1bH[0] = genBH[0]
             genjet1CH[0] = genCH[0]
             if len(genBH) > 1:
                 genjet2BH[0] = genBH[1]
@@ -1146,10 +1148,13 @@ for i in range(num1, num2):
 	#dEta selection : selecting the two jets which minimizes the dEta requirement. (to find a better one?)
 	idxH1 = -1
 	idxH2=-1
-        if len(jets) > 1 and (abs(jets[0].Eta() - jets[1].Eta()) < 1.3):
+        if options.is2p1 == 'False' and len(jets) > 1 and (abs(jets[0].Eta() - jets[1].Eta()) < 1.3):
 		minDEta = abs(jets[0].Eta() - jets[1].Eta())
 		idxH1 = 0
 		idxH2 = 1
+        if options.is2p1 == 'True':
+            idxH1 = 0
+            idxH2 = 1
 			
 	if options.deta and options.is2p1 == 'False' and (idxH1 < 0 or idxH2 <0) : continue
   
@@ -1202,7 +1207,7 @@ for i in range(num1, num2):
                     jet1NearbyJetcmvamass = treeMine.Jet_mass[j]
                     jet1NJCMVA = cmva
                     mincmva1 = cmva
-            if jets[idxH2].DeltaR(jettemp) > math.pi/2:
+            if len(jets) > 1 and jets[idxH2].DeltaR(jettemp) > math.pi/2:
                 jet2FoundNearby = 1
                 if abs(csv) < mincsv2:
                     jet2NearbyJetcsvpt = treeMine.Jet_pt[j]
@@ -1563,22 +1568,23 @@ for i in range(num1, num2):
 #		    jet2mscsv[0] = jet2sjcsv[j]
 	
 	#filling bbtag
-	jet1bbtag[0] = jet_bbtag[idxH1] 
-	jet2bbtag[0] = jet_bbtag[idxH2]
+#	jet1bbtag[0] = jet_bbtag[idxH1] 
+#	jet2bbtag[0] = jet_bbtag[idxH2]
 	
         #writing variables to the tree    
 	jet1pt[0] = jets[idxH1].Pt()
-	jet2pt[0] = jets[idxH2].Pt()
 	jet1eta[0] = jets[idxH1].Eta()
-	jet2eta[0] = jets[idxH2].Eta()
         jet1phi[0] = jets[idxH1].Phi()
-        jet2phi[0] = jets[idxH2].Phi()
         jet1mass[0] = jets[idxH1].M()
-        jet2mass[0] = jets[idxH2].M()
-	etadiff[0] = abs(jets[idxH1].Eta() - jets[idxH2].Eta())
-	dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
-	dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
-        dijetmass_corr_punc[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmassunc[0]-125)-(jet2pmassunc[0]-125)
+        if len(jets) > 1:
+            jet2pt[0] = jets[idxH2].Pt()
+            jet2eta[0] = jets[idxH2].Eta()
+            jet2phi[0] = jets[idxH2].Phi()
+            jet2mass[0] = jets[idxH2].M()
+            etadiff[0] = abs(jets[idxH1].Eta() - jets[idxH2].Eta())
+            dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
+            dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
+            dijetmass_corr_punc[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmassunc[0]-125)-(jet2pmassunc[0]-125)
         if options.isMC == 'True':
             puWeights[0]= puweight
             puWeightsUp[0] = puweightUp
@@ -1862,13 +1868,13 @@ for i in range(num1, num2):
                 if chi<=1:
                     passesResolved[0] = 1
 
-            
+        bb3.Fill(triggerpassbb[0])
 	#filling the tree
         myTree.Fill()
 	
 	#filling error values for each object
         if options.isMC == 'True':
-            genjet1BH[0] = -100.0
+            genjet1bH[0] = -100.0
             genjet2BH[0] = -100.0
             genjet1CH[0] = -100.0
             genjet2CH[0] = -100.0

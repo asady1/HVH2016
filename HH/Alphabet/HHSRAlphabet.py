@@ -78,7 +78,7 @@ binBoundaries = [800, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1
 
 
 Hbb.MakeEstVariable(variable, binBoundaries, antitag, tag)
-FILE = TFile("HHSR.root", "RECREATE")
+FILE = TFile("outputs/HHSR.root", "RECREATE")
 FILE.cd()
 V = TH1F("data_obs", "", len(binBoundaries)-1, array('d',binBoundaries))
 for i in Hbb.hists_MSR:

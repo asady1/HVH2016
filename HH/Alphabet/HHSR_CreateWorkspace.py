@@ -17,7 +17,7 @@ gInterpreter.ProcessLine( 'TH1F *histo_efficiency_upper = (TH1F*)f->Get("histo_e
 gInterpreter.ProcessLine(".x trigger_function.cxx")
 '''
 
-mass=[300,350,400,450,500,550,600,650,700,750,800,900,1000,1200,1400,1600,1800,2000,2500, 3000, 4500]
+mass=[750,800,900,1000,1200,1400,1600,1800,2000,2500, 3000, 4500]
 VAR = "dijetmass_corr"
 binBoundaries = [800, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509]
 vartitle = "m_{X} (GeV)"
@@ -53,21 +53,22 @@ for V in ["H"]:
 
 	print(m)
 
-	signal_file= TFile("/uscms_data/d3/mkrohn/CMSSW_8_0_2/src/Alphabet/tree_"+V+"P_%s_VH_alph.root"%(m))
+	path="/uscms_data/d3/mkrohn/CMSSW_8_0_2/src/Alphabet/"
+	signal_file= TFile(path+"tree_"+V+"P_%s_VH_alph.root"%(m))
 	tree = signal_file.Get("myTree") 
-	quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX, VAR, sigregcut, "puWeights*SF/nTotEvents")#(trigger_function(int(round(htJet40eta3)))*weight2(nTrueInt))")
+	quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX, VAR, sigregcut, "puWeights*SF/nTotEvents")#(trigger_function(int(round(htJet40eta3)))*weight2(nTrueInt))")
 	#writeplot(tree, Signal_mX, VAR, sigregcut, "puWeights*SF/nTotEvents")#(trigger_function(int(round(htJet40eta3)))*weight2(nTrueInt))")
-        quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_btag_up, VAR, sigregcut, "puWeights*SFup/nTotEvents")
+        quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_btag_up, VAR, sigregcut, "puWeights*SFup/nTotEvents")
 	#writeplot(tree, Signal_mX_btag_up, VAR, sigregcut, "puWeights*SFup/nTotEvents")
-	quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_btag_down, VAR, sigregcut, "puWeights*SFdown/nTotEvents")
+	quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_btag_down, VAR, sigregcut, "puWeights*SFdown/nTotEvents")
 	#writeplot(tree, Signal_mX_btag_down, VAR, sigregcut, "puWeights*SFdown/nTotEvents")
-        quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_trig_up, VAR, sigregcutNoTrig, "trigWeightUp*puWeights*SF/nTotEvents")
+        quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_trig_up, VAR, sigregcutNoTrig, "trigWeightUp*puWeights*SF/nTotEvents")
 	#writeplot(tree, Signal_mX_trig_up, VAR, sigregcutNoTrig, "trigWeightUp*puWeights*SF/nTotEvents")
-	quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_trig_down, VAR, sigregcutNoTrig, "trigWeightDown*puWeights*SF/nTotEvents")
+	quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_trig_down, VAR, sigregcutNoTrig, "trigWeightDown*puWeights*SF/nTotEvents")
 	#writeplot(tree, Signal_mX_trig_down, VAR, sigregcutNoTrig, "trigWeightDown*puWeights*SF/nTotEvents")
-	quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_pu_up, VAR, sigregcut, "puWeightsUp*SF/nTotEvents")
+	quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_pu_up, VAR, sigregcut, "puWeightsUp*SF/nTotEvents")
 	#writeplot(tree, Signal_mX_pu_up, VAR, sigregcut, "puWeightsUp*SF/nTotEvents")
-	quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_pu_down, VAR, sigregcut, "puWeightsDown*SF/nTotEvents")
+	quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_pu_down, VAR, sigregcut, "puWeightsDown*SF/nTotEvents")
 	#writeplot(tree, Signal_mX_pu_down, VAR, sigregcut, "puWeightsDown*SF/nTotEvents")
 	###missing here the pu variation
 

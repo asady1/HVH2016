@@ -28,7 +28,7 @@ sigregcutNoTrig = "jet1pmass>105&jet1pmass<135&jet1bbtag>0.6&"+presel
 sigregcut = "jet1pmass>105&jet1pmass<135&jet1bbtag>0.6&triggerpassbb>0&"+presel
 lumi =9200.
 SF_tau21 =1.
-background = TFile("outputs/SR_output.root")
+background = TFile("outputs/HHSR.root")
 UD = ['Up','Down']
 
 for V in ["H"]:
@@ -53,7 +53,7 @@ for V in ["H"]:
 
 	print(m)
 
-	signal_file= TFile("tree_"+V+"P_%s_VH_alph.root"%(m))
+	signal_file= TFile("/uscms_data/d3/mkrohn/CMSSW_8_0_2/src/Alphabet/tree_"+V+"P_%s_VH_alph.root"%(m))
 	tree = signal_file.Get("myTree") 
 	quickplot("tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX, VAR, sigregcut, "puWeights*SF/nTotEvents")#(trigger_function(int(round(htJet40eta3)))*weight2(nTrueInt))")
 	#writeplot(tree, Signal_mX, VAR, sigregcut, "puWeights*SF/nTotEvents")#(trigger_function(int(round(htJet40eta3)))*weight2(nTrueInt))")

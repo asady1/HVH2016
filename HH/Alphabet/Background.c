@@ -30,7 +30,7 @@ using namespace RooFit;
 int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV
 int iPos =11;
 bool bias= false;
-bool blind = false;
+bool blind = true;
 
 double rebin=1;
 
@@ -171,7 +171,7 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     TH1F *h_mX_CR_tau=(TH1F*)f->Get("EST")->Clone("alphabet");
     TH1F *h_mX_SR=(TH1F*)f->Get("data_obs")->Clone("The_SR");
     double maxdata = h_mX_SR->GetMaximum();
-    double nEventsSR = h_mX_SR->Integral(1000,2500);
+    double nEventsSR = h_mX_SR->Integral(1200,2500);
     ratio_tau=(h_mX_SR->GetSumOfWeights()/(h_mX_CR_tau->GetSumOfWeights()));
     //double nEventsSR = h_mX_SR->Integral(600,4000);
     
@@ -194,7 +194,7 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     }
     h_SR_Prediction->SetMarkerSize(0.7);
     h_SR_Prediction->GetYaxis()->SetTitleOffset(1.2);
-    h_SR_Prediction->Sumw2();
+    //h_SR_Prediction->Sumw2();
     
     /*TFile *f_sig = new TFile((dirName+"/w_signal_"+iimass.str()+".root").c_str());
     RooWorkspace* xf_sig = (RooWorkspace*)f_sig->Get("Vg");
@@ -214,7 +214,7 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     */
     RooRealVar x("x", "m_{X} (GeV)", SR_lo, SR_hi);
     
-    RooRealVar nBackground((std::string("bg_")+std::string("_norm")).c_str(),"nbkg",h_mX_CR_tau->Integral(1000,2500));
+    RooRealVar nBackground((std::string("bg_")+std::string("_norm")).c_str(),"nbkg",h_mX_CR_tau->Integral(1200,2500));
     
     
     /* RooRealVar bg_p0((std::string("bg_p0_")+pname).c_str(), "bg_p0", 4.2, 0, 200.);
@@ -250,7 +250,7 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     
     std::cout<<"Nevents "<<nEventsSR<<std::endl;
     RooDataHist pred("pred", "Prediction from SB", RooArgList(x), h_SR_Prediction);
-    RooFitResult *r_bg=bg.fitTo(pred, RooFit::Minimizer("Minuit2"), RooFit::Range(SR_lo, SR_hi), RooFit::SumW2Error(kTRUE), RooFit::Save());
+    RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
     //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
     //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save(),RooFit::SumW2Error(kTRUE));
     std::cout<<" --------------------- Building Envelope --------------------- "<<std::endl;
@@ -533,75 +533,16 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
         "env_pdf_0_13TeV_vvdijet1_coeff1","env_pdf_0_13TeV_vvdijet1_log1",""
     }
     
-    if(bias){
-        //alternative model
-        gSystem->Load("libHiggsAnalysisCombinedLimit");
-        gSystem->Load("libdiphotonsUtils");
-        
-        TFile *f = new TFile("antibtag_multipdf.root");
-        RooWorkspace* xf = (RooWorkspace*)f->Get("wtemplates");
-        RooWorkspace *w_alt=new RooWorkspace("HH4b");
-        for(int i=model_number; i<=model_number; i++){
-            RooMultiPdf *alternative = (RooMultiPdf *)xf->pdf("model_bkg_AntiBtag");
-            std::cout<<"Number of pdfs "<<alternative->getNumPdfs()<<std::endl;
-            for (int j=0; j!=alternative->getNumPdfs(); ++j){
-                std::cout<<alternative->getPdf(j)->GetName()<<std::endl;
-            }
-            RooAbsPdf *alt_bg = alternative->getPdf(alternative->getCurrentIndex()+i);//->clone();
-            w_alt->import(*alt_bg, RooFit::RenameVariable(alt_bg->GetName(),("alt_bg_"+blah).c_str()));
-            w_alt->Print("V");
-            std::cerr<<w_alt->var("x")<<std::endl;
-            RooRealVar * range_ = w_alt->var("x");
-            range_->setRange(SR_lo,SR_hi);
-            char* asd = ("alt_bg_"+blah).c_str()	;
-            w_alt->import(nBackground2);
-            std::cout<<alt_bg->getVal() <<std::endl;
-            w_alt->pdf(asd)->fitTo(pred, RooFit::Minimizer("Minuit2"), RooFit::Range(SR_lo, SR_hi), RooFit::SumW2Error(kTRUE), RooFit::Save());
-
-    	    RooArgSet* altVars = w_alt->pdf(asd)->getVariables();
-            TIterator *it2 = altVars->createIterator();
-            RooRealVar* varAlt = (RooRealVar*)it2->Next();
-            while (varAlt) {
-               varAlt->setConstant(kTRUE);
-               varAlt = (RooRealVar*)it2->Next();
-            }
-
-
-
-            alt_bg->plotOn(aC_plot, RooFit::LineColor(i+1), RooFit::LineStyle(i+2));
-            p_1->cd();
-            aC_plot->GetYaxis()->SetRangeUser(0.01, maxdata*50.);
-            aC_plot->Draw("same");
-            TH1F *h=new TH1F();
-            h->SetLineColor(1+i);
-            h->SetLineStyle(i+2);
-            leg->AddEntry(h, alt_bg->GetName(), "l");
-            
-            
-            w_alt->SaveAs((dirName+"/w_background_alternative.root").c_str());
-        }
-        leg->Draw();
-        p_1->SetLogy();
-        c_rooFit->Update();
-        c_rooFit->SaveAs((dirName+"/"+name_output+blah+"_multipdf.pdf").c_str());
-        
-        for (int i=0; i!=nPars[model_number]; ++i) {
-            std::cout<<parNames[model_number][i]<<" param "<< w_alt->var(parNames[model_number][i])->getVal()<<"   "<<w_alt->var(parNames[model_number][i])->getError()<<std::endl;
-        }
-        
-        
-    } else {
         p_1->SetLogy();
         c_rooFit->Update();
         c_rooFit->SaveAs((dirName+"/"+name_output+"_log.pdf").c_str());
-    }
     
     RooWorkspace *w=new RooWorkspace("HH4b");
     w->import(bg);
-    w->import(nBackground);
+    //w->import(nBackground);
     w->SaveAs((dirName+"/w_background.root").c_str());
     
-    TH1F *h_mX_SR_fakeData=(TH1F*)h_mX_SR->Clone("h_mX_SR_fakeData");
+    TH1F *h_mX_SR_fakeData=(TH1F*)h_mX_CR_tau->Clone("h_mX_SR_fakeData");
     //h_mX_SR_fakeData->Scale(nEventsSR/h_mX_SR_fakeData->GetSumOfWeights());
     RooDataHist data_obs("data_obs", "Data", RooArgList(x), h_mX_SR_fakeData);
     std::cout<<" Background number of events = "<<nEventsSR<<std::endl;

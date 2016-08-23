@@ -18,11 +18,11 @@ gInterpreter.ProcessLine( 'TH1F *histo_efficiency_upper = (TH1F*)f->Get("histo_e
 gInterpreter.ProcessLine(".x trigger_function.cxx")
 '''
 
-mass=[750,800,900,1000,1200,1400,1600,1800,2000,2500, 3000, 4500]
+mass=[1200,1400,1600,1800,2000,2500]
 VAR = "dijetmass_corr"
 binBoundaries=[]
-for i in range(0,371):
-        binBoundaries.append(800+i*10)
+for i in range(0,130):
+        binBoundaries.append(1200+i*10)
 
 i#binBoundaries = [800, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509]
 vartitle = "m_{X} (GeV)"
@@ -31,6 +31,7 @@ vartitle = "m_{X} (GeV)"
 presel = "jet2pmass>105&jet2pmass<135&jet2tau21<0.6&jet2bbtag>0.6&vtype==-1&jet2pt>200&json==1&jet1pt>200&etadiff<1.3&jet1tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4"
 sigregcutNoTrig = "jet1pmass>105&jet1pmass<135&jet1bbtag>0.6&"+presel
 sigregcut = "jet1pmass>105&jet1pmass<135&jet1bbtag>0.6&triggerpassbb>0&"+presel
+antitagcut = "jet1pmass>105&jet1pmass<135&jet1bbtag<0.6&triggerpassbb>0&"+presel
 lumi =9200.
 SF_tau21 =1.
 background = TFile("outputs/HHSR.root")
@@ -43,6 +44,7 @@ for V in ["H"]:
 	vh.cd()
 
 	Signal_mX = TH1F("Signal_mX_%s"%(m), "", len(binBoundaries)-1, array('d',binBoundaries))
+	Signal_mX_antitag = TH1F("Signal_mX_antitag_%s"%(m), "", len(binBoundaries)-1, array('d',binBoundaries))
 	Signal_mX_trig_up = TH1F("Signal_mX_%s_CMS_eff_trigUp"%(m), "", len(binBoundaries)-1, array('d',binBoundaries))
 	Signal_mX_trig_down = TH1F("Signal_mX_%s_CMS_eff_trigDown"%(m), "", len(binBoundaries)-1, array('d',binBoundaries))
 	Signal_mX_btag_up = TH1F("Signal_mX_%s_CMS_eff_btagUp"%(m), "", len(binBoundaries)-1, array('d',binBoundaries))
@@ -62,6 +64,7 @@ for V in ["H"]:
 	signal_file= TFile(path+"tree_"+V+"P_%s_VH_alph.root"%(m))
 	tree = signal_file.Get("myTree") 
 	quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX, VAR, sigregcut, "puWeights*SF/nTotEvents")#(trigger_function(int(round(htJet40eta3)))*weight2(nTrueInt))")
+	quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_antitag, VAR, antitagcut, "puWeights/nTotEvents")
 	#writeplot(tree, Signal_mX, VAR, sigregcut, "puWeights*SF/nTotEvents")#(trigger_function(int(round(htJet40eta3)))*weight2(nTrueInt))")
         quickplot(path+"tree_"+V+"P_%s_VH_alph.root"%(m), "myTree", Signal_mX_btag_up, VAR, sigregcut, "puWeights*SFup/nTotEvents")
 	#writeplot(tree, Signal_mX_btag_up, VAR, sigregcut, "puWeights*SFup/nTotEvents")
@@ -84,6 +87,7 @@ for V in ["H"]:
 	btaglnN= 1.+ abs(Signal_mX_btag_up.GetSumOfWeights()-Signal_mX_btag_down.GetSumOfWeights())/(2.*Signal_mX_btag_up.GetSumOfWeights())
 	PUlnN= 1.+ abs(Signal_mX_pu_up.GetSumOfWeights()-Signal_mX_pu_down.GetSumOfWeights())/(2.*Signal_mX.GetSumOfWeights())
 	Signal_mX.Scale(SF_tau21*lumi*0.01)
+	Signal_mX_antitag.Scale(SF_tau21*lumi*0.01)
 	
  	Signal_mX_btag_up.Scale(SF_tau21*lumi*0.01)
 	Signal_mX_btag_down.Scale(SF_tau21*lumi*0.01)
@@ -97,10 +101,12 @@ for V in ["H"]:
 	FJERlnN= 1.02
 
 
-        signal_integral = Signal_mX.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(3000))
+        signal_integral = Signal_mX.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))
 	print(signal_integral) 
+	signal_integral_anti = Signal_mX_antitag.Integral(Signal_mX_antitag.FindBin(1200),Signal_mX_antitag.FindBin(2500))
+        print(signal_integral_anti)
         background.cd() 	
-	qcd_integral = EST.Integral(EST.FindBin(1200),EST.FindBin(3000))
+	qcd_integral = EST.Integral(EST.FindBin(1200),EST.FindBin(2500))
 
 	qcd = background.Get("EST")
 	qcd_antitag = background.Get("EST_Antitag")
@@ -155,6 +161,7 @@ for V in ["H"]:
 	#qcd_stat_up.Write()
 	#qcd_stat_down.Write()
 	Signal_mX.Write()
+	Signal_mX_antitag.Write()
 	Signal_mX_btag_up.Write()
 	Signal_mX_btag_down.Write()
 	Signal_mX_trig_up.Write()
@@ -166,7 +173,7 @@ for V in ["H"]:
 
 	
 
-	text_file = open("outputs/bump/datacards/"+V+"H_mX_%s_13TeV.txt"%(m), "w")
+	text_file = open("outputs/bump/datacards/"+V+"H_mX_%s_13TeV_pass.txt"%(m), "w")
 
 
 	text_file.write("max    1     number of categories\n")
@@ -181,27 +188,69 @@ for V in ["H"]:
         text_file.write("bin                                            HH4b\n")
         text_file.write("observation                                    -1\n")#%f\n"%(data_integral))
         text_file.write("-------------------------------------------------------------------------------\n")
-        text_file.write("bin                                             HH4b            HH4b\n")
-        text_file.write("process                                          0      1\n")
-        text_file.write("process                                         Signal_mX_%s  EST\n"%(m))
-        text_file.write("rate                                            %f  %f\n"%(signal_integral,qcd_integral))
+        text_file.write("bin                                             HH4b    HH4b        \n")
+        text_file.write("process                                          0      1	     \n")
+        text_file.write("process                                         Signal_mX_%s  EST   \n"%(m))
+        text_file.write("rate                                            %f  1  \n"%(signal_integral))
         text_file.write("-------------------------------------------------------------------------------\n")
-	text_file.write("lumi_13TeV lnN                          1.027       -\n")	
-        text_file.write("CMS_eff_tau21_sf lnN                    1.027       -\n") #(0.028/0.979)
+	text_file.write("lumi_13TeV lnN                          1.027       -		\n")	
+        text_file.write("CMS_eff_tau21_sf lnN                    1.027       -		\n") #(0.028/0.979)
+	text_file.write("CMS_TF_13TeV lnU			     -	  1.20 		\n")#uncertainty on TF to fix   
         #text_file.write("CMS_eff_Htag_sf lnN                    1.1       -\n")   
-        text_file.write("CMS_JEC lnN 		     %f        -\n"%(FJEClnN)) 	
-	text_file.write("CMS_massJEC lnN                 %f        -\n"%(MJEClnN))
+        text_file.write("CMS_JEC lnN 		     %f        -   \n"%(FJEClnN)) 	
+	text_file.write("CMS_massJEC lnN                 %f          - \n"%(MJEClnN))
 	text_file.write("CMS_eff_bbtag_sf lnN                    %f       -\n"%(btaglnN))
-        text_file.write("CMS_JER lnN                    %f        -\n"%(FJERlnN))
-        text_file.write("CMS_PU lnN                    %f        -\n"%(PUlnN))
+        text_file.write("CMS_JER lnN                    %f        - \n"%(FJERlnN))
+        text_file.write("CMS_PU lnN                    %f        -   \n"%(PUlnN))
 	#text_file.write("CMS_eff_trig shapeN2           1.0   -\n")
         #text_file.write("CMS_scale_13TeV shapeN2                           -       1.000\n")
-	text_file.write("CMS_PDF_Scales lnN   1.02 -       \n")
-	text_file.write("bg_p1_   param   0.0203903 0.0220454\n")
-	text_file.write("bg_p2_   param   0.121302 0.357941\n")
+	text_file.write("CMS_PDF_Scales lnN   1.02 -      \n")
+	text_file.write("bg_p1_   param   -0.225816 0.292726\n")
+	text_file.write("bg_p2_   param   0.000949723 0.000690649\n")
+	#text_file.write("bg_p1_   param   -0.00216008 0.0363425\n")
+	#text_file.write("bg_p2_   param   0.00589398 0.00377301\n")
+	
+	#text_file.write("bg_p1_   param   0.0203903 0.0220454\n")
+	#text_file.write("bg_p2_   param   0.121302 0.357941\n")
 
 	#for bin in range(0,len(binBoundaries)-1):
 	#	text_file.write("CMS_stat_13TeV_bin%s shapeN2                           -       1.000\n"%(bin))
 
 
 	text_file.close()
+
+
+	text_file = open("outputs/bump/datacards/"+V+"H_mX_%s_13TeV_fail.txt"%(m), "w")
+
+
+        text_file.write("max    1     number of categories\n")
+        text_file.write("jmax   1     number of samples minus one\n")
+        text_file.write("kmax    *     number of nuisance parameters\n")
+        text_file.write("-------------------------------------------------------------------------------\n")
+        text_file.write("shapes Signal_mX_antitag_%s      HH4b w_signal_antitag_%s.root      HH4b:signal_fixed_antitag_ \n"%(m,m))
+        text_file.write("shapes EST_antitag HH4b w_background.root HH4b:bgSB_\n")
+        text_file.write("shapes data_obs   HH4b w_data.root                HH4b:data_obs_sb\n")
+        #text_file.write("shapes * * "+V+"H_mX_%s_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC\n"%(m))
+        text_file.write("-------------------------------------------------------------------------------\n")
+        text_file.write("bin                                            HH4b\n")
+        text_file.write("observation                                    -1\n")#%f\n"%(data_integral))
+        text_file.write("-------------------------------------------------------------------------------\n")
+        text_file.write("bin                                             HH4b    HH4b        \n")
+        text_file.write("process                                          0      1           \n")
+        text_file.write("process                                         Signal_mX_antitag_%s  EST_antitag   \n"%(m))
+        text_file.write("rate                                            %f  1  \n"%(signal_integral_anti))
+        text_file.write("-------------------------------------------------------------------------------\n")
+        text_file.write("lumi_13TeV lnN                          1.027       -          \n") 
+        text_file.write("CMS_eff_tau21_sf lnN                    1.027       -          \n") #(0.028/0.979)
+        #text_file.write("CMS_TF_13TeV lnN                            -    1.20          \n")#uncertainty on TF to fix   
+        #text_file.write("CMS_eff_Htag_sf lnN                    1.1       -\n")   
+        #text_file.write("CMS_JEC lnN                 %f        -   \n"%(FJEClnN)) 
+        #text_file.write("CMS_massJEC lnN                 %f          - \n"%(MJEClnN))
+        text_file.write("CMS_eff_bbtag_sf lnN                    1/%f       -\n"%(btaglnN))
+        #text_file.write("CMS_JER lnN                    %f        - \n"%(FJERlnN))
+        #text_file.write("CMS_PU lnN                    %f        -   \n"%(PUlnN))
+        #text_file.write("CMS_eff_trig shapeN2           1.0   -\n")
+        #text_file.write("CMS_scale_13TeV shapeN2                           -       1.000\n")
+        #text_file.write("CMS_PDF_Scales lnN   1.02 -      \n")
+        text_file.write("bg_p1_   param   -0.225816 0.292726\n")
+        text_file.write("bg_p2_   param   0.000949723 0.000690649\n")

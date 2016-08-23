@@ -140,7 +140,7 @@ TCanvas* comparePlots2(RooPlot *plot_bC, RooPlot *plot_bS, TH1F *data, TH1F *qcd
     return c;
 }
 
-void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plotBands = false)
+void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool plotBands = false)
 {
     rebin = rebin_factor;
     std::string fname = std::string("outputs/HHSR.root");
@@ -168,11 +168,13 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     double ratio_tau=-1;
     
     TFile *f=new TFile(fname.c_str());
-    TH1F *h_mX_CR_tau=(TH1F*)f->Get("EST")->Clone("alphabet");
+    TH1F *h_mX_EST=(TH1F*)f->Get("EST")->Clone("alphabet");
+    TH1F *h_mX_EST_antitag=(TH1F*)f->Get("EST_Antitag")->Clone("alphabet_SB");	
+    	
     TH1F *h_mX_SR=(TH1F*)f->Get("data_obs")->Clone("The_SR");
     double maxdata = h_mX_SR->GetMaximum();
-    double nEventsSR = h_mX_SR->Integral(1200,2500);
-    ratio_tau=(h_mX_SR->GetSumOfWeights()/(h_mX_CR_tau->GetSumOfWeights()));
+    double nEventsSR = h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500));
+    ratio_tau=(h_mX_SR->GetSumOfWeights()/(h_mX_EST->GetSumOfWeights()));
     //double nEventsSR = h_mX_SR->Integral(600,4000);
     
     std::cout<<"ratio tau "<<ratio_tau<<std::endl;
@@ -181,10 +183,12 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     TH1F *h_SR_Prediction2;
     
     if(blind) {
-        h_SR_Prediction2 = (TH1F*)h_mX_CR_tau->Clone("h_SR_Prediction2");
-        h_mX_CR_tau->Rebin(rebin);
-        h_mX_CR_tau->SetLineColor(kBlack);
-        h_SR_Prediction=(TH1F*)h_mX_CR_tau->Clone("h_SR_Prediction");
+        h_SR_Prediction2 = (TH1F*)h_mX_EST->Clone("h_SR_Prediction2");
+        h_mX_EST->Rebin(rebin);
+	h_mX_EST_antitag->Rebin(rebin);
+        h_mX_EST->SetLineColor(kBlack);
+        h_SR_Prediction=(TH1F*)h_mX_EST->Clone("h_SR_Prediction");
+
     } else {
         h_SR_Prediction2=(TH1F*)h_mX_SR->Clone("h_SR_Prediction2");
         h_mX_SR->Rebin(rebin);
@@ -214,7 +218,9 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     */
     RooRealVar x("x", "m_{X} (GeV)", SR_lo, SR_hi);
     
-    RooRealVar nBackground((std::string("bg_")+std::string("_norm")).c_str(),"nbkg",h_mX_CR_tau->Integral(1200,2500));
+    RooRealVar nBackgroundSB((std::string("bgSB_")+std::string("_norm")).c_str(),"nbkg",h_mX_EST_antitag->Integral(h_mX_EST_antitag->FindBin(1199),h_mX_EST_antitag->FindBin(2500)));
+    //RooRealVar nBackground((std::string("n_exp_binHH4b_proc_EST_")+std::string("_norm")).c_str(),"nbkg",h_mX_EST->Integral(h_mX_EST->FindBin(1200),h_mX_EST->FindBin(2500)));	
+    RooFormulaVar nBackground((std::string("bg__norm")).c_str(),"n_trasf","0.0659433107656*@0",nBackgroundSB);
     
     
     /* RooRealVar bg_p0((std::string("bg_p0_")+pname).c_str(), "bg_p0", 4.2, 0, 200.);
@@ -229,6 +235,7 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     //RooGenericPdf bg_pure = RooGenericPdf((std::string("bg_pure_")+blah).c_str(),"(pow(@0/12500,@1+@2*log(@0/12500)))",RooArgList(x,bg_p1,bg_p2));
    // RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"(pow(@0/12500,@1+@2*log(@0/12500)))",RooArgList(x,bg_p1,bg_p2));
     RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2));
+    RooGenericPdf bgSB = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2));	
 
     /*TF1* biasFunc = new TF1("biasFunc","(0.63*x/1000-1.45)",1350,3600);
     TF1* biasFunc2 = new TF1("biasFunc2","TMath::Min(2.,2.3*x/1000-3.8)",1350,3600);
@@ -251,19 +258,12 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     std::cout<<"Nevents "<<nEventsSR<<std::endl;
     RooDataHist pred("pred", "Prediction from SB", RooArgList(x), h_SR_Prediction);
     RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
-    //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
-    //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save(),RooFit::SumW2Error(kTRUE));
-    std::cout<<" --------------------- Building Envelope --------------------- "<<std::endl;
-    //std::cout<< "bg_p0_"<< pname << "   param   "<<bg_p0.getVal() <<  " "<<bg_p0.getError()<<std::endl;
-    std::cout<< "bg_p1_   param   "<<bg_p1.getVal() <<  " "<<bg_p1.getError()<<std::endl;
-    std::cout<< "bg_p2_   param   "<<bg_p2.getVal() <<  " "<<bg_p2.getError()<<std::endl;
-    //std::cout<< "bias_term_"<< blah << "   param   0 "<<bias_term_s<<std::endl;
     
     RooPlot *aC_plot=x.frame();
     pred.plotOn(aC_plot, RooFit::MarkerColor(kPink+2));
     if (!plotBands) {
-        bg.plotOn(aC_plot, RooFit::VisualizeError(*r_bg, 2), RooFit::FillColor(kYellow));
-        bg.plotOn(aC_plot, RooFit::VisualizeError(*r_bg, 1), RooFit::FillColor(kGreen));
+       // bg.plotOn(aC_plot, RooFit::VisualizeError(*r_bg, 2), RooFit::FillColor(kYellow));
+       // bg.plotOn(aC_plot, RooFit::VisualizeError(*r_bg, 1), RooFit::FillColor(kGreen));
     }
     bg.plotOn(aC_plot, RooFit::LineColor(kBlue));
     pred.plotOn(aC_plot, RooFit::LineColor(kBlack), RooFit::MarkerColor(kBlack));
@@ -301,7 +301,7 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
         error_curve[3]->SetLineColor(kGreen);
         error_curve[4]->SetLineColor(kYellow);
         
-        error_curve[2]->SetLineColor(kBlue);
+        error_curve[2]->SetLineColor(kBlue+1);
         error_curve[2]->SetLineWidth(3);
         
         double binSize = rebin;
@@ -408,7 +408,7 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
     
     aC_plot->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     aC_plot->GetXaxis()->SetLabelOffset(0.02);
-    aC_plot->GetYaxis()->SetRangeUser(0.1, 1000.);
+    aC_plot->GetYaxis()->SetRangeUser(0.001, 100.);
     h_SR_Prediction->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     string rebin_ = itoa(rebin);
     
@@ -531,23 +531,37 @@ void Background(int rebin_factor=2,int model_number = 0,int imass=750, bool plot
         "env_pdf_0_13TeV_atlas1_coeff1","env_pdf_0_13TeV_atlas1_log1","",
         "env_pdf_0_13TeV_atlas2_coeff1","env_pdf_0_13TeV_atlas2_log1","env_pdf_0_13TeV_atlas2_log2",
         "env_pdf_0_13TeV_vvdijet1_coeff1","env_pdf_0_13TeV_vvdijet1_log1",""
-    }
+    };
     
         p_1->SetLogy();
         c_rooFit->Update();
         c_rooFit->SaveAs((dirName+"/"+name_output+"_log.pdf").c_str());
+
+
+    RooDataHist predSB("predSB", "Data from SB", RooArgList(x), h_mX_EST_antitag);
+    RooFitResult *r_bgSB=bgSB.fitTo(predSB, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
+    //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
+    //    //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save(),RooFit::SumW2Error(kTRUE));
+    std::cout<<" --------------------- Building Envelope --------------------- "<<std::endl;
+    std::cout<< "bg_p1_   param   "<<bg_p1.getVal() <<  " "<<bg_p1.getError()<<std::endl;
+    std::cout<< "bg_p2_   param   "<<bg_p2.getVal() <<  " "<<bg_p2.getError()<<std::endl;
     
     RooWorkspace *w=new RooWorkspace("HH4b");
     w->import(bg);
-    //w->import(nBackground);
+    w->import(bgSB);
+    w->import(nBackgroundSB);	
+    w->import(nBackground);
     w->SaveAs((dirName+"/w_background.root").c_str());
     
-    TH1F *h_mX_SR_fakeData=(TH1F*)h_mX_CR_tau->Clone("h_mX_SR_fakeData");
+    TH1F *h_mX_SR_fakeData=(TH1F*)h_mX_EST->Clone("h_mX_SR_fakeData");
     //h_mX_SR_fakeData->Scale(nEventsSR/h_mX_SR_fakeData->GetSumOfWeights());
-    RooDataHist data_obs("data_obs", "Data", RooArgList(x), h_mX_SR_fakeData);
+    RooDataHist data_obs("data_obs", "Data", RooArgList(x), h_mX_SR);
+    RooDataHist data_obs_sb("data_obs_sb", "Data", RooArgList(x), h_mX_EST_antitag);	
     std::cout<<" Background number of events = "<<nEventsSR<<std::endl;
     RooWorkspace *w_data=new RooWorkspace("HH4b");
     w_data->import(data_obs);
+    w_data->import(data_obs_sb);
+   // w->import(nBackground);
     w_data->SaveAs((dirName+"/w_data.root").c_str());
     
 }

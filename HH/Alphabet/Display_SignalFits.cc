@@ -137,10 +137,10 @@ RooPlot* fitSignal(std::string dirName, TH1D *h, int massNum, std::string mass, 
         //RooGaussian signal_fixed("signal_fixed", "Signal Prediction", *x, signal_p0, signal_p1);
         RooCBShape signalCore_fixed((std::string("signalCore_fixed_")).c_str(), "signalCore", *x, signal_p0, signal_p1,signal_p2, signal_p3);
         RooGaussian signalComb_fixed((std::string("signalComb_fixed_")).c_str(), "Combinatoric", *x, signal_p0, signal_p5);
-        RooAddPdf signal_fixed((std::string("signal_fixed_")).c_str(), "signal", RooArgList(signalCore_fixed, signalComb_fixed), signal_p6);
+        RooAddPdf signal_fixed((std::string("signal_fixed_antitag_")).c_str(), "signal", RooArgList(signalCore_fixed, signalComb_fixed), signal_p6);
         RooWorkspace *w=new RooWorkspace("HH4b");
         w->import(signal_fixed);
-        w->SaveAs((dirName+"/w_signal_"+mass+".root").c_str());
+        w->SaveAs((dirName+"/w_signal_antitag_"+mass+".root").c_str());
     }
     return plot;
 }
@@ -158,7 +158,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
                        std::string dir_selection="",
                        std::string file_histograms="HH_mX_",
                        int imass=750,
-                       int rebin_factor = 2,
+                       int rebin_factor = 1,
                        bool focus=false)
 {
     
@@ -175,7 +175,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
     iimass << imass;
     masses.push_back(iimass.str());
     
-    std::string dirName = "outputs/bump/";
+    std::string dirName = "outputs/bump/datacards/";
     
     std::string file_postfix = std::string("_13TeV.root");
     std::cout<< " file input "<< file_postfix<<std::endl;
@@ -204,7 +204,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
     for (unsigned int i=0; i<masses.size(); ++i) {
         std::cout<<" OPENING FILE: " << (dir_preselection+"/"+file_histograms+masses.at(i)+file_postfix).c_str() <<std::endl;
         TFile *file = new TFile((dir_preselection+"/"+file_histograms+masses.at(i)+file_postfix).c_str());
-        TH1D *h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_"+masses.at(i)).c_str());
+        TH1D *h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_antitag_"+masses.at(i)).c_str());
         //std::cout<< "distribs_5_10_0__x"<<std::endl;
         
         double nSignal_init=1.0;
@@ -233,6 +233,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
 
         h_mX_SR->SetTitle(("m_{X} Peak in Signal MC (m_{X}="+masses.at(i)+" GeV); m_{X} (GeV)").c_str());
         h_mX_SR->Rebin(rebin);
+        std::cout<<" norm = "<<h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500))<<std::endl;	
         
         TLegend *leg = new TLegend(0.75,0.75,0.5,0.9,NULL,"brNDC");
         leg->SetBorderSize(0);
@@ -247,6 +248,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
 
         
         leg->AddEntry(h_mX_SR, "Signal MC");
+	h_mX_SR->Sumw2();
         Params params_vg;
         RooPlot *plot_vg=fitSignal(dirName,h_mX_SR, imass, masses.at(i), kBlack, leg, params_vg,true);
         v_sg_p0.push_back(params_vg.sg_p0); v_sg_p0_err.push_back(params_vg.sg_p0_err);

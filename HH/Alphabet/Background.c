@@ -218,9 +218,11 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     */
     RooRealVar x("x", "m_{X} (GeV)", SR_lo, SR_hi);
     
-    RooRealVar nBackgroundSB((std::string("bgSB_")+std::string("_norm")).c_str(),"nbkg",h_mX_EST_antitag->Integral(h_mX_EST_antitag->FindBin(1199),h_mX_EST_antitag->FindBin(2500)));
+//    RooRealVar nBackgroundSB((std::string("bgSB_")+std::string("_norm")).c_str(),"nbkg",h_mX_EST_antitag->Integral(h_mX_EST_antitag->FindBin(1200),h_mX_EST_antitag->FindBin(2500)));	
+    RooRealVar nBackgroundSB((std::string("bgSB_")+std::string("_norm")).c_str(),"nbkg",h_mX_EST->Integral(h_mX_EST->FindBin(1200),h_mX_EST->FindBin(2500)));
     //RooRealVar nBackground((std::string("n_exp_binHH4b_proc_EST_")+std::string("_norm")).c_str(),"nbkg",h_mX_EST->Integral(h_mX_EST->FindBin(1200),h_mX_EST->FindBin(2500)));	
-    RooFormulaVar nBackground((std::string("bg__norm")).c_str(),"n_trasf","0.0659433107656*@0",nBackgroundSB);
+    //RooFormulaVar nBackground((std::string("bg__norm")).c_str(),"n_trasf","0.0659433107656*@0",nBackgroundSB);
+    RooFormulaVar nBackground((std::string("bg__norm")).c_str(),"n_trasf","1.*@0",nBackgroundSB);
     
     
     /* RooRealVar bg_p0((std::string("bg_p0_")+pname).c_str(), "bg_p0", 4.2, 0, 200.);
@@ -538,7 +540,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
         c_rooFit->SaveAs((dirName+"/"+name_output+"_log.pdf").c_str());
 
 
-    RooDataHist predSB("predSB", "Data from SB", RooArgList(x), h_mX_EST_antitag);
+    RooDataHist predSB("predSB", "Data from SB", RooArgList(x), h_mX_EST);//_antitag);
     RooFitResult *r_bgSB=bgSB.fitTo(predSB, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
     //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
     //    //RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save(),RooFit::SumW2Error(kTRUE));
@@ -556,7 +558,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     TH1F *h_mX_SR_fakeData=(TH1F*)h_mX_EST->Clone("h_mX_SR_fakeData");
     //h_mX_SR_fakeData->Scale(nEventsSR/h_mX_SR_fakeData->GetSumOfWeights());
     RooDataHist data_obs("data_obs", "Data", RooArgList(x), h_mX_SR);
-    RooDataHist data_obs_sb("data_obs_sb", "Data", RooArgList(x), h_mX_EST_antitag);	
+    RooDataHist data_obs_sb("data_obs_sb", "Data", RooArgList(x), h_mX_EST);//_antitag);	
     std::cout<<" Background number of events = "<<nEventsSR<<std::endl;
     RooWorkspace *w_data=new RooWorkspace("HH4b");
     w_data->import(data_obs);

@@ -1,0 +1,21 @@
+Combination of Name1=outputs/bump/datacards/HH_mX_1400_13TeV_pass.txt  Name2=outputs/bump/datacards/HH_mX_1400_13TeV_fail.txt
+imax 2 number of bins
+jmax 3 number of processes minus 1
+kmax 1 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes EST                     Name1                   outputs/bump/datacards/w_background.root HH4b:bg_
+shapes Signal_mX_1400          Name1                   outputs/bump/datacards/w_signal_1400.root HH4b:signal_fixed_
+shapes data_obs                Name1                   outputs/bump/datacards/w_data.root HH4b:data_obs
+shapes EST_antitag             Name2                   outputs/bump/datacards/w_background.root HH4b:bgSB_
+shapes Signal_mX_antitag_1400  Name2                   outputs/bump/datacards/w_signal_antitag_1400.root HH4b:signal_fixed_antitag_
+shapes data_obs                Name2                   outputs/bump/datacards/w_data.root HH4b:data_obs_sb
+----------------------------------------------------------------------------------------------------------------------------------
+bin          Name1  Name2
+observation  -1.0   -1.0 
+----------------------------------------------------------------------------------------------------------------------------------
+bin                             Name1                   Name1                   Name2                   Name2                 
+process                         Signal_mX_1400          EST                     Signal_mX_antitag_1400  EST_antitag           
+process                         -1                      1                       0                       2                     
+rate                            9.5629                  1.0000                  0.0000                  1.0000                
+----------------------------------------------------------------------------------------------------------------------------------
+CMS_TF_13TeV            lnU     -                       1.2                     -                       -                     

@@ -319,7 +319,7 @@ sjSF = array('f', [-100.0])
 sjSFup = array('f', [-100.0])
 sjSFdown = array('f', [-100.0])
 if options.isMC == 'True':
-    genjet1BH = array('f', [-100.0])
+    genJet1BH = array('f', [-100.0])
     genjet2BH = array('f', [-100.0])
     genjet1CH = array('f', [-100.0])
     genjet2CH = array('f', [-100.0])
@@ -546,7 +546,7 @@ myTree.Branch('jetSJpt', jetSJpt,'jetSJpt[4]/F')
 myTree.Branch('jetSJcsv',jetSJcsv,'jetSJcsv[4]/F')
 myTree.Branch('jetSJeta',jetSJeta,'jetSJeta[4]/F')
 if options.isMC == 'True':
-    myTree.Branch('genjet1BH', genjet1BH, 'genjet1BH/F')
+    myTree.Branch('genJet1BH', genJet1BH, 'genJet1BH/F')
     myTree.Branch('genjet2BH', genjet2BH, 'genjet2BH/F')
     myTree.Branch('genjet1CH', genjet1CH, 'genjet1CH/F')
     myTree.Branch('genjet2CH', genjet2CH, 'genjet2CH/F')
@@ -775,7 +775,7 @@ for i in range(num1, num2):
             genBH = treeMine.GenJet_numBHadrons	
             genCH = treeMine.GenJet_numCHadrons
             if len(genBH) > 0:
-                genjet1BH[0] = genBH[0]
+                genJet1BH[0] = genBH[0]
 	    if len(genCH) > 0:
                 genjet1CH[0] = genCH[0]
             if len(genBH) > 1:
@@ -1152,7 +1152,10 @@ for i in range(num1, num2):
 		minDEta = abs(jets[0].Eta() - jets[1].Eta())
 		idxH1 = 0
 		idxH2 = 1
-			
+
+        if len(jets) == 1:
+            idxH1 = 0
+
 	if options.deta and options.is2p1 == 'False' and (idxH1 < 0 or idxH2 <0) : continue
   
         nFills += 1
@@ -1204,22 +1207,23 @@ for i in range(num1, num2):
                     jet1NearbyJetcmvamass = treeMine.Jet_mass[j]
                     jet1NJCMVA = cmva
                     maxcmva1 = cmva
-            if jets[idxH2].DeltaR(jettemp) > math.pi/2:
-                jet2FoundNearby = 1
-                if csv > maxcsv2:
-                    jet2NearbyJetcsvpt = treeMine.Jet_pt[j]
-                    jet2NearbyJetcsveta = treeMine.Jet_eta[j]
-                    jet2NearbyJetcsvphi = treeMine.Jet_phi[j]
-                    jet2NearbyJetcsvmass = treeMine.Jet_mass[j]
-                    jet2NJCSV = csv
-                    maxcsv2 = csv
-                if cmva > maxcmva2:
-                    jet2NearbyJetcmvapt = treeMine.Jet_pt[j]
-                    jet2NearbyJetcmvaeta = treeMine.Jet_eta[j]
-                    jet2NearbyJetcmvaphi = treeMine.Jet_phi[j]
-                    jet2NearbyJetcmvamass = treeMine.Jet_mass[j]
-                    jet2NJCMVA = cmva
-                    maxcmva2 = cmva
+            if len(jets) > 1:
+               if jets[idxH2].DeltaR(jettemp) > math.pi/2:
+                   jet2FoundNearby = 1
+                   if csv > maxcsv2:
+                       jet2NearbyJetcsvpt = treeMine.Jet_pt[j]
+                       jet2NearbyJetcsveta = treeMine.Jet_eta[j]
+                       jet2NearbyJetcsvphi = treeMine.Jet_phi[j]
+                       jet2NearbyJetcsvmass = treeMine.Jet_mass[j]
+                       jet2NJCSV = csv
+                       maxcsv2 = csv
+                   if cmva > maxcmva2:
+                       jet2NearbyJetcmvapt = treeMine.Jet_pt[j]
+                       jet2NearbyJetcmvaeta = treeMine.Jet_eta[j]
+                       jet2NearbyJetcmvaphi = treeMine.Jet_phi[j]
+                       jet2NearbyJetcmvamass = treeMine.Jet_mass[j]
+                       jet2NJCMVA = cmva
+                       maxcmva2 = cmva
                 
         if jet1FoundNearby == 1:
             jet1NearbyJetcsvArray[0] = jet1NearbyJetcsvpt
@@ -1567,22 +1571,24 @@ for i in range(num1, num2):
 #		    jet2mscsv[0] = jet2sjcsv[j]
 	
 	#filling bbtag
-	jet1bbtag[0] = jet_bbtag[idxH1] 
-	jet2bbtag[0] = jet_bbtag[idxH2]
+	jet1bbtag[0] = jet_bbtag[idxH1]
+        if len(jets) > 1:
+            jet2bbtag[0] = jet_bbtag[idxH2]
 	
         #writing variables to the tree    
 	jet1pt[0] = jets[idxH1].Pt()
-	jet2pt[0] = jets[idxH2].Pt()
 	jet1eta[0] = jets[idxH1].Eta()
-	jet2eta[0] = jets[idxH2].Eta()
         jet1phi[0] = jets[idxH1].Phi()
-        jet2phi[0] = jets[idxH2].Phi()
         jet1mass[0] = jets[idxH1].M()
-        jet2mass[0] = jets[idxH2].M()
-	etadiff[0] = abs(jets[idxH1].Eta() - jets[idxH2].Eta())
-	dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
-	dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
-        dijetmass_corr_punc[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmassunc[0]-125)-(jet2pmassunc[0]-125)
+        if len(jets) > 1:
+            jet2pt[0] = jets[idxH2].Pt()
+            jet2eta[0] = jets[idxH2].Eta()
+            jet2phi[0] = jets[idxH2].Phi()
+            jet2mass[0] = jets[idxH2].M()
+            etadiff[0] = abs(jets[idxH1].Eta() - jets[idxH2].Eta())
+            dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
+            dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
+            dijetmass_corr_punc[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmassunc[0]-125)-(jet2pmassunc[0]-125)
         if options.isMC == 'True':
             puWeights[0]= puweight
             puWeightsUp[0] = puweightUp
@@ -1872,7 +1878,7 @@ for i in range(num1, num2):
 	
 	#filling error values for each object
         if options.isMC == 'True':
-            genjet1BH[0] = -100.0
+       #     genjet1BH[0] = -100.0
             genjet2BH[0] = -100.0
             genjet1CH[0] = -100.0
             genjet2CH[0] = -100.0

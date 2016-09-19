@@ -1132,17 +1132,17 @@ for i in range(num1, num2):
             jettemp = ROOT.TLorentzVector()
             jettemp.SetPtEtaPhiM(fjUngroomedPt[j], fjUngroomedEta[j], fjUngroomedPhi[j], fjUngroomedMass[j])
 	    if (options.syst=="FJEC_Up"):
-                            correction_factor=1+(tree.FatjetAK08ungroomed_JEC_UP[j]-tree.FatjetAK08ungroomed_JEC_L1L2L3[j])
+                            correction_factor=1+(treeMine.FatjetAK08ungroomed_JEC_UP[j]-treeMine.FatjetAK08ungroomed_JEC_L1L2L3[j])
                             jettemp*=correction_factor
 	    if (options.syst=="FJEC_Down"):
-                            correction_factor=1-(tree.FatjetAK08ungroomed_JEC_UP[j]-tree.FatjetAK08ungroomed_JEC_L1L2L3[j])
+                            correction_factor=1-(treeMine.FatjetAK08ungroomed_JEC_UP[j]-treeMine.FatjetAK08ungroomed_JEC_L1L2L3[j])
                             jettemp*=correction_factor
 	    if (options.syst=="FJER_Up"):
-                            correction_factor=div_except(tree.FatjetAK08ungroomed_JER_UP_PT[j],tree.FatjetAK08ungroomed_pt[j])
+                            correction_factor=div_except(treeMine.FatjetAK08ungroomed_JER_UP_PT[j],treeMine.FatjetAK08ungroomed_pt[j])
                             jettemp*=correction_factor
 	    if (options.syst=="FJER_Down"):
-                            pJERDown=2*tree.FatjetAK08ungroomed_pt[j]-tree.FatjetAK08ungroomed_JER_UP_PT[j]
-			    correction_factor=div_except((pJERDown),tree.FatjetAK08ungroomed_pt[j])
+                            pJERDown=2*treeMine.FatjetAK08ungroomed_pt[j]-treeMine.FatjetAK08ungroomed_JER_UP_PT[j]
+			    correction_factor=div_except((pJERDown),treeMine.FatjetAK08ungroomed_pt[j])
 			    jettemp*=correction_factor
 	
 	
@@ -1154,21 +1154,21 @@ for i in range(num1, num2):
 			    jet_tau.append(100)
 		    mpruned_syst=fjUngroomedPrunedMass[j]
 		    if (options.syst=="MJEC_Down"):
-                            sigma=tree.FatjetAK08ungroomed_JEC_L2L3_UP[j]-tree.FatjetAK08ungroomed_JEC_L2L3[j]
-                            mpruned_syst=tree.FatjetAK08ungroomed_mpruned[j]*(tree.FatjetAK08ungroomed_JEC_L2L3[j]-sigma)
+                            sigma=treeMine.FatjetAK08ungroomed_JEC_L2L3_UP[j]-treeMine.FatjetAK08ungroomed_JEC_L2L3[j]
+                            mpruned_syst=treeMine.FatjetAK08ungroomed_mpruned[j]*(treeMine.FatjetAK08ungroomed_JEC_L2L3[j]-sigma)
                     if (options.syst=="MJEC_Up"): 
-			mpruned_syst=tree.FatjetAK08ungroomed_mpruned[j]*tree.FatjetAK08ungroomed_JEC_L2L3_UP[j]
+			mpruned_syst=treeMine.FatjetAK08ungroomed_mpruned[j]*treeMine.FatjetAK08ungroomed_JEC_L2L3_UP[j]
 
 		    jet_bbtag.append(fjUngroomedBbTag[j])	
                     jet_pmass.append(mpruned_syst)
                     jet_pmassunc.append(fjUngroomedPrunedMass_Unc[j])
                     jet_id.append(fjUngroomedJetID[j])
                     jet_mass.append(fjUngroomedMass[j])
-                    jet_eta.append(tree.FatjetAK08ungroomed_eta[j])
-                    jet_muonF.append(tree.FatjetAK08ungroomed_muonEnergyFraction[j])
-                    jet_EmF.append(tree.FatjetAK08ungroomed_neutralEmEnergyFraction[j])
-                    jet_HF.append(tree.FatjetAK08ungroomed_neutralHadronEnergyFraction[j])
-                    jet_multi.append(tree.FatjetAK08ungroomed_chargedMultiplicity[j])
+                    jet_eta.append(treeMine.FatjetAK08ungroomed_eta[j])
+                    jet_muonF.append(treeMine.FatjetAK08ungroomed_muonEnergyFraction[j])
+                    jet_EmF.append(treeMine.FatjetAK08ungroomed_neutralEmEnergyFraction[j])
+                    jet_HF.append(treeMine.FatjetAK08ungroomed_neutralHadronEnergyFraction[j])
+                    jet_multi.append(treeMine.FatjetAK08ungroomed_chargedMultiplicity[j])
 
                     if options.isMC == 'True':
                         jet_nb.append(fjUngroomedBHadron[j])
@@ -1299,7 +1299,7 @@ for i in range(num1, num2):
 
 	#evaluating regressed pt 
 	this_pt=jets[idxH1].Pt()
-	this_pv= tree.nPVs
+	this_pv= treeMine.nPVs
 	this_eta=jet_eta[idxH1]
 	this_mass=jet_mass[idxH1]
 	this_muonF=jet_muonF[idxH1]

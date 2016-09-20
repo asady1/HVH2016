@@ -220,6 +220,8 @@ jet1pt = array('f', [-100.0])
 jet2pt = array('f', [-100.0])
 jet1pt_reg = array('f', [-100.0])
 jet2pt_reg = array('f', [-100.0])
+jet1mass_reg = array('f', [-100.0])
+jet2mass_reg = array('f', [-100.0])
 
 jet1NearbyJetcsvArray = array('f', [-100.0, -100.0, -100.0, -100.0])
 jet2NearbyJetcsvArray = array('f', [-100.0, -100.0, -100.0, -100.0])
@@ -314,7 +316,7 @@ trigWeightUp = array('f', [-100.0])
 trigWeightDown = array('f', [-100.0])
 trigWeight2Up = array('f', [-100.0])
 trigWeight2Down = array('f', [-100.0])
-norm = array('f', [-100.0])
+#norm = array('f', [-100.0])
 evt = array('f', [-100.0])
 ht = array('f', [-100.0])
 htJet30 = array('f', [-100.0])
@@ -381,7 +383,7 @@ if options.is2p1 == 'True':
     ak4genJetID = vector('double')()
 if options.saveTrig == 'True':
     HLT_AK8PFJet360_V = array('f', [-100.0])
-    HLT_PFHT350_v = array('f', [-100.0])
+  #  HLT_PFHT350_v = array('f', [-100.0])
     HLT_PFHT400_SixJet30_v = array('f', [-100.0])
     HLT_PFHT450_SixJet40_v = array('f', [-100.0])
     HLT_PFMET120_Mu5_v = array('f', [-100.0])
@@ -442,6 +444,8 @@ myTree.Branch('jet1pt', jet1pt, 'jet1pt/F')
 myTree.Branch('jet2pt', jet2pt, 'jet2pt/F')
 myTree.Branch('jet1pt_reg', jet1pt_reg, 'jet1pt_reg/F')
 myTree.Branch('jet2pt_reg', jet2pt_reg, 'jet2pt_reg/F')
+myTree.Branch('jet1mass_reg', jet1mass_reg, 'jet1mass_reg/F')
+myTree.Branch('jet2mass_reg', jet2mass_reg, 'jet2mass_reg/F')
 myTree.Branch('jet1NearbyJetcsv', jet1NearbyJetcsvArray, 'pt/F:eta/F:phi/F:mass/F')
 myTree.Branch('jet2NearbyJetcsv', jet2NearbyJetcsvArray, 'pt/F:eta/F:phi/F:mass/F')
 myTree.Branch('jet1NearbyJetcmva', jet1NearbyJetcmvaArray, 'pt/F:eta/F:phi/F:mass/F')
@@ -539,7 +543,7 @@ myTree.Branch('trigWeightUp', trigWeightUp, 'trigWeightUp/F')
 myTree.Branch('trigWeightDown', trigWeightDown, 'trigWeightDown/F')
 myTree.Branch('trigWeight2Up', trigWeight2Up, 'trigWeight2Up/F')
 myTree.Branch('trigWeight2Down', trigWeight2Down, 'trigWeight2Down/F')
-myTree.Branch('norm',norm,'norm/F')
+#myTree.Branch('norm',norm,'norm/F')
 myTree.Branch('evt',evt,'evt/F')
 myTree.Branch('ht', ht, 'ht/F')
 myTree.Branch('htJet30', htJet30, 'htJet30/F')
@@ -602,7 +606,7 @@ if options.is2p1 == 'True':
     myTree.Branch('ak4genJetID', ak4genJetID)
 if options.saveTrig == 'True':
     myTree.Branch('HLT_AK8PFJet360_V', HLT_AK8PFJet360_V, 'HLT_AK8PFJet360_V/F')
-    myTree.Branch('HLT_PFHT350_v', HLT_PFHT350_v, 'HLT_PFHT350_v/F')
+   # myTree.Branch('HLT_PFHT350_v', HLT_PFHT350_v, 'HLT_PFHT350_v/F')
     myTree.Branch('HLT_PFHT400_SixJet30_v', HLT_PFHT400_SixJet30_v, 'HLT_PFHT400_SixJet30_v/F')
     myTree.Branch('HLT_PFHT450_SixJet40_v', HLT_PFHT450_SixJet40_v, 'HLT_PFHT450_SixJet40_v/F')
     myTree.Branch('HLT_PFMET120_Mu5_v', HLT_PFMET120_Mu5_v, 'HLT_PFMET120_Mu5_v/F')
@@ -738,16 +742,15 @@ for i in range(num1, num2):
     #getting the norm and other useful histos
     if options.isMC == 'True':
         histo_weight=f1.Get("CountWeighted")
-        norm[0]=histo_weight.GetBinContent(1)
-	CountMC.Add(f1.Get("Count"))
+        CountMC.Add(f1.Get("Count"))
 	CountFullWeightedMC.Add(f1.Get("CountFullWeighted"))
 	CountWeightedmc.Add(f1.Get("CountWeighted"))
 	CountPosWeightMC.Add(f1.Get("CountPosWeight"))
 	CountNegWeightMC.Add(f1.Get("CountNegWeight"))
 	CountWeightedLHEWeightScalemc.Add(f1.Get("CountWeightedLHEWeightScale"))
 	CountWeightedLHEWeightPdfMC.Add(f1.Get("CountWeightedLHEWeightPdf"))
-    else:
-        norm[0] = 1
+#    else:
+#        norm[0] = 1
     #loop over events in file
     print "Start looping"
     for j in range(0,nevent):
@@ -849,66 +852,66 @@ for i in range(num1, num2):
             hPhi = treeMine.GenHiggsBoson_phi
             hMass = treeMine.GenHiggsBoson_mass
         if options.isMC == 'True' and options.saveTrig == 'True':
-            HLT_AK8PFJet360_V[0] = treeMine.HLT2_BIT_HLT_AK8PFJet360_TrimMass30_v
-            HLT_PFHT350_v[0] = treeMine.HLT2_BIT_HLT_PFHT350_v
-            HLT_PFHT400_SixJet30_v[0] = treeMine.HLT2_BIT_HLT_PFHT400_SixJet30_v
-            HLT_PFHT450_SixJet40_v[0] = treeMine.HLT2_BIT_HLT_PFHT450_SixJet40_v
-            HLT_PFMET120_Mu5_v[0] = treeMine.HLT2_BIT_HLT_PFMET120_Mu5_v
-            HLT_PFHT800_v[0] = treeMine.HLT2_BIT_HLT_PFHT800_v
-            HLT_PFHT750_4JetPt50_v[0] = treeMine.HLT2_BIT_HLT_PFHT750_4JetPt50_v
-            HLT_PFHT350_PFMET100_v[0] = treeMine.HLT2_BIT_HLT_PFHT350_PFMET100_v
-            HLT_PFMET170_NoiseCleaned_v[0] = treeMine.HLT2_BIT_HLT_PFMET170_NoiseCleaned_v
-            HLT_PFMET120_PFMHT120_IDTight_v[0] = treeMine.HLT2_BIT_HLT_PFMET120_PFMHT120_IDTight_v
-            HLT_PFMET110_PFMHT110_IDTight_v[0] = treeMine.HLT2_BIT_HLT_PFMET110_PFMHT110_IDTight_v
-            HLT_PFMET100_PFMHT100_IDTight_v[0] = treeMine.HLT2_BIT_HLT_PFMET100_PFMHT100_IDTight_v
-            HLT_PFMET90_PFMHT90_IDTight_v[0] = treeMine.HLT2_BIT_HLT_PFMET90_PFMHT90_IDTight_v
-            HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v[0] = treeMine.HLT2_BIT_HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v
-            HLT_PFHT450_SixJet40_BTagCSV_p056_v[0] = treeMine.HLT2_BIT_HLT_PFHT450_SixJet40_BTagCSV_p056_v
-            HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v[0] = treeMine.HLT2_BIT_HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v
-            HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT2_BIT_HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
-            HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT2_BIT_HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v
-            HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT2_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
-            HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v[0] = treeMine.HLT2_BIT_HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v
-            HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v[0] = treeMine.HLT2_BIT_HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v
-            HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v[0] = treeMine.HLT2_BIT_HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v
-            HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v[0] = treeMine.HLT2_BIT_HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v 
-            HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v[0] = treeMine.HLT2_BIT_HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v
-            HLT_QuadPFJet_VBF_v[0] = treeMine.HLT2_BIT_HLT_QuadPFJet_VBF_v
-            HLT_L1_TripleJet_VBF_v[0] = treeMine.HLT2_BIT_HLT_L1_TripleJet_VBF_v
-            HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT2_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v 
-            HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v[0] = treeMine.HLT2_BIT_HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v
-            HLT_PFJet40_v[0] = treeMine.HLT2_BIT_HLT_PFJet40_v
-            HLT_PFJet60_v[0] = treeMine.HLT2_BIT_HLT_PFJet60_v 
-            HLT_PFJet80_v[0] = treeMine.HLT2_BIT_HLT_PFJet80_v
-            HLT_PFJet140_v[0] = treeMine.HLT2_BIT_HLT_PFJet140_v
-            HLT_PFJet200_v[0] = treeMine.HLT2_BIT_HLT_PFJet200_v
-            HLT_PFJet260_v[0] = treeMine.HLT2_BIT_HLT_PFJet260_v 
-            HLT_PFJet320_v[0] = treeMine.HLT2_BIT_HLT_PFJet320_v 
-            HLT_PFJet400_v[0] = treeMine.HLT2_BIT_HLT_PFJet400_v 
-            HLT_PFJet450_v[0] = treeMine.HLT2_BIT_HLT_PFJet450_v 
-            HLT_DiPFJetAve40_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve40_v 
-            HLT_DiPFJetAve60_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve60_v
-            HLT_DiPFJetAve80_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve80_v
-            HLT_DiPFJetAve140_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve140_v 
-            HLT_DiPFJetAve200_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve200_v
-            HLT_DiPFJetAve260_v[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve260_v
-            HLT_DiPFJetAve320_V[0] = treeMine.HLT2_BIT_HLT_DiPFJetAve320_v
-            HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v[0] = treeMine.HLT2_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v
-            HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v[0] = treeMine.HLT2_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v
-            HLT_QuadJet45_TripleBTagCSV_p087_v[0] = treeMine.HLT2_BIT_HLT_QuadJet45_TripleBTagCSV_p087_v
-            HLT_QuadJet45_DoubleBTagCSV_p087_v[0] = treeMine.HLT2_BIT_HLT_QuadJet45_DoubleBTagCSV_p087_v
-            HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v[0] = treeMine.HLT2_BIT_HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v
-            HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v[0] = treeMine.HLT2_BIT_HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v
-            HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v[0] = treeMine.HLT2_BIT_HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v
-            HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v[0] = treeMine.HLT2_BIT_HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v
-            HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v[0] = treeMine.HLT2_BIT_HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v
-            HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT2_BIT_HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
-            HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT2_BIT_HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v
-            HLT_Mu20_v[0] = treeMine.HLT2_BIT_HLT_Mu20_v
+            HLT_AK8PFJet360_V[0] = treeMine.HLT_BIT_HLT_AK8PFJet360_TrimMass30_v
+          #  HLT_PFHT350_v[0] = treeMine.HLT_BIT_HLT_PFHT350_v
+            HLT_PFHT400_SixJet30_v[0] = treeMine.HLT_BIT_HLT_PFHT400_SixJet30_v
+            HLT_PFHT450_SixJet40_v[0] = treeMine.HLT_BIT_HLT_PFHT450_SixJet40_v
+            HLT_PFMET120_Mu5_v[0] = treeMine.HLT_BIT_HLT_PFMET120_Mu5_v
+            HLT_PFHT800_v[0] = treeMine.HLT_BIT_HLT_PFHT800_v
+            HLT_PFHT750_4JetPt50_v[0] = treeMine.HLT_BIT_HLT_PFHT750_4JetPt50_v
+            HLT_PFHT350_PFMET100_v[0] = treeMine.HLT_BIT_HLT_PFHT350_PFMET100_v
+            HLT_PFMET170_NoiseCleaned_v[0] = treeMine.HLT_BIT_HLT_PFMET170_NoiseCleaned_v
+            HLT_PFMET120_PFMHT120_IDTight_v[0] = treeMine.HLT_BIT_HLT_PFMET120_PFMHT120_IDTight_v
+            HLT_PFMET110_PFMHT110_IDTight_v[0] = treeMine.HLT_BIT_HLT_PFMET110_PFMHT110_IDTight_v
+            HLT_PFMET100_PFMHT100_IDTight_v[0] = treeMine.HLT_BIT_HLT_PFMET100_PFMHT100_IDTight_v
+            HLT_PFMET90_PFMHT90_IDTight_v[0] = treeMine.HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v
+            HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v[0] = treeMine.HLT_BIT_HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v
+            HLT_PFHT450_SixJet40_BTagCSV_p056_v[0] = treeMine.HLT_BIT_HLT_PFHT450_SixJet40_BTagCSV_p056_v
+            HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v[0] = treeMine.HLT_BIT_HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v
+            HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT_BIT_HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
+            HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT_BIT_HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v
+            HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
+            HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v[0] = treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v
+            HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v[0] = treeMine.HLT_BIT_HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v
+            HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v[0] = treeMine.HLT_BIT_HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v
+            HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v[0] = treeMine.HLT_BIT_HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v 
+            HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v[0] = treeMine.HLT_BIT_HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v
+            HLT_QuadPFJet_VBF_v[0] = treeMine.HLT_BIT_HLT_QuadPFJet_VBF_v
+            HLT_L1_TripleJet_VBF_v[0] = treeMine.HLT_BIT_HLT_L1_TripleJet_VBF_v
+            HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v 
+            HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v[0] = treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v
+            HLT_PFJet40_v[0] = treeMine.HLT_BIT_HLT_PFJet40_v
+            HLT_PFJet60_v[0] = treeMine.HLT_BIT_HLT_PFJet60_v 
+            HLT_PFJet80_v[0] = treeMine.HLT_BIT_HLT_PFJet80_v
+            HLT_PFJet140_v[0] = treeMine.HLT_BIT_HLT_PFJet140_v
+            HLT_PFJet200_v[0] = treeMine.HLT_BIT_HLT_PFJet200_v
+            HLT_PFJet260_v[0] = treeMine.HLT_BIT_HLT_PFJet260_v 
+            HLT_PFJet320_v[0] = treeMine.HLT_BIT_HLT_PFJet320_v 
+            HLT_PFJet400_v[0] = treeMine.HLT_BIT_HLT_PFJet400_v 
+            HLT_PFJet450_v[0] = treeMine.HLT_BIT_HLT_PFJet450_v 
+            HLT_DiPFJetAve40_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve40_v 
+            HLT_DiPFJetAve60_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve60_v
+            HLT_DiPFJetAve80_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve80_v
+            HLT_DiPFJetAve140_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve140_v 
+            HLT_DiPFJetAve200_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve200_v
+            HLT_DiPFJetAve260_v[0] = treeMine.HLT_BIT_HLT_DiPFJetAve260_v
+            HLT_DiPFJetAve320_V[0] = treeMine.HLT_BIT_HLT_DiPFJetAve320_v
+            HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v[0] = treeMine.HLT_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p026_DoublePFJetsC160_v
+            HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v[0] = treeMine.HLT_BIT_HLT_DoubleJetsC100_DoubleBTagCSV_p014_DoublePFJetsC100MaxDeta1p6_v
+            HLT_QuadJet45_TripleBTagCSV_p087_v[0] = treeMine.HLT_BIT_HLT_QuadJet45_TripleBTagCSV_p087_v
+            HLT_QuadJet45_DoubleBTagCSV_p087_v[0] = treeMine.HLT_BIT_HLT_QuadJet45_DoubleBTagCSV_p087_v
+            HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v[0] = treeMine.HLT_BIT_HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v
+            HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v[0] = treeMine.HLT_BIT_HLT_DoubleJet90_Double30_DoubleBTagCSV_p087_v
+            HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v[0] = treeMine.HLT_BIT_HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v
+            HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v[0] = treeMine.HLT_BIT_HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v
+            HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v[0] = treeMine.HLT_BIT_HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v
+            HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT_BIT_HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
+            HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT_BIT_HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v
+            HLT_Mu20_v[0] = treeMine.HLT_BIT_HLT_Mu20_v
 
         elif options.saveTrig == 'True' and options.isMC == 'False':
             HLT_AK8PFJet360_V[0] = treeMine.HLT_BIT_HLT_AK8PFJet360_TrimMass30_v
-            HLT_PFHT350_v[0] = treeMine.HLT_BIT_HLT_PFHT350_v
+          #  HLT_PFHT350_v[0] = treeMine.HLT_BIT_HLT_PFHT350_v
             HLT_PFHT400_SixJet30_v[0] = treeMine.HLT_BIT_HLT_PFHT400_SixJet30_v
             HLT_PFHT450_SixJet40_v[0] = treeMine.HLT_BIT_HLT_PFHT450_SixJet40_v
             HLT_PFMET120_Mu5_v[0] = treeMine.HLT_BIT_HLT_PFMET120_Mu5_v
@@ -1658,6 +1661,7 @@ for i in range(num1, num2):
 	jet1_reg.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1mass[0])
 	jet1_reg=jet1_reg*(regressedJetpT_0)
 	jet1pt_reg[0] = jet1_reg.Pt()
+        jet1mass_reg[0] = jet1_reg.M()
 	jet1_ureg =ROOT.TLorentzVector()
 	jet1_ureg.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1_reg.M())
 
@@ -1669,6 +1673,8 @@ for i in range(num1, num2):
 	    jet2_reg =ROOT.TLorentzVector()
 	    jet2_reg.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0],jet2mass[0])
             jet2_reg=jet2_reg*(regressedJetpT_1)
+            jet2pt_reg[0] = jet2_reg.Pt()
+            jet2mass_reg[0] = jet2_reg.M()
 	    jet2_ureg =ROOT.TLorentzVector()
 	    jet2_ureg.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0],jet2_reg.M())
             etadiff[0] = abs(jets[idxH1].Eta() - jets[idxH2].Eta())
@@ -1995,7 +2001,6 @@ for i in range(num1, num2):
         DeltaPhi4[0] = -100.0
 #	PUWeight[0]= -100.0
 	
-    
     f1.Close()
 
 print "nFills"

@@ -1681,7 +1681,7 @@ for i in range(num1, num2):
             dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
             dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1mass[0]-125)-(jet2mass[0]-125)
             dijetmass_corr_punc[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmassunc[0]-125)-(jet2pmassunc[0]-125)
-            dijetmass_reg[0]=(jet1_ureg+jet2_ureg).M()- (jet1_ureg.M()-125)-(jet2_ureg.M()-125)
+            dijetmass_reg[0]=dijetmass_reg[0]=(jet1_ureg+jet2_ureg).M() - (jet1mass[0]-125)-(jet2mass[0]-125)#(jet1_ureg.M()-125)-(jet2_ureg.M()-125)
         if options.isMC == 'True':
             puWeights[0]= puweight
             puWeightsUp[0] = puweightUp

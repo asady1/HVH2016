@@ -216,12 +216,16 @@ f.cd()
 myTree =  ROOT.TTree('myTree', 'myTree')
 
 #creating the tree objects we need
+regressedJetpT_0 = array('f', [-100.0])
+regressedJetpT_1 = array('f', [-100.0])
 jet1pt = array('f', [-100.0])
 jet2pt = array('f', [-100.0])
 jet1pt_reg = array('f', [-100.0])
 jet2pt_reg = array('f', [-100.0])
 jet1mass_reg = array('f', [-100.0])
 jet2mass_reg = array('f', [-100.0])
+jet1mass_reg_noL2L3 = array('f', [-100.0])
+jet2mass_reg_noL2L3 = array('f', [-100.0])
 
 jet1NearbyJetcsvArray = array('f', [-100.0, -100.0, -100.0, -100.0])
 jet2NearbyJetcsvArray = array('f', [-100.0, -100.0, -100.0, -100.0])
@@ -243,11 +247,21 @@ etadiff = array('f', [-100.0])
 dijetmass = array('f', [-100.0])
 dijetmass_corr = array('f', [-100.0])
 dijetmass_reg = array('f', [-100.0])
+dijetmass_TLpruned_Subpruned = array('f', [-100.0])
+dijetmass_TLpruned_Subregressed = array('f', [-100.0])
+dijetmass_TLregressed_Subpruned = array('f', [-100.0])
+dijetmass_TLregressed_Subregressed = array('f', [-100.0])
+dijetmass_TLungroomed_Subregressed = array('f', [-100.0])
+dijetmass_TLungroomed_Subpruned = array('f', [-100.0])
+dijetmass_TLregressed_Subungroomed = array('f', [-100.0])
+dijetmass_TLpruned_Subungroomed = array('f', [-100.0])
 dijetmass_corr_punc = array('f', [-100.0])
 jet1tau21 = array('f', [-100.0])
 jet2tau21 = array('f', [-100.0])
 jet1pmass = array('f', [-100.0])
 jet2pmass = array('f', [-100.0])
+jet1pmass_noL2L3 = array('f', [-100.0])
+jet1pmass_CA15 = array('f', [-100.0])
 jet1pmassunc = array('f', [-100.0])
 jet2pmassunc = array('f', [-100.0])
 jet1bbtag = array('f', [-100.0])
@@ -440,12 +454,16 @@ if options.saveTrig == 'True':
     HLT_Mu20_v = array('f', [-100.0])
 
 #creating the tree branches we need
+#myTree.Branch('regressedJetpT_0', regressedJetpT_0, 'regressedJetpT_0/F')
+#myTree.Branch('regressedJetpT_1', regressedJetpT_1, 'regressedJetpT_1/F')
 myTree.Branch('jet1pt', jet1pt, 'jet1pt/F')
 myTree.Branch('jet2pt', jet2pt, 'jet2pt/F')
 myTree.Branch('jet1pt_reg', jet1pt_reg, 'jet1pt_reg/F')
 myTree.Branch('jet2pt_reg', jet2pt_reg, 'jet2pt_reg/F')
 myTree.Branch('jet1mass_reg', jet1mass_reg, 'jet1mass_reg/F')
 myTree.Branch('jet2mass_reg', jet2mass_reg, 'jet2mass_reg/F')
+myTree.Branch('jet1mass_reg_noL2L3', jet1mass_reg_noL2L3, 'jet1mass_reg_noL2L3/F')
+myTree.Branch('jet2mass_reg_noL2L3', jet2mass_reg_noL2L3, 'jet2mass_reg_noL2L3/F')
 myTree.Branch('jet1NearbyJetcsv', jet1NearbyJetcsvArray, 'pt/F:eta/F:phi/F:mass/F')
 myTree.Branch('jet2NearbyJetcsv', jet2NearbyJetcsvArray, 'pt/F:eta/F:phi/F:mass/F')
 myTree.Branch('jet1NearbyJetcmva', jet1NearbyJetcmvaArray, 'pt/F:eta/F:phi/F:mass/F')
@@ -464,11 +482,21 @@ myTree.Branch('etadiff', etadiff, 'etadiff/F')
 myTree.Branch('dijetmass', dijetmass, 'dijetmass/F')
 myTree.Branch('dijetmass_corr', dijetmass_corr, 'dijetmass_corr/F')
 myTree.Branch('dijetmass_reg', dijetmass_reg, 'dijetmass_reg/F')
+#myTree.Branch('dijetmass_TLpruned_Subpruned', dijetmass_TLpruned_Subpruned, 'dijetmass_TLpruned_Subpruned/F')
+#myTree.Branch('dijetmass_TLpruned_Subregressed', dijetmass_TLpruned_Subregressed, 'dijetmass_TLpruned_Subregressed/F')
+#myTree.Branch('dijetmass_TLregressed_Subpruned', dijetmass_TLregressed_Subpruned, 'dijetmass_TLregressed_Subpruned/F')
+#myTree.Branch('dijetmass_TLregressed_Subregressed', dijetmass_TLregressed_Subregressed, 'dijetmass_TLregressed_Subregressed/F')
+#myTree.Branch('dijetmass_TLungroomed_Subregressed', dijetmass_TLungroomed_Subregressed, 'dijetmass_TLungroomed_Subregressed/F')
+#myTree.Branch('dijetmass_TLungroomed_Subpruned', dijetmass_TLungroomed_Subpruned, 'dijetmass_TLungroomed_Subpruned/F')
+#myTree.Branch('dijetmass_TLregressed_Subungroomed', dijetmass_TLregressed_Subungroomed, 'dijetmass_TLregressed_Subungroomed/F')
+#myTree.Branch('dijetmass_TLpruned_Subungroomed', dijetmass_TLpruned_Subungroomed, 'dijetmass_TLpruned_Subungroomed/F')
 myTree.Branch('dijetmass_corr_punc', dijetmass_corr_punc, 'dijetmass_corr_punc/F')
 myTree.Branch('jet1tau21', jet1tau21, 'jet1tau21/F')
 myTree.Branch('jet2tau21', jet2tau21, 'jet2tau21/F')
 myTree.Branch('jet1pmass', jet1pmass, 'jet1pmass/F')
 myTree.Branch('jet2pmass', jet2pmass, 'jet2pmass/F')
+myTree.Branch('jet1pmass_noL2L3', jet1pmass_noL2L3, 'jet1pmass_noL2L3/F')
+myTree.Branch('jet1pmass_CA15', jet1pmass_CA15, 'jet1pmass_CA15/F')
 myTree.Branch('jet1pmassunc', jet1pmassunc, 'jet1pmassunc/F')
 myTree.Branch('jet2pmassunc', jet2pmassunc, 'jet2pmassunc/F')
 myTree.Branch('jet1bbtag', jet1bbtag, 'jet1bbtag/F')
@@ -830,6 +858,11 @@ for i in range(num1, num2):
 	fjUngroomedJetID = treeMine.FatjetAK08ungroomed_id_Tight
 	fjUngroomedPrunedMass = treeMine.FatjetAK08ungroomed_mprunedcorr
         fjUngroomedPrunedMass_Unc = treeMine.FatjetAK08ungroomed_mpruned
+	nFatjetCA15pruned = treeMine.nFatjetCA15pruned
+	FatjetCA15pruned_pt = treeMine.FatjetCA15pruned_pt
+	FatjetCA15pruned_eta = treeMine.FatjetCA15pruned_eta
+	FatjetCA15pruned_phi = treeMine.FatjetCA15pruned_phi
+        FatjetCA15pruned_mass = treeMine.FatjetCA15pruned_mass
         if options.isMC == 'True':
             fjUngroomedFlavour = treeMine.FatjetAK08ungroomed_Flavour
             fjUngroomedBHadron = treeMine.FatjetAK08ungroomed_BhadronFlavour
@@ -1113,9 +1146,11 @@ for i in range(num1, num2):
 
 	#filling an array with jet 4-vectors for jets pt > 30 and |eta| < 2.5, an array of tau21s, and an array of bbtag values, pmass, id, nbhadrons, nchadrons, flavor, l1l2l3 corr, l2l3 corr, JER
         jets = []
+        jets_noL2L3 = []
 	jet_tau = []
 	jet_bbtag = []
         jet_pmass = []
+        jet_pmass_noL2L3 = []
         jet_pmassunc = []
         jet_id = []
         jet_nb = []
@@ -1134,6 +1169,8 @@ for i in range(num1, num2):
         for j in range(len(fjUngroomedPt)):
             jettemp = ROOT.TLorentzVector()
             jettemp.SetPtEtaPhiM(fjUngroomedPt[j], fjUngroomedEta[j], fjUngroomedPhi[j], fjUngroomedMass[j])
+            jettemp_noL2L3 = ROOT.TLorentzVector()
+            jettemp_noL2L3.SetPtEtaPhiM(fjUngroomedPt[j], fjUngroomedEta[j], fjUngroomedPhi[j], fjUngroomedMass[j])
 	    if (options.syst=="FJEC_Up"):
                             correction_factor=1+(treeMine.FatjetAK08ungroomed_JEC_UP[j]-treeMine.FatjetAK08ungroomed_JEC_L1L2L3[j])
                             jettemp*=correction_factor
@@ -1150,7 +1187,8 @@ for i in range(num1, num2):
 	
 	
 	    if jettemp.Pt() > 200. and abs(jettemp.Eta()) < 2.4: 	
-                    jets.append(jettemp)
+		    jets.append(jettemp)
+                    jets_noL2L3.append(jettemp_noL2L3)
 		    if fjUngroomedTau1[j] > 0:
 			    jet_tau.append(fjUngroomedTau2[j]/fjUngroomedTau1[j])
 		    else:
@@ -1159,12 +1197,13 @@ for i in range(num1, num2):
 		    if (options.syst=="MJEC_Down"):
                             sigma=treeMine.FatjetAK08ungroomed_JEC_L2L3_UP[j]-treeMine.FatjetAK08ungroomed_JEC_L2L3[j]
                             mpruned_syst=treeMine.FatjetAK08ungroomed_mpruned[j]*(treeMine.FatjetAK08ungroomed_JEC_L2L3[j]-sigma)
-                    if (options.syst=="MJEC_Up"): 
-			mpruned_syst=treeMine.FatjetAK08ungroomed_mpruned[j]*treeMine.FatjetAK08ungroomed_JEC_L2L3_UP[j]
+                    if (options.syst=="MJEC"): 
+			mpruned_syst=treeMine.FatjetAK08ungroomed_mpruned[j]*treeMine.FatjetAK08ungroomed_JEC_L2L3[j]
 
 		    jet_bbtag.append(fjUngroomedBbTag[j])	
                     jet_pmass.append(mpruned_syst)
                     jet_pmassunc.append(fjUngroomedPrunedMass_Unc[j])
+                    jet_pmass_noL2L3.append(fjUngroomedPrunedMass[j])
                     jet_id.append(fjUngroomedJetID[j])
                     jet_mass.append(fjUngroomedMass[j])
                     jet_eta.append(treeMine.FatjetAK08ungroomed_eta[j])
@@ -1301,24 +1340,24 @@ for i in range(num1, num2):
 
 
 	#evaluating regressed pt 
-	this_pt=jets[idxH1].Pt()
-	this_pv= treeMine.nPVs
-	this_eta=jet_eta[idxH1]
-	this_mass=jet_mass[idxH1]
-	this_muonF=jet_muonF[idxH1]
-	this_EmF =jet_EmF[idxH1]
-	this_HF=jet_HF[idxH1]
-	this_multi=jet_multi[idxH1]
-	regressedJetpT_0=(reader.EvaluateRegression("BDTG method"))[0]
-	this_pt=jets[idxH2].Pt()
-        this_eta=jet_eta[idxH2]
-        this_mass=jet_mass[idxH2]
-        this_muonF=jet_muonF[idxH2]
-        this_EmF =jet_EmF[idxH2]
-        this_HF=jet_HF[idxH2]
-        this_multi=jet_multi[idxH2]
-	regressedJetpT_1=(reader.EvaluateRegression("BDTG method"))[0]
-
+	this_pt[0]=jets[idxH1].Pt()
+	this_pv[0]= treeMine.nPVs
+	this_eta[0]=jet_eta[idxH1]
+	this_mass[0]=jet_mass[idxH1]
+	this_muonF[0]=jet_muonF[idxH1]
+	this_EmF[0] =jet_EmF[idxH1]
+	this_HF[0]=jet_HF[idxH1]
+	this_multi[0]=jet_multi[idxH1]
+	regressedJetpT_0[0]=(reader.EvaluateRegression("BDTG method"))[0]
+	this_pt[0]=jets[idxH2].Pt()
+        this_eta[0]=jet_eta[idxH2]
+        this_mass[0]=jet_mass[idxH2]
+        this_muonF[0]=jet_muonF[idxH2]
+        this_EmF[0] =jet_EmF[idxH2]
+        this_HF[0]=jet_HF[idxH2]
+        this_multi[0]=jet_multi[idxH2]
+	regressedJetpT_1[0]=(reader.EvaluateRegression("BDTG method"))[0]
+	
             
 
 
@@ -1327,6 +1366,7 @@ for i in range(num1, num2):
         #filling jet variables
         jet1pmass[0] = jet_pmass[idxH1]
         jet1pmassunc[0] = jet_pmassunc[idxH1]
+	jet1pmass_noL2L3[0] = jet_pmass_noL2L3[idxH1]
         if len(jets) > 1: 
             jet2pmass[0] = jet_pmass[idxH2]
             jet2pmassunc[0] = jet_pmassunc[idxH2]
@@ -1651,37 +1691,87 @@ for i in range(num1, num2):
 #	jet1bbtag[0] = jet_bbtag[idxH1]
 #        if len(jets) > 1:
 #            jet2bbtag[0] = jet_bbtag[idxH2]
-	
+
+
+#	CA15prunedJets = []
+#	for j in range(len(FatjetCA15pruned_pt)):
+#	    CA15temp = ROOT.TLorentzVector()
+#	    CA15temp.SetPtEtaPhiM(FatjetCA15pruned_pt[j], FatjetCA15pruned_eta[j], FatjetCA15pruned_phi[j], FatjetCA15pruned_mass[j])
+#	    CA15prunedJets.append(CA15temp)
+
+#	for j in range(len(FatjetCA15pruned_pt)):
+#	    CA15jet1 = MatchCollection(CA15prunedJets, jets[idxH1])
+#	    if len(jets) > 1:
+#		CA15jet2 = MatchCollection2(CA15prunedJets, jets[idxH2],CA15jet1)
+
+
         #writing variables to the tree    
 	jet1pt[0] = jets[idxH1].Pt()
 	jet1eta[0] = jets[idxH1].Eta()
         jet1phi[0] = jets[idxH1].Phi()
         jet1mass[0] = jets[idxH1].M()
-	jet1_reg =ROOT.TLorentzVector()
-	jet1_reg.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1mass[0])
-	jet1_reg=jet1_reg*(regressedJetpT_0)
-	jet1pt_reg[0] = jet1_reg.Pt()
+
+#	if CA15jet1 > -1:
+#		jet1_reg =ROOT.TLorentzVector()
+#		jet1_reg.SetPtEtaPhiM(FatjetCA15pruned_pt[CA15jet1], FatjetCA15pruned_eta[CA15jet1], FatjetCA15pruned_phi[CA15jet1], FatjetCA15pruned_mass[CA15jet1])
+#		jet1_reg=jet1_reg*(regressedJetpT_0[0])
+#		jet1pt_reg[0] = jet1_reg.Pt()
+#	        jet1mass_reg[0] = jet1_reg.M()
+#		jet1_ureg =ROOT.TLorentzVector()
+#		jet1_ureg.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1_reg.M())
+#	        jet1pmass_CA15[0] = FatjetCA15pruned_mass[CA15jet1]
+
+        jet1_reg_beforeL2L3 = ROOT.TLorentzVector()
+        jet1_reg_beforeL2L3.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0], jet1pmassunc[0])
+        jet1_reg_beforeL2L3 = jet1_reg_beforeL2L3*(regressedJetpT_0[0])
+        jet1mass_reg_noL2L3[0] = jet1_reg_beforeL2L3.M()
+        jet1_reg =ROOT.TLorentzVector()
+        jet1_reg.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1pmass[0])
+        jet1_reg=jet1_reg*(regressedJetpT_0[0])
+        jet1pt_reg[0] = jet1_reg.Pt()
         jet1mass_reg[0] = jet1_reg.M()
-	jet1_ureg =ROOT.TLorentzVector()
-	jet1_ureg.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1_reg.M())
+        jet1_ureg =ROOT.TLorentzVector()
+        jet1_ureg.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1_reg.M())
+
+	jet1_pruned =  ROOT.TLorentzVector()
+	jet1_pruned.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1pmass[0])
 
         if len(jets) > 1:
             jet2pt[0] = jets[idxH2].Pt()
             jet2eta[0] = jets[idxH2].Eta()
             jet2phi[0] = jets[idxH2].Phi()
             jet2mass[0] = jets[idxH2].M()
+            jet2_reg_beforeL2L3 = ROOT.TLorentzVector()
+            jet2_reg_beforeL2L3.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0], jet2pmassunc[0])
+            jet2_reg_beforeL2L3 = jet2_reg_beforeL2L3*(regressedJetpT_1[0])
+            jet2mass_reg_noL2L3[0] = jet2_reg_beforeL2L3.M()
 	    jet2_reg =ROOT.TLorentzVector()
-	    jet2_reg.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0],jet2mass[0])
-            jet2_reg=jet2_reg*(regressedJetpT_1)
+	    jet2_reg.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0],jet2pmass[0])
+            jet2_reg=jet2_reg*(regressedJetpT_1[0])
             jet2pt_reg[0] = jet2_reg.Pt()
             jet2mass_reg[0] = jet2_reg.M()
 	    jet2_ureg =ROOT.TLorentzVector()
 	    jet2_ureg.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0],jet2_reg.M())
             etadiff[0] = abs(jets[idxH1].Eta() - jets[idxH2].Eta())
+
+            jet2_pruned =  ROOT.TLorentzVector()
+            jet2_pruned.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0],jet2pmass[0])
+
             dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
             dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1mass[0]-125)-(jet2mass[0]-125)
             dijetmass_corr_punc[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmassunc[0]-125)-(jet2pmassunc[0]-125)
-            dijetmass_reg[0]=dijetmass_reg[0]=(jet1_ureg+jet2_ureg).M() - (jet1mass[0]-125)-(jet2mass[0]-125)#(jet1_ureg.M()-125)-(jet2_ureg.M()-125)
+#            if CA15jet1 > -1:	    
+            dijetmass_reg[0]=(jet1_ureg+jet2_ureg).M() - (jet1mass[0]-125)-(jet2mass[0]-125)#(jet1_ureg.M()-125)-(jet2_ureg.M()-125)
+	    dijetmass_TLpruned_Subpruned[0] = (jet1_pruned+jet2_pruned).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
+	    dijetmass_TLpruned_Subregressed[0] = (jet1_pruned+jet2_pruned).M() - (jet1mass_reg[0]-125)-(jet2mass_reg[0]-125)
+	    dijetmass_TLregressed_Subpruned[0] = (jet1_reg+jet2_reg).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
+	    dijetmass_TLregressed_Subregressed[0] = (jet1_reg+jet2_reg).M() - (jet1mass_reg[0]-125)-(jet2mass_reg[0]-125)
+	    dijetmass_TLungroomed_Subregressed[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1mass_reg[0]-125)-(jet2mass_reg[0]-125)
+            dijetmass_TLungroomed_Subpruned[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
+            dijetmass_TLregressed_Subungroomed[0] = (jet1_reg+jet2_reg).M() - (jet1mass[0]-125)-(jet2mass[0]-125)
+            dijetmass_TLpruned_Subungroomed[0] = (jet1_pruned+jet2_pruned).M() - (jet1mass[0]-125)-(jet2mass[0]-125)
+
+
         if options.isMC == 'True':
             puWeights[0]= puweight
             puWeightsUp[0] = puweightUp

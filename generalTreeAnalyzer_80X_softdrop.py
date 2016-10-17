@@ -310,6 +310,8 @@ jet1_puppi_msoftdrop_corrL2L3 = array('f', [-100.0])
 jet2_puppi_msoftdrop_corrL2L3 = array('f', [-100.0])
 jet1_puppi_TheaCorr = array('f', [-100.0])
 jet2_puppi_TheaCorr = array('f', [-100.0])
+jet1_puppi_msoftdrop_raw = array('f', [-100.0])
+jet2_puppi_msoftdrop_raw = array('f', [-100.0])
 
 jetSJfla = array('f', [-100.0]*4)
 jetSJpt =  array('f', [-100.0]*4)
@@ -563,6 +565,8 @@ myTree.Branch('jet1_puppi_msoftdrop_corrL2L3', jet1_puppi_msoftdrop_corrL2L3, 'j
 myTree.Branch('jet2_puppi_msoftdrop_corrL2L3', jet2_puppi_msoftdrop_corrL2L3, 'jet2_puppi_msoftdrop_corrL2L3/F')
 myTree.Branch('jet1_puppi_TheaCorr', jet1_puppi_TheaCorr, 'jet1_puppi_TheaCorr/F')
 myTree.Branch('jet2_puppi_TheaCorr', jet2_puppi_TheaCorr, 'jet2_puppi_TheaCorr/F')
+myTree.Branch('jet1_puppi_msoftdrop_raw', jet1_puppi_msoftdrop_raw, 'jet1_puppi_msoftdrop_raw/F')
+myTree.Branch('jet2_puppi_msoftdrop_raw', jet2_puppi_msoftdrop_raw, 'jet2_puppi_msoftdrop_raw/F')
 
 myTree.Branch('nAK08Jets', nAK08Jets, 'nAK08Jets/F')
 myTree.Branch('nAK04Jets', nAK04Jets, 'nAK04Jets/F')
@@ -1231,7 +1235,7 @@ for i in range(num1, num2):
         jet_puppi_tau21=[]
         jet_puppi_msoftdrop=[]
         jet_puppi_msoftdrop_corrL2L3=[]
-
+	jet_puppi_msoftdrop_raw=[]
 
         for j in range(len(fjUngroomedPt)):
             jettemp = ROOT.TLorentzVector()
@@ -1285,6 +1289,7 @@ for i in range(num1, num2):
                     jet_puppi_tau21.append(treeMine.FatjetAK08ungroomed_puppi_tau2[j]/treeMine.FatjetAK08ungroomed_puppi_tau1[j])
                     jet_puppi_msoftdrop.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop[j])
                     jet_puppi_msoftdrop_corrL2L3.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop_corrL2L3[j])
+		    jet_puppi_msoftdrop_raw.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop_raw[j])
 
 
                     if options.isMC == 'True':
@@ -1793,6 +1798,7 @@ for i in range(num1, num2):
         jet1_puppi_tau21[0] = jet_puppi_tau21[idxH1]
         jet1_puppi_msoftdrop[0] = jet_puppi_msoftdrop[idxH1]
         jet1_puppi_msoftdrop_corrL2L3[0] = jet_puppi_msoftdrop_corrL2L3[idxH1]
+	jet1_puppi_msoftdrop_raw[0] = jet_puppi_msoftdrop_raw[idxH1]
 
 	jet1_puppi_TheaCorr[0] = getPUPPIweight(jet_puppi_pt[idxH1], jet_puppi_eta[idxH1])
 
@@ -1834,6 +1840,8 @@ for i in range(num1, num2):
             jet2_puppi_msoftdrop[0] = jet_puppi_msoftdrop[idxH2]
             jet2_puppi_msoftdrop_corrL2L3[0] = jet_puppi_msoftdrop_corrL2L3[idxH2]
             jet2_puppi_TheaCorr[0] = getPUPPIweight(jet_puppi_pt[idxH2], jet_puppi_eta[idxH2])
+            jet2_puppi_msoftdrop_raw[0] = jet_puppi_msoftdrop_raw[idxH2]
+
 
             jet2_reg_beforeL2L3 = ROOT.TLorentzVector()
             jet2_reg_beforeL2L3.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0], jet2pmassunc[0])

@@ -1319,6 +1319,27 @@ for i in range(num1, num2):
 		minDEta = abs(jets[0].Eta() - jets[1].Eta())
 		idxH1 = 0
 		idxH2 = 1
+	else if options.is2p1 == 'False' and len(jets) > 2 and (abs(jets[0].Eta() - jets[2].Eta()) < 1.3):
+                minDEta = abs(jets[0].Eta() - jets[2].Eta())
+                idxH1 = 0
+                idxH2 = 2
+        else if options.is2p1 == 'False' and len(jets) > 2 and (abs(jets[1].Eta() - jets[2].Eta()) < 1.3):
+                minDEta = abs(jets[1].Eta() - jets[2].Eta())
+                idxH1 = 1
+                idxH2 = 2
+        else if options.is2p1 == 'False' and len(jets) > 3 and (abs(jets[0].Eta() - jets[3].Eta()) < 1.3):
+                minDEta = abs(jets[0].Eta() - jets[3].Eta())
+                idxH1 = 0
+                idxH2 = 3
+        else if options.is2p1 == 'False' and len(jets) > 3 and (abs(jets[1].Eta() - jets[3].Eta()) < 1.3):
+                minDEta = abs(jets[1].Eta() - jets[3].Eta())
+                idxH1 = 1
+                idxH2 = 3
+        else if options.is2p1 == 'False' and len(jets) > 3 and (abs(jets[2].Eta() - jets[3].Eta()) < 1.3):
+                minDEta = abs(jets[2].Eta() - jets[3].Eta())
+                idxH1 = 2
+                idxH2 = 3
+
         if options.is2p1 == 'True' and len(jets) > 1:
             idxH1 = 0
             idxH2 = 1

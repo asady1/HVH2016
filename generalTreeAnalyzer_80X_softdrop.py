@@ -1287,23 +1287,23 @@ for i in range(num1, num2):
 		minDEta = abs(jets[0].Eta() - jets[1].Eta())
 		idxH1 = 0
 		idxH2 = 1
-	else len(jets) > 2 and (abs(jets[0].Eta() - jets[2].Eta()) < 1.3):
+	elif len(jets) > 2 and (abs(jets[0].Eta() - jets[2].Eta()) < 1.3):
                 minDEta = abs(jets[0].Eta() - jets[2].Eta())
                 idxH1 = 0
                 idxH2 = 2
-        else len(jets) > 2 and (abs(jets[1].Eta() - jets[2].Eta()) < 1.3):
+        elif len(jets) > 2 and (abs(jets[1].Eta() - jets[2].Eta()) < 1.3):
                 minDEta = abs(jets[1].Eta() - jets[2].Eta())
                 idxH1 = 1
                 idxH2 = 2
-        else len(jets) > 3 and (abs(jets[0].Eta() - jets[3].Eta()) < 1.3):
+        elif len(jets) > 3 and (abs(jets[0].Eta() - jets[3].Eta()) < 1.3):
                 minDEta = abs(jets[0].Eta() - jets[3].Eta())
                 idxH1 = 0
                 idxH2 = 3
-        else len(jets) > 3 and (abs(jets[1].Eta() - jets[3].Eta()) < 1.3):
+        elif len(jets) > 3 and (abs(jets[1].Eta() - jets[3].Eta()) < 1.3):
                 minDEta = abs(jets[1].Eta() - jets[3].Eta())
                 idxH1 = 1
                 idxH2 = 3
-        else len(jets) > 3 and (abs(jets[2].Eta() - jets[3].Eta()) < 1.3):
+        elif len(jets) > 3 and (abs(jets[2].Eta() - jets[3].Eta()) < 1.3):
                 minDEta = abs(jets[2].Eta() - jets[3].Eta())
                 idxH1 = 2
                 idxH2 = 3
@@ -1926,7 +1926,7 @@ for i in range(num1, num2):
 	#3b-tag category
 	#SF=[((1-SF1e1))/(1-e1)]*SF2*SF3*SF4
 	#e1 estimated in HH signal sample to be 
-            '''	
+        '''	
             if (jet1s1csv[0] >0.460 and jet2s1csv[0] >0.460  and jet1s2csv[0] >0.460 and jet2s2csv[0] < 0.460 ) or (jet1s1csv[0] >0.460 and jet2s1csv[0] >0.460  and jet1s2csv[0] <0.460 and jet2s2csv[0] > 0.460 ) or (jet1s1csv[0] >0.460 and jet2s1csv[0] <0.460  and jet1s2csv[0] >0.460 and jet2s2csv[0] > 0.460 ) or (jet1s1csv[0] <0.460 and jet2s1csv[0] > 0.460  and jet1s2csv[0] >0.460 and jet2s2csv[0] > 0.460 ):
                if n1sj >1 and n2sj>1:
                  if(jet1s1csv[0] >0.460) :
@@ -1966,7 +1966,7 @@ for i in range(num1, num2):
 	    if SF3sj[0] <0. : SF3sj[0] = -SF3sj[0]
 	    if SF3sjUp[0] <0. : SF3sjUp[0] = -SF3sjUp[0]
 	    if SF3sjDown[0] <0. : SF3sjDown[0] = -SF3sjDown[0]	
-  	    '''
+  	'''
         if len(jets) > 1:
                 if jets[1].Pt() < 400:
                     sf2 = 0.929
@@ -2096,7 +2096,7 @@ for i in range(num1, num2):
         foundRes = False
         passesResolved[0] = 0
         for j in range(len(akjets)):
-                if ak4jetCMVA[j] > 0.185:
+            if ak4jetCMVA[j] > 0.185:
                     ak4res.append(akjets[j])
             if len(ak4res) > 3:
                 jet1=TLorentzVector()

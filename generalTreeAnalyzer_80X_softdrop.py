@@ -34,20 +34,8 @@ parser.add_option("-j", "--max", dest="max",
 parser.add_option("-l", "--file", dest="txt", 
 		  help="input txt file")
 
-parser.add_option("-t", "--trigger", dest="trigger", 
-		  help="bool for trigger cut")
-
-parser.add_option("-k", "--jets", dest="jets", 
-		  help="bool for jet cuts")
-
-parser.add_option("-d", "--deta", dest="deta", 
-		  help="bool for delta eta cut")
-
 parser.add_option("-m", "--isMC", dest="isMC", 
 		  help="bool for is MC")
-
-parser.add_option("-q", "--is2p1", dest="is2p1",
-                  help="bool to retain ak4 jet info and other 2p1 things")
 
 parser.add_option("-y", "--saveTrig", dest="saveTrig",
                   help="bool to not save triggers for background")
@@ -349,25 +337,23 @@ puWeights = array('f', [-100.0])
 puWeightsUp = array('f', [-100.0])
 puWeightsDown = array('f', [-100.0])
 json = array('f', [-100.0])
-if options.is2p1 == 'True':
-    bbtag1SF = array('f', [-100.0])
-    bbtag2SF = array('f', [-100.0])
-    bbtag1SFUp = array('f', [-100.0])
-    bbtag2SFUp = array('f', [-100.0])
-    bbtag1SFDown = array('f', [-100.0])
-    bbtag2SFDown = array('f', [-100.0])
-    passesBoosted = array('f', [-100.0])
-    passesResolved = array('f', [-100.0])
-else:
-    SF = array('f', [-100.0])
-    SFup = array('f', [-100.0])
-    SFdown = array('f', [-100.0])
-    SF4sj = array('f', [-100.0])
-    SF4sjUp = array('f', [-100.0])
-    SF4sjDown = array('f', [-100.0])
-    SF3sj = array('f', [-100.0])
-    SF3sjUp = array('f', [-100.0])
-    SF3sjDown = array('f', [-100.0])
+bbtag1SF = array('f', [-100.0])
+bbtag2SF = array('f', [-100.0])
+bbtag1SFUp = array('f', [-100.0])
+bbtag2SFUp = array('f', [-100.0])
+bbtag1SFDown = array('f', [-100.0])
+bbtag2SFDown = array('f', [-100.0])
+passesBoosted = array('f', [-100.0])
+passesResolved = array('f', [-100.0])
+SF = array('f', [-100.0])
+SFup = array('f', [-100.0])
+SFdown = array('f', [-100.0])
+SF4sj = array('f', [-100.0])
+SF4sjUp = array('f', [-100.0])
+SF4sjDown = array('f', [-100.0])
+SF3sj = array('f', [-100.0])
+SF3sjUp = array('f', [-100.0])
+SF3sjDown = array('f', [-100.0])
 trigWeight = array('f', [-100.0])
 trigWeightUp = array('f', [-100.0])
 trigWeightDown = array('f', [-100.0])
@@ -397,47 +383,46 @@ nAK04btagsMWP = array('f', [-100.0])
 nLooseEle = array('f', [-100.0])
 nLooseMu = array('f', [-100.0])
 tPtsum = array('f', [-100.0])
-if options.is2p1 == 'True':
-    ak4jet_pt = vector('double')()
-    ak4jet_eta = vector('double')()
-    ak4jet_phi = vector('double')()
-    ak4jet_mass = vector('double')()
-    ak4jetID = vector('double')()
-    ak4jetHeppyFlavour = vector('double')()
-    ak4jetMCflavour = vector('double')()
-    ak4jetPartonFlavour = vector('double')() 
-    ak4jetHadronFlavour = vector('double')()
-    ak4jetCSVLSF = vector('double')()
-    ak4jetCSVLSF_Up = vector('double')()
-    ak4jetCSVLSF_Down = vector('double')()
-    ak4jetCSVMSF = vector('double')()
-    ak4jetCSVMSF_up = vector('double')()
-    ak4jetCSVMSF_Down = vector('double')()
-    ak4jetCSVTSF = vector('double')()
-    ak4jetCSVTSF_Up = vector('double')()
-    ak4jetCSVTSF_Down = vector('double')()
-    ak4jetCMVALSF = vector('double')()
-    ak4jetCMVALSF_Up = vector('double')()
-    ak4jetCMVALSF_Down = vector('double')()
-    ak4jetCMVAMSF = vector('double')()
-    ak4jetCMVAMSF_Up = vector('double')()
-    ak4jetCMVAMSF_Down = vector('double')()
-    ak4jetCMVATSF = vector('double')()
-    ak4jetCMVATSF_Up = vector('double')()
-    ak4jetCMVATSF_Down = vector('double')()
-    ak4jetCSV = vector('double')()
-    ak4jetCMVA = vector('double')()
-    ak4jetCorr = vector('double')()
-    ak4jetCorrJECUp = vector('double')()
-    ak4jetCorrJECDown = vector('double')()
-    ak4jetCorrJER = vector('double')()
-    ak4jetCorrJERUp = vector('double')()
-    ak4jetCorrJERDown = vector('double')()
-    ak4genJetPt = vector('double')()
-    ak4genJetPhi = vector('double')()
-    ak4genJetEta = vector('double')()
-    ak4genJetMass = vector('double')()
-    ak4genJetID = vector('double')()
+ak4jet_pt = vector('double')()
+ak4jet_eta = vector('double')()
+ak4jet_phi = vector('double')()
+ak4jet_mass = vector('double')()
+ak4jetID = vector('double')()
+ak4jetHeppyFlavour = vector('double')()
+ak4jetMCflavour = vector('double')()
+ak4jetPartonFlavour = vector('double')() 
+ak4jetHadronFlavour = vector('double')()
+ak4jetCSVLSF = vector('double')()
+ak4jetCSVLSF_Up = vector('double')()
+ak4jetCSVLSF_Down = vector('double')()
+ak4jetCSVMSF = vector('double')()
+ak4jetCSVMSF_up = vector('double')()
+ak4jetCSVMSF_Down = vector('double')()
+ak4jetCSVTSF = vector('double')()
+ak4jetCSVTSF_Up = vector('double')()
+ak4jetCSVTSF_Down = vector('double')()
+ak4jetCMVALSF = vector('double')()
+ak4jetCMVALSF_Up = vector('double')()
+ak4jetCMVALSF_Down = vector('double')()
+ak4jetCMVAMSF = vector('double')()
+ak4jetCMVAMSF_Up = vector('double')()
+ak4jetCMVAMSF_Down = vector('double')()
+ak4jetCMVATSF = vector('double')()
+ak4jetCMVATSF_Up = vector('double')()
+ak4jetCMVATSF_Down = vector('double')()
+ak4jetCSV = vector('double')()
+ak4jetCMVA = vector('double')()
+ak4jetCorr = vector('double')()
+ak4jetCorrJECUp = vector('double')()
+ak4jetCorrJECDown = vector('double')()
+ak4jetCorrJER = vector('double')()
+ak4jetCorrJERUp = vector('double')()
+ak4jetCorrJERDown = vector('double')()
+ak4genJetPt = vector('double')()
+ak4genJetPhi = vector('double')()
+ak4genJetEta = vector('double')()
+ak4genJetMass = vector('double')()
+ak4genJetID = vector('double')()
 if options.saveTrig == 'True':
     HLT_AK8PFJet360_V = array('f', [-100.0])
   #  HLT_PFHT350_v = array('f', [-100.0])
@@ -609,25 +594,23 @@ myTree.Branch('DeltaPhi1', DeltaPhi1, 'DeltaPhi1/F')
 myTree.Branch('DeltaPhi2', DeltaPhi2, 'DeltaPhi2/F')
 myTree.Branch('DeltaPhi3', DeltaPhi3, 'DeltaPhi3/F')
 myTree.Branch('DeltaPhi4', DeltaPhi4, 'DeltaPhi4/F')
-if options.is2p1 == 'True':
-    myTree.Branch('bbtag1SF', bbtag1SF, 'bbtag1SF/F')
-    myTree.Branch('bbtag2SF', bbtag2SF, 'bbtag2SF/F')
-    myTree.Branch('bbtag1SFUp', bbtag1SFUp, 'bbtag1SFUp/F')
-    myTree.Branch('bbtag2SFUp', bbtag2SFUp, 'bbtag2SFUp/F')
-    myTree.Branch('bbtag1SFDown', bbtag1SFDown, 'bbtag1SFDown/F')
-    myTree.Branch('bbtag2SFDown', bbtag2SFDown, 'bbtag2SFDown/F')
-    myTree.Branch('passesBoosted', passesBoosted, 'passesBoosted/F')
-    myTree.Branch('passesResolved', passesResolved, 'passesResolved/F')
-else:
-    myTree.Branch('SF', SF, 'SF/F')
-    myTree.Branch('SFup', SFup, 'SFup/F')
-    myTree.Branch('SFdown', SFdown, 'SFdown/F')
-    myTree.Branch('SF4sj', SF4sj, 'SF4sj/F')
-    myTree.Branch('SF4sjUp', SF4sjUp, 'SF4sjUp/F')
-    myTree.Branch('SF4sjDown', SF4sjDown, 'SF4sjDown/F')
-    myTree.Branch('SF3sj', SF3sj, 'SF3sj/F')
-    myTree.Branch('SF3sjUp', SF3sjUp, 'SF3sjUp/F')
-    myTree.Branch('SF3sjDown', SF3sjDown, 'SF3sjDown/F')
+myTree.Branch('bbtag1SF', bbtag1SF, 'bbtag1SF/F')
+myTree.Branch('bbtag2SF', bbtag2SF, 'bbtag2SF/F')
+myTree.Branch('bbtag1SFUp', bbtag1SFUp, 'bbtag1SFUp/F')
+myTree.Branch('bbtag2SFUp', bbtag2SFUp, 'bbtag2SFUp/F')
+myTree.Branch('bbtag1SFDown', bbtag1SFDown, 'bbtag1SFDown/F')
+myTree.Branch('bbtag2SFDown', bbtag2SFDown, 'bbtag2SFDown/F')
+myTree.Branch('passesBoosted', passesBoosted, 'passesBoosted/F')
+myTree.Branch('passesResolved', passesResolved, 'passesResolved/F')
+myTree.Branch('SF', SF, 'SF/F')
+myTree.Branch('SFup', SFup, 'SFup/F')
+myTree.Branch('SFdown', SFdown, 'SFdown/F')
+myTree.Branch('SF4sj', SF4sj, 'SF4sj/F')
+myTree.Branch('SF4sjUp', SF4sjUp, 'SF4sjUp/F')
+myTree.Branch('SF4sjDown', SF4sjDown, 'SF4sjDown/F')
+myTree.Branch('SF3sj', SF3sj, 'SF3sj/F')
+myTree.Branch('SF3sjUp', SF3sjUp, 'SF3sjUp/F')
+myTree.Branch('SF3sjDown', SF3sjDown, 'SF3sjDown/F')
 myTree.Branch('tPtsum', tPtsum, 'tPtsum/F')
 myTree.Branch('trigWeight', trigWeight, 'trigWeight/F')
 myTree.Branch('trigWeightUp', trigWeightUp, 'trigWeightUp/F')
@@ -654,47 +637,46 @@ if options.isMC == 'True':
     myTree.Branch('genjet2CH', genjet2CH, 'genjet2CH/F')
 myTree.Branch('nLooseEle', nLooseEle, 'nLooseEle/F')
 myTree.Branch('nLooseMu', nLooseMu, 'nLooseMu/F')
-if options.is2p1 == 'True':
-    myTree.Branch('ak4jet_pt',ak4jet_pt)
-    myTree.Branch('ak4jet_eta',ak4jet_eta)
-    myTree.Branch('ak4jet_phi',ak4jet_phi)
-    myTree.Branch('ak4jet_mass',ak4jet_mass)
-    myTree.Branch('ak4jetID',ak4jetID)
-    myTree.Branch('ak4jetHeppyFlavour', ak4jetHeppyFlavour)
-    myTree.Branch('ak4jetMCflavour', ak4jetMCflavour)
-    myTree.Branch('ak4jetPartonFlavour', ak4jetPartonFlavour)
-    myTree.Branch('ak4jetHadronFlavour', ak4jetHadronFlavour)
-    myTree.Branch('ak4jetCSVLSF', ak4jetCSVLSF)
-    myTree.Branch('ak4jetCSVLSF_Up', ak4jetCSVLSF_Up)
-    myTree.Branch('ak4jetCSVLSF_Down', ak4jetCSVLSF_Down)
-    myTree.Branch('ak4jetCSVMSF', ak4jetCSVMSF)
-    myTree.Branch('ak4jetCSVMSF_up', ak4jetCSVMSF_up)
-    myTree.Branch('ak4jetCSVMSF_Down', ak4jetCSVMSF_Down)
-    myTree.Branch('ak4jetCSVTSF', ak4jetCSVTSF)
-    myTree.Branch('ak4jetCSVTSF_Up', ak4jetCSVTSF_Up)
-    myTree.Branch('ak4jetCSVTSF_Down', ak4jetCSVTSF_Down) 
-    myTree.Branch('ak4jetCMVALSF', ak4jetCMVALSF)
-    myTree.Branch('ak4jetCMVALSF_Up', ak4jetCMVALSF_Up)
-    myTree.Branch('ak4jetCMVALSF_Down', ak4jetCMVALSF_Down) 
-    myTree.Branch('ak4jetCMVAMSF', ak4jetCMVAMSF)
-    myTree.Branch('ak4jetCMVAMSF_Up', ak4jetCMVAMSF_Up)
-    myTree.Branch('ak4jetCMVAMSF_Down', ak4jetCMVAMSF_Down)
-    myTree.Branch('ak4jetCMVATSF', ak4jetCMVATSF)
-    myTree.Branch('ak4jetCMVATSF_Up', ak4jetCMVATSF_Up)
-    myTree.Branch('ak4jetCMVATSF_Down', ak4jetCMVATSF_Down)
-    myTree.Branch('ak4jetCSV', ak4jetCSV)
-    myTree.Branch('ak4jetCMVA', ak4jetCMVA)
-    myTree.Branch('ak4jetCorr', ak4jetCorr)
-    myTree.Branch('ak4jetCorrJECUp', ak4jetCorrJECUp)
-    myTree.Branch('ak4jetCorrJECDown', ak4jetCorrJECDown)
-    myTree.Branch('ak4jetCorrJER', ak4jetCorrJER)
-    myTree.Branch('ak4jetCorrJERUp', ak4jetCorrJERUp)
-    myTree.Branch('ak4jetCorrJERDown', ak4jetCorrJERDown)
-    myTree.Branch('ak4genJetPt', ak4genJetPt) 
-    myTree.Branch('ak4genJetPhi', ak4genJetPhi)
-    myTree.Branch('ak4genJetEta', ak4genJetEta)
-    myTree.Branch('ak4genJetMass', ak4genJetMass)
-    myTree.Branch('ak4genJetID', ak4genJetID)
+myTree.Branch('ak4jet_pt',ak4jet_pt)
+myTree.Branch('ak4jet_eta',ak4jet_eta)
+myTree.Branch('ak4jet_phi',ak4jet_phi)
+myTree.Branch('ak4jet_mass',ak4jet_mass)
+myTree.Branch('ak4jetID',ak4jetID)
+myTree.Branch('ak4jetHeppyFlavour', ak4jetHeppyFlavour)
+myTree.Branch('ak4jetMCflavour', ak4jetMCflavour)
+myTree.Branch('ak4jetPartonFlavour', ak4jetPartonFlavour)
+myTree.Branch('ak4jetHadronFlavour', ak4jetHadronFlavour)
+myTree.Branch('ak4jetCSVLSF', ak4jetCSVLSF)
+myTree.Branch('ak4jetCSVLSF_Up', ak4jetCSVLSF_Up)
+myTree.Branch('ak4jetCSVLSF_Down', ak4jetCSVLSF_Down)
+myTree.Branch('ak4jetCSVMSF', ak4jetCSVMSF)
+myTree.Branch('ak4jetCSVMSF_up', ak4jetCSVMSF_up)
+myTree.Branch('ak4jetCSVMSF_Down', ak4jetCSVMSF_Down)
+myTree.Branch('ak4jetCSVTSF', ak4jetCSVTSF)
+myTree.Branch('ak4jetCSVTSF_Up', ak4jetCSVTSF_Up)
+myTree.Branch('ak4jetCSVTSF_Down', ak4jetCSVTSF_Down) 
+myTree.Branch('ak4jetCMVALSF', ak4jetCMVALSF)
+myTree.Branch('ak4jetCMVALSF_Up', ak4jetCMVALSF_Up)
+myTree.Branch('ak4jetCMVALSF_Down', ak4jetCMVALSF_Down) 
+myTree.Branch('ak4jetCMVAMSF', ak4jetCMVAMSF)
+myTree.Branch('ak4jetCMVAMSF_Up', ak4jetCMVAMSF_Up)
+myTree.Branch('ak4jetCMVAMSF_Down', ak4jetCMVAMSF_Down)
+myTree.Branch('ak4jetCMVATSF', ak4jetCMVATSF)
+myTree.Branch('ak4jetCMVATSF_Up', ak4jetCMVATSF_Up)
+myTree.Branch('ak4jetCMVATSF_Down', ak4jetCMVATSF_Down)
+myTree.Branch('ak4jetCSV', ak4jetCSV)
+myTree.Branch('ak4jetCMVA', ak4jetCMVA)
+myTree.Branch('ak4jetCorr', ak4jetCorr)
+myTree.Branch('ak4jetCorrJECUp', ak4jetCorrJECUp)
+myTree.Branch('ak4jetCorrJECDown', ak4jetCorrJECDown)
+myTree.Branch('ak4jetCorrJER', ak4jetCorrJER)
+myTree.Branch('ak4jetCorrJERUp', ak4jetCorrJERUp)
+myTree.Branch('ak4jetCorrJERDown', ak4jetCorrJERDown)
+myTree.Branch('ak4genJetPt', ak4genJetPt) 
+myTree.Branch('ak4genJetPhi', ak4genJetPhi)
+myTree.Branch('ak4genJetEta', ak4genJetEta)
+myTree.Branch('ak4genJetMass', ak4genJetMass)
+myTree.Branch('ak4genJetID', ak4genJetID)
 if options.saveTrig == 'True':
     myTree.Branch('HLT_AK8PFJet360_V', HLT_AK8PFJet360_V, 'HLT_AK8PFJet360_V/F')
    # myTree.Branch('HLT_PFHT350_v', HLT_PFHT350_v, 'HLT_PFHT350_v/F')
@@ -759,12 +741,7 @@ Files_list	= open_files( inputfile )
 #list of histograms that may be useful
 bbj = ROOT.TH1F("bbj", "Before any cuts", 3, -0.5, 1.5)
 bb0 = ROOT.TH1F("bb0", "After Json", 3, -0.5, 1.5)
-bb1 = ROOT.TH1F("bb1", "After Trigger", 3, -0.5, 1.5)
-bb2 = ROOT.TH1F("bb2", "After jet cuts", 3, -0.5, 1.5)
-if options.is2p1 == 'False':
-    bb3 = ROOT.TH1F("bb3", "After Delta Eta Cuts", 3, -0.5, 1.5)
-if options.is2p1 == 'True':
-    bb3 = ROOT.TH1F("bb3", "After AK4 Jet Cuts", 3, -0.5, 1.5)
+bb1 = ROOT.TH1F("bb1", "After Jet", 3, -0.5, 1.5)
 
 if options.isMC == 'True':
     CountMC = ROOT.TH1F("Count","Count",1,0,2)
@@ -853,11 +830,10 @@ for i in range(num1, num2):
 	#variables we need from the heppy ntuple
 	fJetPt  = treeMine.Jet_pt
         fJetEta  = treeMine.Jet_eta
-        if options.is2p1 == 'True':
-            fJetPhi = treeMine.Jet_phi
-            fJetMass = treeMine.Jet_mass
-            fJetID = treeMine.Jet_id
-            if options.isMC == 'True':
+        fJetPhi = treeMine.Jet_phi
+        fJetMass = treeMine.Jet_mass
+        fJetID = treeMine.Jet_id
+        if options.isMC == 'True':
                 fJetHeppyFlavour = treeMine.Jet_heppyFlavour
                 fJetMCflavour = treeMine.Jet_mcFlavour
                 fJetPartonFlavour = treeMine.Jet_partonFlavour
@@ -880,12 +856,12 @@ for i in range(num1, num2):
                 fJetCMVATSF = treeMine.Jet_btagCMVAV2T_SF
                 fJetCMVATSF_Up = treeMine.Jet_btagCMVAV2T_SF_up
                 fJetCMVATSF_Down = treeMine.Jet_btagCMVAV2T_SF_down
-            fJetCSV = treeMine.Jet_btagCSVV0
-            fJetCMVA = treeMine.Jet_btagCMVAV2
-            fJetCorr = treeMine.Jet_corr
-            fJetCorrJECUp = treeMine.Jet_corr_JECUp
-            fJetCorrJECDown = treeMine.Jet_corr_JECDown
-            if options.isMC == 'True':
+        fJetCSV = treeMine.Jet_btagCSVV0
+        fJetCMVA = treeMine.Jet_btagCMVAV2
+        fJetCorr = treeMine.Jet_corr
+        fJetCorrJECUp = treeMine.Jet_corr_JECUp
+        fJetCorrJECDown = treeMine.Jet_corr_JECDown
+        if options.isMC == 'True':
                 fJetCorrJER = treeMine.Jet_corr_JER
                 fJetCorrJERUp = treeMine.Jet_corr_JERUp
                 fJetCorrJERDown = treeMine.Jet_corr_JERDown
@@ -1111,12 +1087,6 @@ for i in range(num1, num2):
             continue		
         bb0.Fill(triggerpassbb[0])
 
-        #requiring event pass trigger
-#        if options.trigger and triggerpass[0] < 1:
-#            continue
-
-        bb1.Fill(triggerpassbb[0])
-
 	#Determining the number of medium working point AK4 btags
 	nbtagMWP = 0
 	btagCSV = treeMine.Jet_btagCSV
@@ -1257,7 +1227,7 @@ for i in range(num1, num2):
 			    jettemp*=correction_factor
 	
 	
-	    if jettemp.Pt() > 200. and abs(jettemp.Eta()) < 2.4: 	
+	    if jettemp.Pt() > 250. and abs(jettemp.Eta()) < 2.4: 	
 		    jets.append(jettemp)
                     jets_noL2L3.append(jettemp_noL2L3)
 		    if fjUngroomedTau1[j] > 0:
@@ -1304,51 +1274,43 @@ for i in range(num1, num2):
                             
                         
         
-	if options.jets == 'True'  and len(jets) < 1: # one jet with pt > 200 and |eta| < 2.4
+	if len(jets) < 1: # one jet with pt > 200 and |eta| < 2.4
 		continue
-        if options.is2p1 == 'False' and options.jets == 'True' and len(jets) < 2: #2 if not 2p1
-            continue
         
  
-        bb2.Fill(triggerpassbb[0])
+        bb1.Fill(triggerpassbb[0])
 
 	#dEta selection : selecting the two jets which minimizes the dEta requirement. (to find a better one?)
 	idxH1 = -1
 	idxH2=-1
-        if options.is2p1 == 'False' and len(jets) > 1 and (abs(jets[0].Eta() - jets[1].Eta()) < 1.3):
+        if len(jets) > 1 and (abs(jets[0].Eta() - jets[1].Eta()) < 1.3):
 		minDEta = abs(jets[0].Eta() - jets[1].Eta())
 		idxH1 = 0
 		idxH2 = 1
-	else if options.is2p1 == 'False' and len(jets) > 2 and (abs(jets[0].Eta() - jets[2].Eta()) < 1.3):
+	else len(jets) > 2 and (abs(jets[0].Eta() - jets[2].Eta()) < 1.3):
                 minDEta = abs(jets[0].Eta() - jets[2].Eta())
                 idxH1 = 0
                 idxH2 = 2
-        else if options.is2p1 == 'False' and len(jets) > 2 and (abs(jets[1].Eta() - jets[2].Eta()) < 1.3):
+        else len(jets) > 2 and (abs(jets[1].Eta() - jets[2].Eta()) < 1.3):
                 minDEta = abs(jets[1].Eta() - jets[2].Eta())
                 idxH1 = 1
                 idxH2 = 2
-        else if options.is2p1 == 'False' and len(jets) > 3 and (abs(jets[0].Eta() - jets[3].Eta()) < 1.3):
+        else len(jets) > 3 and (abs(jets[0].Eta() - jets[3].Eta()) < 1.3):
                 minDEta = abs(jets[0].Eta() - jets[3].Eta())
                 idxH1 = 0
                 idxH2 = 3
-        else if options.is2p1 == 'False' and len(jets) > 3 and (abs(jets[1].Eta() - jets[3].Eta()) < 1.3):
+        else len(jets) > 3 and (abs(jets[1].Eta() - jets[3].Eta()) < 1.3):
                 minDEta = abs(jets[1].Eta() - jets[3].Eta())
                 idxH1 = 1
                 idxH2 = 3
-        else if options.is2p1 == 'False' and len(jets) > 3 and (abs(jets[2].Eta() - jets[3].Eta()) < 1.3):
+        else len(jets) > 3 and (abs(jets[2].Eta() - jets[3].Eta()) < 1.3):
                 minDEta = abs(jets[2].Eta() - jets[3].Eta())
                 idxH1 = 2
                 idxH2 = 3
 
-        if options.is2p1 == 'True' and len(jets) > 1:
-            idxH1 = 0
-            idxH2 = 1
-
         if len(jets) == 1:
             idxH1 = 0
 
-	if options.deta and options.is2p1 == 'False' and (idxH1 < 0 or idxH2 <0) : continue
-  
         nFills += 1
 
 	#higgs tagging - matching higgs gen jet to the 1 and 2 pt jet
@@ -1942,27 +1904,25 @@ for i in range(num1, num2):
                 sf2 = 1.048
                 sf2change = 0.215
         
-        if options.is2p1 == 'True':
-            bbtag1SF[0] = sf1
-            bbtag1SFUp[0] = sf1*(1+sf1change)
-            bbtag1SFDown[0] = sf1*(1-sf1change)
-        else:
-            SF[0] = sf1*sf2
-            SFup[0] = sf1*(1+sf1change)*sf2*(1+sf2change)
-            SFdown[0] = sf1*(1-sf1change)*sf2*(1-sf2change)
+        bbtag1SF[0] = sf1
+        bbtag1SFUp[0] = sf1*(1+sf1change)
+        bbtag1SFDown[0] = sf1*(1-sf1change)
+        
+        SF[0] = sf1*sf2
+        SFup[0] = sf1*(1+sf1change)*sf2*(1+sf2change)
+        SFdown[0] = sf1*(1-sf1change)*sf2*(1-sf2change)
 
-        if options.is2p1 == 'False':
-            SF4sj[0] = -1
-            SF4sjUp[0] = -1
-            SF4sjDown[0] = -1	
-            if n1sj >1 and n2sj>1:
+        SF4sj[0] = -1
+        SF4sjUp[0] = -1
+        SF4sjDown[0] = -1	
+        if n1sj >1 and n2sj>1:
                 SF4sj[0] = sfsj1*sfsj2*sfsj3*sfsj4
                 SF4sjUp[0] = sfsj1up*sfsj2up*sfsj3up*sfsj4up 	
                 SF4sjDown[0] = sfsj1down*sfsj2down*sfsj3down*sfsj4down  
                 
-            SF3sj[0] =-1.
-            SF3sjUp[0] =-1.
-            SF3sjDown[0] =-1.
+        SF3sj[0] =-1.
+        SF3sjUp[0] =-1.
+        SF3sjDown[0] =-1.
 	#3b-tag category
 	#SF=[((1-SF1e1))/(1-e1)]*SF2*SF3*SF4
 	#e1 estimated in HH signal sample to be 
@@ -2007,8 +1967,7 @@ for i in range(num1, num2):
 	    if SF3sjUp[0] <0. : SF3sjUp[0] = -SF3sjUp[0]
 	    if SF3sjDown[0] <0. : SF3sjDown[0] = -SF3sjDown[0]	
   	    '''
-        if options.is2p1 == 'True':
-            if len(jets) > 1:
+        if len(jets) > 1:
                 if jets[1].Pt() < 400:
                     sf2 = 0.929
                     sf2change = 0.078
@@ -2022,60 +1981,60 @@ for i in range(num1, num2):
                     sf2 = 1.048
                     sf2change = 0.215
 
-                bbtag2SF[0] = sf2
-                bbtag2SFUp[0] = sf2*(1+sf2change)
-                bbtag2SFDown[0] = sf2*(1-sf2change)
+        bbtag2SF[0] = sf2
+        bbtag2SFUp[0] = sf2*(1+sf2change)
+        bbtag2SFDown[0] = sf2*(1-sf2change)
 
 
-            if len(jets) > 1 and jets[0].Pt() > 300 and jets[1].Pt() > 300 and abs(jets[0].Eta() - jets[1].Eta()) < 1.3 and ((jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)) > 800 and jet1tau21[0] < 0.6 and jet2tau21[0] < 0.6 and jet1pmass[0] > 105 and jet1pmass[0] < 135 and jet2pmass[0] > 105 and jet2pmass[0] < 135 and jet1bbtag[0] > 0.6 and jet2bbtag[0] > 0.6:
+        if len(jets) > 1 and jets[0].Pt() > 300 and jets[1].Pt() > 300 and abs(jets[0].Eta() - jets[1].Eta()) < 1.3 and ((jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)) > 800 and jet1tau21[0] < 0.6 and jet2tau21[0] < 0.6 and jet1pmass[0] > 105 and jet1pmass[0] < 135 and jet2pmass[0] > 105 and jet2pmass[0] < 135 and jet1bbtag[0] > 0.6 and jet2bbtag[0] > 0.6:
                 passesBoosted[0] = 1
-            else:
+        else:
                 passesBoosted[0] = 0
 
-            ak4jet_pt.clear()
-            ak4jet_eta.clear()
-            ak4jet_phi.clear()
-            ak4jet_mass.clear()
-            ak4jetID.clear()
-            ak4jetHeppyFlavour.clear()
-            ak4jetMCflavour.clear()
-            ak4jetPartonFlavour.clear() 
-            ak4jetHadronFlavour.clear()
-            ak4jetCSVLSF.clear()
-            ak4jetCSVLSF_Up.clear()
-            ak4jetCSVLSF_Down.clear()
-            ak4jetCSVMSF.clear()
-            ak4jetCSVMSF_up.clear()
-            ak4jetCSVMSF_Down.clear()
-            ak4jetCSVTSF.clear()
-            ak4jetCSVTSF_Up.clear()
-            ak4jetCSVTSF_Down.clear()
-            ak4jetCMVALSF.clear()
-            ak4jetCMVALSF_Up.clear()
-            ak4jetCMVALSF_Down.clear()
-            ak4jetCMVAMSF.clear()
-            ak4jetCMVAMSF_Up.clear()
-            ak4jetCMVAMSF_Down.clear()
-            ak4jetCMVATSF.clear()
-            ak4jetCMVATSF_Up.clear()
-            ak4jetCMVATSF_Down.clear()
-            ak4jetCSV.clear()
-            ak4jetCMVA.clear()
-            ak4jetCorr.clear()
-            ak4jetCorrJECUp.clear()
-            ak4jetCorrJECDown.clear()
-            ak4jetCorrJER.clear()
-            ak4jetCorrJERUp.clear()
-            ak4jetCorrJERDown.clear()
-            ak4genJetPt.clear()
-            ak4genJetPhi.clear()
-            ak4genJetEta.clear()
-            ak4genJetMass.clear()
-            ak4genJetID.clear()
+        ak4jet_pt.clear()
+        ak4jet_eta.clear()
+        ak4jet_phi.clear()
+        ak4jet_mass.clear()
+        ak4jetID.clear()
+        ak4jetHeppyFlavour.clear()
+        ak4jetMCflavour.clear()
+        ak4jetPartonFlavour.clear() 
+        ak4jetHadronFlavour.clear()
+        ak4jetCSVLSF.clear()
+        ak4jetCSVLSF_Up.clear()
+        ak4jetCSVLSF_Down.clear()
+        ak4jetCSVMSF.clear()
+        ak4jetCSVMSF_up.clear()
+        ak4jetCSVMSF_Down.clear()
+        ak4jetCSVTSF.clear()
+        ak4jetCSVTSF_Up.clear()
+        ak4jetCSVTSF_Down.clear()
+        ak4jetCMVALSF.clear()
+        ak4jetCMVALSF_Up.clear()
+        ak4jetCMVALSF_Down.clear()
+        ak4jetCMVAMSF.clear()
+        ak4jetCMVAMSF_Up.clear()
+        ak4jetCMVAMSF_Down.clear()
+        ak4jetCMVATSF.clear()
+        ak4jetCMVATSF_Up.clear()
+        ak4jetCMVATSF_Down.clear()
+        ak4jetCSV.clear()
+        ak4jetCMVA.clear()
+        ak4jetCorr.clear()
+        ak4jetCorrJECUp.clear()
+        ak4jetCorrJECDown.clear()
+        ak4jetCorrJER.clear()
+        ak4jetCorrJERUp.clear()
+        ak4jetCorrJERDown.clear()
+        ak4genJetPt.clear()
+        ak4genJetPhi.clear()
+        ak4genJetEta.clear()
+        ak4genJetMass.clear()
+        ak4genJetID.clear()
                 
         #ak4 jets
-            akjets = [] 
-            for j in range(len(fJetPt)):
+        akjets = [] 
+        for j in range(len(fJetPt)):
                 if (options.syst=="JEC_Up"): jet_pT = treeMine.Jet_pt[j]*treeMine.Jet_corr_JECUp[j]/treeMine.Jet_corr[j]
                 elif (options.syst=="JEC_Down"): jet_pT = treeMine.Jet_pt[j]*treeMine.Jet_corr_JECDown[j]/treeMine.Jet_corr[j]
                 elif (options.syst=="JER_Up"): jet_pT = treeMine.Jet_pt[j]*treeMine.Jet_corr_JERUp[j]*treeMine.Jet_corr_JER[j]
@@ -2130,15 +2089,13 @@ for i in range(num1, num2):
                         ak4genJetMass.push_back(ujets[akj].M())
                         ak4genJetID.push_back(akj)
         
-            if options.jets == 'True' and len(ak4jet_pt) < 2:        
-                continue
 
         #resolved
-            ak4res = []
-            chi2_old=200
-            foundRes = False
-            passesResolved[0] = 0
-            for j in range(len(akjets)):
+        ak4res = []
+        chi2_old=200
+        foundRes = False
+        passesResolved[0] = 0
+        for j in range(len(akjets)):
                 if ak4jetCMVA[j] > 0.185:
                     ak4res.append(akjets[j])
             if len(ak4res) > 3:
@@ -2173,7 +2130,7 @@ for i in range(num1, num2):
                                                 chi2_old=chi2
                                                 foundRes=True
 
-            if foundRes:
+        if foundRes:
                 chi=chi2_old**0.5
                 if chi<=1:
                     passesResolved[0] = 1

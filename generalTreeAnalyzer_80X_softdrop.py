@@ -298,8 +298,8 @@ jet1_puppi_msoftdrop_corrL2L3 = array('f', [-100.0])
 jet2_puppi_msoftdrop_corrL2L3 = array('f', [-100.0])
 jet1_puppi_TheaCorr = array('f', [-100.0])
 jet2_puppi_TheaCorr = array('f', [-100.0])
-jet1_puppi_msoftdrop_raw = array('f', [-100.0])
-jet2_puppi_msoftdrop_raw = array('f', [-100.0])
+#jet1_puppi_msoftdrop_raw = array('f', [-100.0])
+#jet2_puppi_msoftdrop_raw = array('f', [-100.0])
 
 jetSJfla = array('f', [-100.0]*4)
 jetSJpt =  array('f', [-100.0]*4)
@@ -550,8 +550,8 @@ myTree.Branch('jet1_puppi_msoftdrop_corrL2L3', jet1_puppi_msoftdrop_corrL2L3, 'j
 myTree.Branch('jet2_puppi_msoftdrop_corrL2L3', jet2_puppi_msoftdrop_corrL2L3, 'jet2_puppi_msoftdrop_corrL2L3/F')
 myTree.Branch('jet1_puppi_TheaCorr', jet1_puppi_TheaCorr, 'jet1_puppi_TheaCorr/F')
 myTree.Branch('jet2_puppi_TheaCorr', jet2_puppi_TheaCorr, 'jet2_puppi_TheaCorr/F')
-myTree.Branch('jet1_puppi_msoftdrop_raw', jet1_puppi_msoftdrop_raw, 'jet1_puppi_msoftdrop_raw/F')
-myTree.Branch('jet2_puppi_msoftdrop_raw', jet2_puppi_msoftdrop_raw, 'jet2_puppi_msoftdrop_raw/F')
+#myTree.Branch('jet1_puppi_msoftdrop_raw', jet1_puppi_msoftdrop_raw, 'jet1_puppi_msoftdrop_raw/F')
+#myTree.Branch('jet2_puppi_msoftdrop_raw', jet2_puppi_msoftdrop_raw, 'jet2_puppi_msoftdrop_raw/F')
 
 myTree.Branch('nAK08Jets', nAK08Jets, 'nAK08Jets/F')
 myTree.Branch('nAK04Jets', nAK04Jets, 'nAK04Jets/F')
@@ -1205,7 +1205,7 @@ for i in range(num1, num2):
         jet_puppi_tau21=[]
         jet_puppi_msoftdrop=[]
         jet_puppi_msoftdrop_corrL2L3=[]
-	jet_puppi_msoftdrop_raw=[]
+#	jet_puppi_msoftdrop_raw=[]
 
         for j in range(len(fjUngroomedPt)):
             jettemp = ROOT.TLorentzVector()
@@ -1256,10 +1256,13 @@ for i in range(num1, num2):
                     jet_puppi_eta.append(treeMine.FatjetAK08ungroomed_puppi_eta[j])
                     jet_puppi_phi.append(treeMine.FatjetAK08ungroomed_puppi_phi[j])
                     jet_puppi_mass.append(treeMine.FatjetAK08ungroomed_puppi_mass[j])
-                    jet_puppi_tau21.append(treeMine.FatjetAK08ungroomed_puppi_tau2[j]/treeMine.FatjetAK08ungroomed_puppi_tau1[j])
+                    if treeMine.FatjetAK08ungroomed_puppi_tau1[j]>0:
+		        jet_puppi_tau21.append(treeMine.FatjetAK08ungroomed_puppi_tau2[j]/treeMine.FatjetAK08ungroomed_puppi_tau1[j])
+		    else:
+			jet_puppi_tau21.append(100)
                     jet_puppi_msoftdrop.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop[j])
                     jet_puppi_msoftdrop_corrL2L3.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop_corrL2L3[j])
-		    jet_puppi_msoftdrop_raw.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop_raw[j])
+#		    jet_puppi_msoftdrop_raw.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop_raw[j])
 
 
                     if options.isMC == 'True':
@@ -1287,26 +1290,26 @@ for i in range(num1, num2):
 		minDEta = abs(jets[0].Eta() - jets[1].Eta())
 		idxH1 = 0
 		idxH2 = 1
-	elif len(jets) > 2 and (abs(jets[0].Eta() - jets[2].Eta()) < 1.3):
-                minDEta = abs(jets[0].Eta() - jets[2].Eta())
-                idxH1 = 0
-                idxH2 = 2
-        elif len(jets) > 2 and (abs(jets[1].Eta() - jets[2].Eta()) < 1.3):
-                minDEta = abs(jets[1].Eta() - jets[2].Eta())
-                idxH1 = 1
-                idxH2 = 2
-        elif len(jets) > 3 and (abs(jets[0].Eta() - jets[3].Eta()) < 1.3):
-                minDEta = abs(jets[0].Eta() - jets[3].Eta())
-                idxH1 = 0
-                idxH2 = 3
-        elif len(jets) > 3 and (abs(jets[1].Eta() - jets[3].Eta()) < 1.3):
-                minDEta = abs(jets[1].Eta() - jets[3].Eta())
-                idxH1 = 1
-                idxH2 = 3
-        elif len(jets) > 3 and (abs(jets[2].Eta() - jets[3].Eta()) < 1.3):
-                minDEta = abs(jets[2].Eta() - jets[3].Eta())
-                idxH1 = 2
-                idxH2 = 3
+#	elif len(jets) > 2 and (abs(jets[0].Eta() - jets[2].Eta()) < 1.3):
+#                minDEta = abs(jets[0].Eta() - jets[2].Eta())
+#                idxH1 = 0
+#                idxH2 = 2
+#        elif len(jets) > 2 and (abs(jets[1].Eta() - jets[2].Eta()) < 1.3):
+#                minDEta = abs(jets[1].Eta() - jets[2].Eta())
+#                idxH1 = 1
+#                idxH2 = 2
+#        elif len(jets) > 3 and (abs(jets[0].Eta() - jets[3].Eta()) < 1.3):
+#                minDEta = abs(jets[0].Eta() - jets[3].Eta())
+#                idxH1 = 0
+#                idxH2 = 3
+#        elif len(jets) > 3 and (abs(jets[1].Eta() - jets[3].Eta()) < 1.3):
+#                minDEta = abs(jets[1].Eta() - jets[3].Eta())
+#                idxH1 = 1
+#                idxH2 = 3
+#        elif len(jets) > 3 and (abs(jets[2].Eta() - jets[3].Eta()) < 1.3):
+#                minDEta = abs(jets[2].Eta() - jets[3].Eta())
+#                idxH1 = 2
+#                idxH2 = 3
 
         if len(jets) == 1:
             idxH1 = 0
@@ -1781,7 +1784,7 @@ for i in range(num1, num2):
         jet1_puppi_tau21[0] = jet_puppi_tau21[idxH1]
         jet1_puppi_msoftdrop[0] = jet_puppi_msoftdrop[idxH1]
         jet1_puppi_msoftdrop_corrL2L3[0] = jet_puppi_msoftdrop_corrL2L3[idxH1]
-	jet1_puppi_msoftdrop_raw[0] = jet_puppi_msoftdrop_raw[idxH1]
+#	jet1_puppi_msoftdrop_raw[0] = jet_puppi_msoftdrop_raw[idxH1]
 
 	jet1_puppi_TheaCorr[0] = getPUPPIweight(jet_puppi_pt[idxH1], jet_puppi_eta[idxH1])
 
@@ -1823,7 +1826,7 @@ for i in range(num1, num2):
             jet2_puppi_msoftdrop[0] = jet_puppi_msoftdrop[idxH2]
             jet2_puppi_msoftdrop_corrL2L3[0] = jet_puppi_msoftdrop_corrL2L3[idxH2]
             jet2_puppi_TheaCorr[0] = getPUPPIweight(jet_puppi_pt[idxH2], jet_puppi_eta[idxH2])
-            jet2_puppi_msoftdrop_raw[0] = jet_puppi_msoftdrop_raw[idxH2]
+#            jet2_puppi_msoftdrop_raw[0] = jet_puppi_msoftdrop_raw[idxH2]
 
 
             jet2_reg_beforeL2L3 = ROOT.TLorentzVector()
@@ -1843,7 +1846,7 @@ for i in range(num1, num2):
             jet2_pruned.SetPtEtaPhiM(jet2pt[0],jet2eta[0],jet2phi[0],jet2pmass[0])
 
             dijetmass[0] = (jets[idxH1] + jets[idxH2]).M()
-            dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1mass[0]-125)-(jet2mass[0]-125)
+            dijetmass_corr[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmass[0]-125)-(jet2pmass[0]-125)
             dijetmass_corr_punc[0] = (jets[idxH1] + jets[idxH2]).M() - (jet1pmassunc[0]-125)-(jet2pmassunc[0]-125)
 #            if CA15jet1 > -1:	    
             dijetmass_reg[0]=(jet1_ureg+jet2_ureg).M() - (jet1mass[0]-125)-(jet2mass[0]-125)#(jet1_ureg.M()-125)-(jet2_ureg.M()-125)
@@ -2034,6 +2037,7 @@ for i in range(num1, num2):
                 
         #ak4 jets
         akjets = [] 
+	fJetMass = treeMine.Jet_mass
         for j in range(len(fJetPt)):
                 if (options.syst=="JEC_Up"): jet_pT = treeMine.Jet_pt[j]*treeMine.Jet_corr_JECUp[j]/treeMine.Jet_corr[j]
                 elif (options.syst=="JEC_Down"): jet_pT = treeMine.Jet_pt[j]*treeMine.Jet_corr_JECDown[j]/treeMine.Jet_corr[j]
@@ -2135,7 +2139,6 @@ for i in range(num1, num2):
                 if chi<=1:
                     passesResolved[0] = 1
 
-        bb3.Fill(triggerpassbb[0])
 	#filling the tree
         myTree.Fill()
 	

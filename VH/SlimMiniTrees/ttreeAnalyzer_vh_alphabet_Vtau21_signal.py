@@ -301,15 +301,21 @@ for i in range(num1, num2):
 
         etadiff[0] = abs(treeMine.jet1_puppi_eta - treeMine.jet2_puppi_eta)
  
+        jet1_puppi_raw_TL = ROOT.TLorentzVector()
+        jet1_puppi_raw_TL.SetPtEtaPhiM(treeMine.jet1_puppi_pt, treeMine.jet1_puppi_eta, treeMine.jet1_puppi_phi, treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr)
+
+        jet2_puppi_raw_TL = ROOT.TLorentzVector()
+        jet2_puppi_raw_TL.SetPtEtaPhiM(treeMine.jet2_puppi_pt, treeMine.jet2_puppi_eta, treeMine.jet2_puppi_phi, treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr)
+
         jet1_puppi_TL = ROOT.TLorentzVector()
-        jet1_puppi_TL.SetPtEtaPhiM(treeMine.jet1_puppi_pt, treeMine.jet1_puppi_eta, treeMine.jet2_puppi_phi, treeMine.jet1_puppi_mass)
+        jet1_puppi_TL.SetPtEtaPhiM(treeMine.jet1_puppi_pt, treeMine.jet1_puppi_eta, treeMine.jet1_puppi_phi, treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr)
 
         jet2_puppi_TL = ROOT.TLorentzVector()
-        jet2_puppi_TL.SetPtEtaPhiM(treeMine.jet2_puppi_pt, treeMine.jet2_puppi_eta, treeMine.jet2_puppi_phi, treeMine.jet2_puppi_mass)
+        jet2_puppi_TL.SetPtEtaPhiM(treeMine.jet2_puppi_pt, treeMine.jet2_puppi_eta, treeMine.jet2_puppi_phi, treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr)
 
-        dijetmass_puppi[0] = (jet1_puppi_TL + jet2_puppi_TL).M() - (treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr-125)-(treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr-125)
+        dijetmass_puppi[0] = (jet1_puppi_TL + jet2_puppi_TL).M()
 
-	dijetmass_puppi_raw[0] = (jet1_puppi_TL + jet2_puppi_TL).M() - (treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr-125)-(treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr-125)
+        dijetmass_puppi_raw[0] = (jet1_puppi_raw_TL + jet2_puppi_raw_TL).M()
 
         nTrueInt[0] = treeMine.nTrueInt
         puWeights[0] = treeMine.puWeights

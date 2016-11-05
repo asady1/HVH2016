@@ -67,7 +67,7 @@ TightAT                 =       TightPre + "&jetH_puppi_msoftdrop_TheaCorr>110&j
 #TightAT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag<"+str(Options.tightcut)+")"
 TightT          =       TightPre + "&jetH_puppi_msoftdrop_TheaCorr>110&jetH_puppi_msoftdrop_TheaCorr<140&(jetHbbtag>"+str(Options.tightcut)+")"
 #TightT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"
-#TightT2         = "jetVbbtag > 0.8 & jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr < 105  &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetVeta-jetHeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.8)"
+#TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr < 105  &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetVeta-jetHeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.8)"
 TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr< 105  &  jetHbbtag < 0.8 &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetHeta-jetVeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&jetH_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.3)"
 
 if Options.finebins:
@@ -103,15 +103,15 @@ if Options.inject != "none":
 	whichdataorQCD = "QCD w/ Injected Signal"
 	DistsWeWantToEstimate.append(INJ)
 #### SOME SIGNALS WE'LL USE:
-norm0= GetNom(sigpath+"Wprime1000.root")
+norm0= GetNom(sigpath+"Wprime3500.root")
 norm1 = GetNom(sigpath+"Wprime1800.root")
 norm2 = GetNom(sigpath+"Wprime2500.root")
 
-SIG0 = TH1F("Signal1200", "", len(binBoundaries)-1, array('d',binBoundaries))
+SIG0 = TH1F("Signal3500", "", len(binBoundaries)-1, array('d',binBoundaries))
 SIG1 = TH1F("Signal1800", "", len(binBoundaries)-1, array('d',binBoundaries))
 SIG2 = TH1F("Signal2500", "", len(binBoundaries)-1, array('d',binBoundaries))
 
-quickplot(sigpath+"Wprime1000.root", "mynewTree", SIG0, variable2, TightT2, "puWeights*SF/1.")
+quickplot(sigpath+"Wprime3500.root", "mynewTree", SIG0, variable2, TightT2, "puWeights*SF/1.")
 quickplot(sigpath+"Wprime1800.root", "mynewTree", SIG1, variable2, TightT2, "puWeights*SF/1.")
 quickplot(sigpath+"Wprime2500.root", "mynewTree", SIG2, variable2, TightT2, "puWeights*SF/1.")
 
@@ -156,7 +156,7 @@ leg.AddEntry(Hbb.Fit.fit, "fit", "L")
 leg.AddEntry(Hbb.Fit.ErrUp, "fit errors", "L")
 plotforplotting = TH1F("empty_"+Options.name, "", 24, -75, 80)
 plotforplotting.SetStats(0)
-plotforplotting.GetYaxis().SetRangeUser(0.,0.25)
+plotforplotting.GetYaxis().SetRangeUser(0.,0.35)
 plotforplotting.GetXaxis().SetTitle("m_{J} - m_{H} (GeV)")
 plotforplotting.GetYaxis().SetTitle("R_{p/f}")
 plotforplotting.GetYaxis().SetTitleOffset(1.5)
@@ -252,9 +252,9 @@ leg2.AddEntry(N, "background prediction", "LF")
 leg2.AddEntry(Boxes[0], "total uncertainty", "F")
 leg2.AddEntry(sBoxes[0], "background statistical component", "F")
 if Options.Sig:
-	leg2.AddEntry(SIG0, "Bulk Graviton (1200 GeV, 27 fb)", "F")
-	leg2.AddEntry(SIG1, "Bulk Graviton (1800 GeV, 27 fb)", "F")
-	leg2.AddEntry(SIG2, "Bulk Graviton (2500 GeV, 27 fb)", "F")
+	leg2.AddEntry(SIG0, "Wprime (3500 GeV, 27 fb)", "F")
+	leg2.AddEntry(SIG1, "Wprime (1800 GeV, 27 fb)", "F")
+	leg2.AddEntry(SIG2, "Wprime (2500 GeV, 27 fb)", "F")
 
 T0 = TLine(800,0.,4509,0.)
 T0.SetLineColor(kBlue)
@@ -309,7 +309,7 @@ C4.SaveAs("outputs/VHSR_Plot_"+Options.name+".pdf")
 if Options.workspace == "alphabet":
 	print "creating workspace and datacard: ALPHABET"
 
-	mass=[800,1000,1200,1400,1600,1800,2500, 3000,3500,4000,4500]
+	mass=[800,1600,1800,2000,2500, 3000,3500,4000,4500]
 	for m in mass:
 		print str(m)
 		SF_tau21 =1.

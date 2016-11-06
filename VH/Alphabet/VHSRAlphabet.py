@@ -68,7 +68,7 @@ TightAT                 =       TightPre + "&jetH_puppi_msoftdrop_TheaCorr>110&j
 TightT          =       TightPre + "&jetH_puppi_msoftdrop_TheaCorr>110&jetH_puppi_msoftdrop_TheaCorr<140&(jetHbbtag>"+str(Options.tightcut)+")"
 #TightT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"
 #TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr < 105  &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetVeta-jetHeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.8)"
-TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr< 105  &  jetHbbtag < 0.8 &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetHeta-jetVeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&jetH_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.3)"
+TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr< 105  &  jetHbbtag < 0.8 &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetHeta-jetVeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&jetH_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.3)&HLT_PFHT800_v==1"
 
 if Options.finebins:
 	binBoundaries=[]

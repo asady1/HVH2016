@@ -35,7 +35,7 @@ parser.add_option('--T2', '--Selection', metavar='T32', type='string', dest='tig
 parser.add_option('--T1', '--Cut', metavar='T13', type='float', dest='tightcut', default = 0.8)
 
 parser.add_option('--N', '--name', metavar='Name', type='string', dest='name', default="test")
-parser.add_option('--L', '--lumi', metavar='Name', type='float', dest='lumi', default="27000")
+parser.add_option('--L', '--lumi', metavar='Name', type='float', dest='lumi', default="27200")
 
 parser.add_option("--data", action="store_true", dest="isData", default=True)
 parser.add_option("--qcd", action="store_false", dest="isData")

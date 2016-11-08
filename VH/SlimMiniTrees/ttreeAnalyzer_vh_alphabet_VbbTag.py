@@ -60,7 +60,7 @@ def open_files(file_name) : #opens files to run on
 
 #Files_list      = open_files( inputfile )
 
-f =  ROOT.TFile(outputfilename+inputFile.replace('/eos/uscms/store/user/mkrohn/HHHHTo4b/V23/JetHT_old/',''), 'recreate')
+f =  ROOT.TFile(inputFile.replace('root://cmseos.fnal.gov//store/user/mkrohn/HHHHTo4b/V23/JetHT_old/',''), 'recreate')
 #print outputfilename
 f.cd()
 #getting old tree
@@ -117,6 +117,7 @@ evt = array('f', [-100.0])
 ht = array('f', [-100.0])
 xsec = array('f', [-100.0])
 HLT_PFHT800_v = array('f', [-100.0])
+HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
 
 jet1_puppi_pt = array('f', [-100.0])
 jet2_puppi_pt = array('f', [-100.0])
@@ -200,6 +201,7 @@ mynewTree.Branch('jet2_puppi_msoftdrop_corrL2L3', jet2_puppi_msoftdrop_corrL2L3,
 mynewTree.Branch('jet1_puppi_TheaCorr', jet1_puppi_TheaCorr, 'jet1_puppi_TheaCorr/F')
 mynewTree.Branch('jet2_puppi_TheaCorr', jet2_puppi_TheaCorr, 'jet2_puppi_TheaCorr/F')
 mynewTree.Branch('HLT_PFHT800_v', HLT_PFHT800_v, 'HLT_PFHT800_v/F')
+mynewTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
 
 
 print outputfilename
@@ -315,6 +317,7 @@ for i in range(num1, num2):
         ht[0] = treeMine.ht
         xsec[0] = treeMine.xsec
         HLT_PFHT800_v[0] = treeMine.HLT_PFHT800_v
+	HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
         mynewTree.Fill()
 
 print "nFills"

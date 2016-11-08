@@ -120,6 +120,7 @@ evt = array('f', [-100.0])
 ht = array('f', [-100.0])
 xsec = array('f', [-100.0])
 HLT_PFHT800_v = array('f', [-100.0])
+HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
 
 jet1_puppi_pt = array('f', [-100.0])
 jet2_puppi_pt = array('f', [-100.0])
@@ -192,6 +193,7 @@ mynewTree.Branch('ht', ht, 'ht/F')
 mynewTree.Branch('xsec', xsec, 'xsec/F')
 
 mynewTree.Branch('HLT_PFHT800_v', HLT_PFHT800_v, 'HLT_PFHT800_v/F')
+mynewTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
 
 
 CountWeightedmc = ROOT.TH1F("CountWeighted","Count with sign(gen weight) and pu weight",1,0,2)
@@ -331,6 +333,7 @@ for i in range(num1, num2):
         ht[0] = treeMine.ht
         xsec[0] = treeMine.xsec
         HLT_PFHT800_v[0] = treeMine.HLT_PFHT800_v
+        HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
         mynewTree.Fill()
 
 print "nFills"

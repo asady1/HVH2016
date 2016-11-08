@@ -60,15 +60,15 @@ parser.add_option('-I', '--inject', metavar='Inj', type='string', dest='inject',
 parser.add_option('--workspace', metavar='WSPC', type='string', dest='workspace', default="alphabet")
 (Options, args) = parser.parse_args()
 
-preselection    =       "&vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetVeta-jetHeta)<1.3&jetVtau21<0.6&jetHtau21<0.6&dijetmass_puppi>800&jetVID==1&jetHID==1&abs(jetVeta)<2.4&abs(jetHeta)<2.4&HLT_PFHT800_v==1"
+preselection    =       "&(vtype==-1||vtype==4)&jetVpt>200&json==1&jetHpt>200&abs(jetVeta-jetHeta)<1.3&jetVtau21<0.6&jetHtau21<0.6&dijetmass_puppi>800&jetVID==1&jetHID==1&abs(jetVeta)<2.4&abs(jetHeta)<2.4&HLT_PFHT800_v==1"
 #preselection	= 	"&vtype==-1&jet2pt>250&json==1&jet1pt>250&etadiff<1.3&jet1tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&HLT_PFHT800_v==1"
 TightPre 		=	Options.tightpre + preselection
 TightAT                 =       TightPre + "&jetH_puppi_msoftdrop_TheaCorr>110&jetH_puppi_msoftdrop_TheaCorr<140&(jetHbbtag<"+str(Options.tightcut)+")"
 #TightAT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag<"+str(Options.tightcut)+")"
 TightT          =       TightPre + "&jetH_puppi_msoftdrop_TheaCorr>110&jetH_puppi_msoftdrop_TheaCorr<140&(jetHbbtag>"+str(Options.tightcut)+")"
 #TightT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"
-#TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr < 105  &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetVeta-jetHeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.8)"
-TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr< 105  &  jetHbbtag < 0.8 &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetHeta-jetVeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&jetH_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.3)&HLT_PFHT800_v==1"
+#TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr < 105  &vtype==-1&jetVpt>200&json==1&jetHpt>200&abs(jetVeta-jetHeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&jetH_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.8)&HLT_PFHT800_v==1"
+TightT2         = "jetV_puppi_msoftdrop_raw_TheaCorr > 65 & jetV_puppi_msoftdrop_raw_TheaCorr< 105  &  jetHbbtag < 0.8 &(vtype==-1||vtype==4)&jetVpt>200&json==1&jetHpt>200&abs(jetHeta-jetVeta)<1.3&jetHtau21<0.6&dijetmass_puppi_raw>800&jetVID==1&jetHID==1&abs(jetHeta)<2.4&abs(jetVeta)<2.4&jetH_puppi_msoftdrop_raw_TheaCorr>110&jetH_puppi_msoftdrop_raw_TheaCorr<140&(jetHbbtag>0.3)&HLT_PFHT800_v==1"
 
 if Options.finebins:
 	binBoundaries=[]
@@ -135,7 +135,8 @@ if Options.Linear:
 else:
 	F = QuadraticFit([0.1,0.1,0.1], -75, 85, "quadfit", "EMRFNEX0")
 Hbb.GetRates([Options.tightcut, ">"], bins[0], bins[1], 125., F)
-
+print bins[0]
+print bins[1]
 
 Hbb.TwoDPlot.SetStats(0)
 C1 = TCanvas("C1", "", 800, 600)
@@ -185,7 +186,20 @@ NU = TH1F("est_up", "", len(binBoundaries)-1, array('d',binBoundaries))
 ND = TH1F("est_down", "", len(binBoundaries)-1, array('d',binBoundaries))
 A =  TH1F("antitag", "", len(binBoundaries)-1, array('d',binBoundaries)) 
 
+print "TightAT:"
+print TightAT
 PULL = FillPlots(Hbb, D, N, NU, ND, A, variable, binBoundaries, TightAT, TightT)
+
+print "D info"
+D.Print("all")
+print "N info"
+N.Print("all")
+print "NU info"
+NU.Print("all")
+print "ND info"
+ND.Print("all")
+print "A info"
+A.Print("all")
 
 Pull = PULL[0]
 maxy = PULL[1]

@@ -33,14 +33,14 @@ parser.add_option("-j", "--max", dest="max",
 (options, args) = parser.parse_args()
 outputfilename = options.outName
 
-inputfile = options.txt
+#inputfile = options.txt
 
-ff_n = int(options.max)
+ff_n = 1#int(options.max)
 
-num1 = int(options.min)
-num2 = int(options.max)
+num1 = 0#int(options.min)
+num2 = 1#int(options.max)
 
-
+inputFile=options.inputFile
 def open_files(file_name) : #opens files to run on
 
     g = open(file_name)
@@ -58,9 +58,9 @@ def open_files(file_name) : #opens files to run on
 
 
 
-Files_list      = open_files( inputfile )
+#Files_list      = open_files( inputfile )
 
-f =  ROOT.TFile(outputfilename, 'recreate')
+f =  ROOT.TFile(outputfilename+inputFile.replace('/eos/uscms/store/user/mkrohn/HHHHTo4b/V23/JetHT_old/',''), 'recreate')
 #print outputfilename
 f.cd()
 #getting old tree
@@ -76,7 +76,6 @@ jetVeta = array('f', [-100.0])
 jetHeta = array('f', [-100.0])
 etadiff = array('f', [-100.0])
 dijetmass_puppi = array('f', [-100.0])
-#dijetmass_puppi_raw = array('f', [-100.0])
 jetVtau21 = array('f', [-100.0])
 jetHtau21 = array('f', [-100.0])
 jetV_puppi_msoftdrop_TheaCorr = array('f', [-100.0])
@@ -143,7 +142,6 @@ mynewTree.Branch('jetVeta', jetVeta, 'jetVeta/F')
 mynewTree.Branch('jetHeta', jetHeta, 'jetHeta/F')
 mynewTree.Branch('etadiff', etadiff, 'etadiff/F')
 mynewTree.Branch('dijetmass_puppi', dijetmass_puppi, 'dijetmass_puppi/F')
-#mynewTree.Branch('dijetmass_puppi_raw', dijetmass_puppi_raw, 'dijetmass_puppi_raw/F')
 mynewTree.Branch('jetVtau21', jetVtau21, 'jetVtau21/F')
 mynewTree.Branch('jetHtau21', jetHtau21, 'jetHtau21/F')
 mynewTree.Branch('jetV_puppi_msoftdrop_TheaCorr', jetV_puppi_msoftdrop_TheaCorr, 'jetV_puppi_msoftdrop_TheaCorr/F')
@@ -208,9 +206,9 @@ print outputfilename
 
 count = 0
 for i in range(num1, num2):
-    files = Files_list[i]
-    print files
-    f1 = ROOT.TFile.Open(files, "READ")
+    #files = Files_list[i]
+    print inputFile
+    f1 = ROOT.TFile.Open(inputFile, "READ")
     treeMine  = f1.Get('myTree')
     nevent = treeMine.GetEntries();
     nFills = 0
@@ -222,6 +220,9 @@ for i in range(num1, num2):
             print "processing events", count
 
         if treeMine.jet2pt < -10.:
+            continue
+
+        if treeMine.jet1_puppi_pt < 0 or treeMine.jet2_puppi_pt < 0:
             continue
 
         whichJetIsV = 0.
@@ -239,10 +240,10 @@ for i in range(num1, num2):
    	   jetV_puppi_msoftdrop_TheaCorr[0] = treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr
            jetVbbtag[0] = treeMine.jet1bbtag
            jetVID[0] = treeMine.jet1ID
-           jetVnbHadron[0] = treeMine.jet1nbHadron
-           jetVflavor[0] = treeMine.jet1flavor
-           jetVncHadron[0] = treeMine.jet1ncHadron
-           jetVl1l2l3[0] = treeMine.jet1l1l2l3
+           jetVnbHadron[0] = 1#treeMine.jet1nbHadron
+           jetVflavor[0] = 1#treeMine.jet1flavor
+           jetVncHadron[0] = 1#treeMine.jet1ncHadron
+           jetVl1l2l3[0] = 1#treeMine.jet1l1l2l3
            jetVl2l3[0] = treeMine.jet1l2l3
            jetVJER[0] = treeMine.jet1JER
            jetHpt[0] = treeMine.jet2_puppi_pt
@@ -251,9 +252,9 @@ for i in range(num1, num2):
            jetH_puppi_msoftdrop_TheaCorr[0] = treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr
 	   jetHbbtag[0] = treeMine.jet2bbtag
            jetHID[0] = treeMine.jet2ID
-           jetHnbHadron[0] = treeMine.jet2nbHadron
-           jetHflavor[0] = treeMine.jet2flavor
-           jetHncHadron[0] = treeMine.jet2ncHadron
+           jetHnbHadron[0] = 1#treeMine.jet2nbHadron
+           jetHflavor[0] = 1#treeMine.jet2flavor
+           jetHncHadron[0] = 1#treeMine.jet2ncHadron
            jetHl2l3[0] = treeMine.jet2l2l3
            jetHJER[0] = treeMine.jet2JER
 
@@ -264,10 +265,10 @@ for i in range(num1, num2):
            jetH_puppi_msoftdrop_TheaCorr[0] = treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr
            jetHbbtag[0] = treeMine.jet1bbtag
            jetHID[0] = treeMine.jet1ID
-           jetHnbHadron[0] = treeMine.jet1nbHadron
-           jetHflavor[0] = treeMine.jet1flavor
-           jetHncHadron[0] = treeMine.jet1ncHadron
-           jetHl1l2l3[0] = treeMine.jet1l1l2l3
+           jetHnbHadron[0] = 1#treeMine.jet1nbHadron
+           jetHflavor[0] = 1#treeMine.jet1flavor
+           jetHncHadron[0] = 1#treeMine.jet1ncHadron
+           jetHl1l2l3[0] =1 #treeMine.jet1l1l2l3
            jetHl2l3[0] = treeMine.jet1l2l3
            jetHJER[0] = treeMine.jet1JER
            jetVpt[0] = treeMine.jet2_puppi_pt
@@ -276,10 +277,10 @@ for i in range(num1, num2):
            jetV_puppi_msoftdrop_TheaCorr[0] = treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr
            jetVbbtag[0] = treeMine.jet2bbtag
            jetVID[0] = treeMine.jet2ID
-           jetVnbHadron[0] = treeMine.jet2nbHadron
-           jetVflavor[0] = treeMine.jet2flavor
-           jetVncHadron[0] = treeMine.jet2ncHadron
-           jetVl1l2l3[0] = treeMine.jet2l1l2l3
+           jetVnbHadron[0] =1# treeMine.jet2nbHadron
+           jetVflavor[0] =1# treeMine.jet2flavor
+           jetVncHadron[0] = 1#treeMine.jet2ncHadron
+           jetVl1l2l3[0] = 1#treeMine.jet2l1l2l3
            jetVl2l3[0] = treeMine.jet2l2l3
            jetVJER[0] = treeMine.jet2JER
 
@@ -297,9 +298,6 @@ for i in range(num1, num2):
         jet2_puppi_TL.SetPtEtaPhiM(treeMine.jet2_puppi_pt, treeMine.jet2_puppi_eta, treeMine.jet2_puppi_phi, treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr)
 
         dijetmass_puppi[0] = (jet1_puppi_TL + jet2_puppi_TL).M()
-
-#        dijetmass_puppi_raw[0] = (jet1_puppi_TL + jet2_puppi_TL).M() - (treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr-125)-(treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr-125)
-
 
         nTrueInt[0] = treeMine.nTrueInt
         puWeights[0] = treeMine.puWeights

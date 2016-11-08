@@ -72,6 +72,12 @@ histo_efficiency_2up=copy.copy(File_tr.Get("histo_efficiency_upper_2sigma"))
 histo_efficiency_2down=copy.copy(File_tr.Get("histo_efficiency_lower_2sigma"))
 File_tr.Close()
 
+PuppiWeightFile = ROOT.TFile.Open("puppiCorr.root","R")
+puppisd_corrGEN      = PuppiWeightFile.Get("puppiJECcorr_gen")
+puppisd_corrRECO_cen = PuppiWeightFile.Get("puppiJECcorr_reco_0eta1v3")
+puppisd_corrRECO_for = PuppiWeightFile.Get("puppiJECcorr_reco_1v3eta2v5")
+PuppiWeightFile.Close()
+
 
 #defining functions
 def div_except(a, b):
@@ -195,12 +201,6 @@ def deltaR( particle, jet ) : #gives deltaR between two particles
     return deltaRHere
 
 def getPUPPIweight( puppipt, puppieta ):
-    PuppiWeightFile = ROOT.TFile.Open("puppiCorr.root","R")
-    
-    puppisd_corrGEN      = PuppiWeightFile.Get("puppiJECcorr_gen")
-    puppisd_corrRECO_cen = PuppiWeightFile.Get("puppiJECcorr_reco_0eta1v3")
-    puppisd_corrRECO_for = PuppiWeightFile.Get("puppiJECcorr_reco_1v3eta2v5")
-
     genCorr  = 1.
     recoCorr = 1.
     totalWeight = 1.
@@ -213,7 +213,6 @@ def getPUPPIweight( puppipt, puppieta ):
       recoCorr = puppisd_corrRECO_for.Eval( puppipt )
 
     totalWeight = genCorr * recoCorr
-    PuppiWeightFile.Close()
 
     return totalWeight
 
@@ -704,8 +703,6 @@ if options.saveTrig == 'True':
     myTree.Branch('HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v', HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v, 'HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v/F')
     myTree.Branch('HLT_QuadPFJet_VBF_v', HLT_QuadPFJet_VBF_v, 'HLT_QuadPFJet_VBF_v/F')
     myTree.Branch('HLT_L1_TripleJet_VBF_v', HLT_L1_TripleJet_VBF_v, 'HLT_L1_TripleJet_VBF_v/F')
-    myTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F') 
-    myTree.Branch('HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v/F')
     myTree.Branch('HLT_PFJet40_v', HLT_PFJet40_v, 'HLT_PFJet40_v/F')
     myTree.Branch('HLT_PFJet60_v', HLT_PFJet60_v, 'HLT_PFJet60_v/F')
     myTree.Branch('HLT_PFJet80_v', HLT_PFJet80_v, 'HLT_PFJet80_v/F')
@@ -806,6 +803,7 @@ for i in range(num1, num2):
     treeMine  = f1.Get('tree')
     nevent = treeMine.GetEntries();
     nFills = 0	
+    nFills2 = 0
 
     #getting the norm and other useful histos
     if options.isMC == 'True':
@@ -950,8 +948,6 @@ for i in range(num1, num2):
             HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v[0] = treeMine.HLT_BIT_HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v
             HLT_QuadPFJet_VBF_v[0] = treeMine.HLT_BIT_HLT_QuadPFJet_VBF_v
             HLT_L1_TripleJet_VBF_v[0] = treeMine.HLT_BIT_HLT_L1_TripleJet_VBF_v
-            HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v 
-            HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v[0] = treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v
             HLT_PFJet40_v[0] = treeMine.HLT_BIT_HLT_PFJet40_v
             HLT_PFJet60_v[0] = treeMine.HLT_BIT_HLT_PFJet60_v 
             HLT_PFJet80_v[0] = treeMine.HLT_BIT_HLT_PFJet80_v
@@ -1284,8 +1280,8 @@ for i in range(num1, num2):
         bb1.Fill(triggerpassbb[0])
 
 	#dEta selection : selecting the two jets which minimizes the dEta requirement. (to find a better one?)
-	idxH1 = -1
-	idxH2=-1
+	idxH1 = 0
+	idxH2=1
         if len(jets) > 1 and (abs(jets[0].Eta() - jets[1].Eta()) < 1.3):
 		minDEta = abs(jets[0].Eta() - jets[1].Eta())
 		idxH1 = 0
@@ -1313,6 +1309,9 @@ for i in range(num1, num2):
 
         if len(jets) == 1:
             idxH1 = 0
+
+#	if (idxH1 < 0 or idxH2 <0) : continue
+
 
         nFills += 1
 
@@ -1415,14 +1414,15 @@ for i in range(num1, num2):
 	this_HF[0]=jet_HF[idxH1]
 	this_multi[0]=jet_multi[idxH1]
 	regressedJetpT_0[0]=(reader.EvaluateRegression("BDTG method"))[0]
-	this_pt[0]=jets[idxH2].Pt()
-        this_eta[0]=jet_eta[idxH2]
-        this_mass[0]=jet_mass[idxH2]
-        this_muonF[0]=jet_muonF[idxH2]
-        this_EmF[0] =jet_EmF[idxH2]
-        this_HF[0]=jet_HF[idxH2]
-        this_multi[0]=jet_multi[idxH2]
-	regressedJetpT_1[0]=(reader.EvaluateRegression("BDTG method"))[0]
+        if len(jets) > 1:
+    	   this_pt[0]=jets[idxH2].Pt()
+           this_eta[0]=jet_eta[idxH2]
+           this_mass[0]=jet_mass[idxH2]
+           this_muonF[0]=jet_muonF[idxH2]
+           this_EmF[0] =jet_EmF[idxH2]
+           this_HF[0]=jet_HF[idxH2]
+           this_multi[0]=jet_multi[idxH2]
+	   regressedJetpT_1[0]=(reader.EvaluateRegression("BDTG method"))[0]
 	
             
 
@@ -1814,6 +1814,8 @@ for i in range(num1, num2):
 	jet1_pruned.SetPtEtaPhiM(jet1pt[0],jet1eta[0],jet1phi[0],jet1pmass[0])
 
         if len(jets) > 1:
+	    #print idxH2
+	    #print jets[idxH2].Pt()
             jet2pt[0] = jets[idxH2].Pt()
             jet2eta[0] = jets[idxH2].Eta()
             jet2phi[0] = jets[idxH2].Phi()
@@ -2141,7 +2143,7 @@ for i in range(num1, num2):
 
 	#filling the tree
         myTree.Fill()
-	
+	nFills2 += 1
 	#filling error values for each object
         if options.isMC == 'True':
        #     genjet1BH[0] = -100.0
@@ -2179,6 +2181,8 @@ for i in range(num1, num2):
 print "nFills"
 print nFills
 print "OK"
+print "nFills2"
+print nFills2
 
 f.cd()
 f.Write()

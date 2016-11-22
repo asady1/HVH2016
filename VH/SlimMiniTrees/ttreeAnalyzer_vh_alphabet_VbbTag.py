@@ -76,8 +76,13 @@ jetVeta = array('f', [-100.0])
 jetHeta = array('f', [-100.0])
 etadiff = array('f', [-100.0])
 dijetmass_puppi = array('f', [-100.0])
+dijetmass = array('f', [-100.0])
+dijetmass_corr = array('f', [-100.0])
+dijetmass_corr_punc = array('f', [-100.0])
 jetVtau21 = array('f', [-100.0])
 jetHtau21 = array('f', [-100.0])
+jetVtau21DDT = array('f', [-100.0])
+jetHtau21DDT = array('f', [-100.0])
 jetV_puppi_msoftdrop_TheaCorr = array('f', [-100.0])
 jetH_puppi_msoftdrop_TheaCorr = array('f', [-100.0])
 #pjet1pmass = array('f', [-100.0])
@@ -118,6 +123,10 @@ ht = array('f', [-100.0])
 xsec = array('f', [-100.0])
 HLT_PFHT800_v = array('f', [-100.0])
 HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
+HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
+HLT_AK8PFJet360_V = array('f', [-100.0])
+HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
+HLT_PFJet260_v = array('f', [-100.0])
 
 jet1_puppi_pt = array('f', [-100.0])
 jet2_puppi_pt = array('f', [-100.0])
@@ -143,8 +152,13 @@ mynewTree.Branch('jetVeta', jetVeta, 'jetVeta/F')
 mynewTree.Branch('jetHeta', jetHeta, 'jetHeta/F')
 mynewTree.Branch('etadiff', etadiff, 'etadiff/F')
 mynewTree.Branch('dijetmass_puppi', dijetmass_puppi, 'dijetmass_puppi/F')
+mynewTree.Branch('dijetmass', dijetmass, 'dijetmass/F')
+mynewTree.Branch('dijetmass_corr', dijetmass_corr, 'dijetmass_corr/F')
+mynewTree.Branch('dijetmass_corr_punc', dijetmass_corr_punc, 'dijetmass_corr_punc/F')
 mynewTree.Branch('jetVtau21', jetVtau21, 'jetVtau21/F')
 mynewTree.Branch('jetHtau21', jetHtau21, 'jetHtau21/F')
+mynewTree.Branch('jetVtau21DDT', jetVtau21DDT, 'jetVtau21DDT/F')
+mynewTree.Branch('jetHtau21DDT', jetHtau21DDT, 'jetHtau21DDT/F')
 mynewTree.Branch('jetV_puppi_msoftdrop_TheaCorr', jetV_puppi_msoftdrop_TheaCorr, 'jetV_puppi_msoftdrop_TheaCorr/F')
 mynewTree.Branch('jetH_puppi_msoftdrop_TheaCorr', jetH_puppi_msoftdrop_TheaCorr, 'jetH_puppi_msoftdrop_TheaCorr/F')
 
@@ -202,6 +216,10 @@ mynewTree.Branch('jet1_puppi_TheaCorr', jet1_puppi_TheaCorr, 'jet1_puppi_TheaCor
 mynewTree.Branch('jet2_puppi_TheaCorr', jet2_puppi_TheaCorr, 'jet2_puppi_TheaCorr/F')
 mynewTree.Branch('HLT_PFHT800_v', HLT_PFHT800_v, 'HLT_PFHT800_v/F')
 mynewTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
+mynewTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
+mynewTree.Branch('HLT_AK8PFJet360_V', HLT_AK8PFJet360_V, 'HLT_AK8PFJet360_V/F')
+mynewTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
+mynewTree.Branch('HLT_PFJet260_v', HLT_PFJet260_v, 'HLT_PFJet260_v/F')
 
 
 print outputfilename
@@ -236,9 +254,15 @@ for i in range(num1, num2):
 	   whichJetIsV = 1
  
         if whichJetIsV == 1: 
-           jetVpt[0] = treeMine.jet1_puppi_pt
-           jetVeta[0] = treeMine.jet1_puppi_eta
-           jetVtau21[0] = treeMine.jet1_puppi_tau21
+           jetVpt[0] = treeMine.jet1pt
+           jetVeta[0] = treeMine.jet1eta
+           jetVtau21[0] = treeMine.jet1tau21
+
+           if treeMine.jet1mass*treeMine.jet1mass/treeMine.jet1pt > 0:
+             jetVtau21DDT[0] = treeMine.jet1tau21+0.063*math.log(treeMine.jet1mass*treeMine.jet1mass/treeMine.jet1pt)
+           else:
+             jetVtau21DDT[0] = -99999
+
    	   jetV_puppi_msoftdrop_TheaCorr[0] = treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr
            jetVbbtag[0] = treeMine.jet1bbtag
            jetVID[0] = treeMine.jet1ID
@@ -248,9 +272,15 @@ for i in range(num1, num2):
            jetVl1l2l3[0] = 1#treeMine.jet1l1l2l3
            jetVl2l3[0] = treeMine.jet1l2l3
            jetVJER[0] = treeMine.jet1JER
-           jetHpt[0] = treeMine.jet2_puppi_pt
-           jetHeta[0] = treeMine.jet2_puppi_eta
-           jetHtau21[0] = treeMine.jet2_puppi_tau21
+           jetHpt[0] = treeMine.jet2pt
+           jetHeta[0] = treeMine.jet2eta
+           jetHtau21[0] = treeMine.jet2tau21
+
+           if treeMine.jet2mass*treeMine.jet2mass/treeMine.jet2pt > 0:
+             jetHtau21DDT[0] = treeMine.jet2tau21+0.063*math.log(treeMine.jet2mass*treeMine.jet2mass/treeMine.jet2pt)
+           else:
+             jetHtau21DDT[0] = -99999
+
            jetH_puppi_msoftdrop_TheaCorr[0] = treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr
 	   jetHbbtag[0] = treeMine.jet2bbtag
            jetHID[0] = treeMine.jet2ID
@@ -261,9 +291,15 @@ for i in range(num1, num2):
            jetHJER[0] = treeMine.jet2JER
 
         if whichJetIsV == 2: 
-           jetHpt[0] = treeMine.jet1_puppi_pt
-           jetHeta[0] = treeMine.jet1_puppi_eta
-           jetHtau21[0] = treeMine.jet1_puppi_tau21
+           jetHpt[0] = treeMine.jet1pt
+           jetHeta[0] = treeMine.jet1eta
+           jetHtau21[0] = treeMine.jet1tau21
+
+           if treeMine.jet1mass*treeMine.jet1mass/treeMine.jet1pt > 0:
+             jetHtau21DDT[0] = treeMine.jet1tau21+0.063*math.log(treeMine.jet1mass*treeMine.jet1mass/treeMine.jet1pt)
+           else:
+             jetHtau21DDT[0] = -99999
+
            jetH_puppi_msoftdrop_TheaCorr[0] = treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr
            jetHbbtag[0] = treeMine.jet1bbtag
            jetHID[0] = treeMine.jet1ID
@@ -273,9 +309,15 @@ for i in range(num1, num2):
            jetHl1l2l3[0] =1 #treeMine.jet1l1l2l3
            jetHl2l3[0] = treeMine.jet1l2l3
            jetHJER[0] = treeMine.jet1JER
-           jetVpt[0] = treeMine.jet2_puppi_pt
-           jetVeta[0] = treeMine.jet2_puppi_eta
-           jetVtau21[0] = treeMine.jet2_puppi_tau21
+           jetVpt[0] = treeMine.jet2pt
+           jetVeta[0] = treeMine.jet2eta
+           jetVtau21[0] = treeMine.jet2tau21
+
+           if treeMine.jet2mass*treeMine.jet2mass/treeMine.jet2pt > 0:
+             jetVtau21DDT[0] = treeMine.jet2tau21+0.063*math.log(treeMine.jet2mass*treeMine.jet2mass/treeMine.jet2pt)
+           else:
+             jetVtau21DDT[0] = -99999
+
            jetV_puppi_msoftdrop_TheaCorr[0] = treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr
            jetVbbtag[0] = treeMine.jet2bbtag
            jetVID[0] = treeMine.jet2ID
@@ -291,7 +333,7 @@ for i in range(num1, num2):
         SFup[0] = treeMine.SFup
         SFdown[0] = treeMine.SFdown
 
-        etadiff[0] = abs(treeMine.jet1_puppi_eta - treeMine.jet2_puppi_eta)
+        etadiff[0] = treeMine.etadiff
  
         jet1_puppi_TL = ROOT.TLorentzVector()
         jet1_puppi_TL.SetPtEtaPhiM(treeMine.jet1_puppi_pt, treeMine.jet1_puppi_eta, treeMine.jet1_puppi_phi, treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr)
@@ -300,6 +342,9 @@ for i in range(num1, num2):
         jet2_puppi_TL.SetPtEtaPhiM(treeMine.jet2_puppi_pt, treeMine.jet2_puppi_eta, treeMine.jet2_puppi_phi, treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr)
 
         dijetmass_puppi[0] = (jet1_puppi_TL + jet2_puppi_TL).M()
+        dijetmass[0] = treeMine.dijetmass
+        dijetmass_corr[0] = treeMine.dijetmass_corr
+        dijetmass_corr_punc[0] = treeMine.dijetmass_corr_punc
 
         nTrueInt[0] = treeMine.nTrueInt
         puWeights[0] = treeMine.puWeights
@@ -318,6 +363,11 @@ for i in range(num1, num2):
         xsec[0] = treeMine.xsec
         HLT_PFHT800_v[0] = treeMine.HLT_PFHT800_v
 	HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
+        HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v[0] = treeMine.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v
+        HLT_AK8PFJet360_V[0] = treeMine.HLT_AK8PFJet360_V
+        HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
+        HLT_PFJet260_v[0] = treeMine.HLT_PFJet260_v
+
         mynewTree.Fill()
 
 print "nFills"

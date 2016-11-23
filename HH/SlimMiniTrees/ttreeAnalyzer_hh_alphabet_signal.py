@@ -363,14 +363,14 @@ for i in range(num1, num2):
 
 	dijetmass_puppi_uncorr[0] = (jet1_puppi_raw_TL + jet2_puppi_raw_TL).M()
 
-	if math.isnan(dijetmass_TLpuppi_SubsoftdropTheaCorr[0]):
+	if math.isnan(dijetmass_corr[0]):
            trigWeight[0] = 1
            trigWeightUp[0] = 1
            trigWeightDown[0] = 1
         else:
-           trigWeight[0] = DataEf.GetBinContent(int(round(dijetmass_TLpuppi_SubsoftdropTheaCorr[0])))
-           trigWeightUp[0] = trigWeight[0] + DataEf.GetBinError(int(round(dijetmass_TLpuppi_SubsoftdropTheaCorr[0])))
-           trigWeightDown[0] = trigWeight[0] - DataEf.GetBinError(int(round(dijetmass_TLpuppi_SubsoftdropTheaCorr[0])))
+           trigWeight[0] = DataEf.GetBinContent(int(round(dijetmass_corr[0])))
+           trigWeightUp[0] = trigWeight[0] + DataEf.GetBinError(int(round(dijetmass_corr[0])))
+           trigWeightDown[0] = trigWeight[0] - DataEf.GetBinError(int(round(dijetmass_corr[0])))
 
 
         mynewTree.Fill()

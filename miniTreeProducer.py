@@ -211,14 +211,6 @@ class miniTreeProducer:
         self.dijetmass = array('f', [-100.0])
         self.dijetmass_corr = array('f', [-100.0])
         self.dijetmass_reg = array('f', [-100.0])
-        self.dijetmass_TLpruned_Subpruned = array('f', [-100.0])
-        self.dijetmass_TLpruned_Subregressed = array('f', [-100.0])
-        self.dijetmass_TLregressed_Subpruned = array('f', [-100.0])
-        self.dijetmass_TLregressed_Subregressed = array('f', [-100.0])
-        self.dijetmass_TLungroomed_Subregressed = array('f', [-100.0])
-        self.dijetmass_TLungroomed_Subpruned = array('f', [-100.0])
-        self.dijetmass_TLregressed_Subungroomed = array('f', [-100.0])
-        self.dijetmass_TLpruned_Subungroomed = array('f', [-100.0])
         self.dijetmass_corr_punc = array('f', [-100.0])
         self.jet1tau21 = array('f', [-100.0])
         self.jet2tau21 = array('f', [-100.0])
@@ -251,8 +243,8 @@ class miniTreeProducer:
         self.jet2_puppi_msoftdrop_corrL2L3 = array('f', [-100.0])
         self.jet1_puppi_TheaCorr = array('f', [-100.0])
         self.jet2_puppi_TheaCorr = array('f', [-100.0])
-        #self.jet1_puppi_msoftdrop_raw = array('f', [-100.0])
-        #self.jet2_puppi_msoftdrop_raw = array('f', [-100.0])
+        self.jet1_puppi_msoftdrop_raw = array('f', [-100.0])
+        self.jet2_puppi_msoftdrop_raw = array('f', [-100.0])
 
         self.jetSJfla = array('f', [-100.0]*4)
         self.jetSJpt =  array('f', [-100.0]*4)
@@ -382,6 +374,17 @@ class miniTreeProducer:
             self.HLT_PFJet80_v = array('f', [-100.0])
             self.HLT_QuadJet45_TripleBTagCSV_p087_v = array('f', [-100.0])
             self.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v = array('f', [-100.0])
+	    self.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
+	    self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
+	    self.HLT_AK8PFJet360_v = array('f', [-100.0])
+	    self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
+            self.HLT_PFJet140_v = array('f', [-100.0])
+ 	    self.HLT_PFJet200_v = array('f', [-100.0])
+	    self.HLT_PFJet260_v = array('f', [-100.0])
+            self.HLT_Mu24_eta2p1_v = array('f', [-100.0])
+            self.HLT_Mu27_v = array('f', [-100.0])
+            self.HLT_Ele105_CaloIdVT_GsfTrkIdT_v = array('f', [-100.0])
+
 
         #creating the tree branches we need
         self.theTree.Branch('regressedJetpT_0', self.regressedJetpT_0, 'regressedJetpT_0/F')
@@ -412,14 +415,6 @@ class miniTreeProducer:
         self.theTree.Branch('dijetmass', self.dijetmass, 'dijetmass/F')
         self.theTree.Branch('dijetmass_corr', self.dijetmass_corr, 'dijetmass_corr/F')
         self.theTree.Branch('dijetmass_reg', self.dijetmass_reg, 'dijetmass_reg/F')
-        self.theTree.Branch('dijetmass_TLpruned_Subpruned', self.dijetmass_TLpruned_Subpruned, 'dijetmass_TLpruned_Subpruned/F')
-        self.theTree.Branch('dijetmass_TLpruned_Subregressed', self.dijetmass_TLpruned_Subregressed, 'dijetmass_TLpruned_Subregressed/F')
-        self.theTree.Branch('dijetmass_TLregressed_Subpruned', self.dijetmass_TLregressed_Subpruned, 'dijetmass_TLregressed_Subpruned/F')
-        self.theTree.Branch('dijetmass_TLregressed_Subregressed', self.dijetmass_TLregressed_Subregressed, 'dijetmass_TLregressed_Subregressed/F')
-        self.theTree.Branch('dijetmass_TLungroomed_Subregressed', self.dijetmass_TLungroomed_Subregressed, 'dijetmass_TLungroomed_Subregressed/F')
-        self.theTree.Branch('dijetmass_TLungroomed_Subpruned', self.dijetmass_TLungroomed_Subpruned, 'dijetmass_TLungroomed_Subpruned/F')
-        self.theTree.Branch('dijetmass_TLregressed_Subungroomed', self.dijetmass_TLregressed_Subungroomed, 'dijetmass_TLregressed_Subungroomed/F')
-        self.theTree.Branch('dijetmass_TLpruned_Subungroomed', self.dijetmass_TLpruned_Subungroomed, 'dijetmass_TLpruned_Subungroomed/F')
         self.theTree.Branch('dijetmass_corr_punc', self.dijetmass_corr_punc, 'dijetmass_corr_punc/F')
         self.theTree.Branch('jet1tau21', self.jet1tau21, 'jet1tau21/F')
         self.theTree.Branch('jet2tau21', self.jet2tau21, 'jet2tau21/F')
@@ -452,8 +447,8 @@ class miniTreeProducer:
         self.theTree.Branch('jet2_puppi_msoftdrop_corrL2L3', self.jet2_puppi_msoftdrop_corrL2L3, 'jet2_puppi_msoftdrop_corrL2L3/F')
         self.theTree.Branch('jet1_puppi_TheaCorr', self.jet1_puppi_TheaCorr, 'jet1_puppi_TheaCorr/F')
         self.theTree.Branch('jet2_puppi_TheaCorr', self.jet2_puppi_TheaCorr, 'jet2_puppi_TheaCorr/F')
-#        self.theTree.Branch('jet1_puppi_msoftdrop_raw', self.jet1_puppi_msoftdrop_raw, 'jet1_puppi_msoftdrop_raw/F')
-#        self.theTree.Branch('jet2_puppi_msoftdrop_raw', self.jet2_puppi_msoftdrop_raw, 'jet2_puppi_msoftdrop_raw/F')
+        self.theTree.Branch('jet1_puppi_msoftdrop_raw', self.jet1_puppi_msoftdrop_raw, 'jet1_puppi_msoftdrop_raw/F')
+        self.theTree.Branch('jet2_puppi_msoftdrop_raw', self.jet2_puppi_msoftdrop_raw, 'jet2_puppi_msoftdrop_raw/F')
 
         self.theTree.Branch('nAK08Jets', self.nAK08Jets, 'nAK08Jets/F')
         self.theTree.Branch('nAK04Jets', self.nAK04Jets, 'nAK04Jets/F')
@@ -586,6 +581,17 @@ class miniTreeProducer:
             self.theTree.Branch('HLT_PFJet80_v', self.HLT_PFJet80_v, 'HLT_PFJet80_v/F')
             self.theTree.Branch('HLT_QuadJet45_TripleBTagCSV_p087_v', self.HLT_QuadJet45_TripleBTagCSV_p087_v, 'HLT_QuadJet45_TripleBTagCSV_p087_v/F')
             self.theTree.Branch('HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v', self.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v, 'HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v/F')
+	    self.theTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
+	    self.theTree.Branch('HLT_AK8PFJet360_v', HLT_AK8PFJet360_v, 'HLT_AK8PFJet360_v/F')
+	    self.theTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
+	    self.theTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
+	    self.theTree.Branch('HLT_PFJet140_v', HLT_PFJet140_v, 'HLT_PFJet140_v/F')
+	    self.theTree.Branch('HLT_PFJet200_v', HLT_PFJet200_v, 'HLT_PFJet200_v/F')
+	    self.theTree.Branch('HLT_PFJet260_v', HLT_PFJet260_v, 'HLT_PFJet260_v/F')
+            self.theTree.Branch('HLT_Mu24_eta2p1_v', HLT_Mu24_eta2p1_v, 'HLT_Mu24_eta2p1_v/F')
+            self.theTree.Branch('HLT_Mu27_v', HLT_Mu27_v, 'HLT_Mu27_v/F')
+            self.theTree.Branch('HLT_Ele105_CaloIdVT_GsfTrkIdT_v', HLT_Ele105_CaloIdVT_GsfTrkIdT_v, 'HLT_Ele105_CaloIdVT_GsfTrkIdT_v/F')
+
 
         self.Files_list	= open_files( inputfile, location )
 
@@ -782,7 +788,17 @@ class miniTreeProducer:
                     self.HLT_PFJet80_v[0] = self.treeMine.HLT_BIT_HLT_PFJet80_v
                     self.HLT_QuadJet45_TripleBTagCSV_p087_v[0] = self.treeMine.HLT_BIT_HLT_QuadJet45_TripleBTagCSV_p087_v
                     self.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v[0] = self.treeMine.HLT_BIT_HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v
-     
+     		    self.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v[0] = self.treeMine.HLT_BIT_HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v
+                    self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = self.treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
+                    self.HLT_AK8PFJet360_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFJet360_v
+                    self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
+                    self.HLT_PFJet140_v[0] = self.treeMine.HLT_BIT_HLT_PFJet140_v
+                    self.HLT_PFJet200_v[0] = self.treeMine.HLT_BIT_HLT_PFJet200_v
+                    self.HLT_PFJet260_v[0] = self.treeMine.HLT_BIT_HLT_PFJet260_v
+                    self.HLT_Mu24_eta2p1_v[0] = self.treeMine.HLT_BIT_HLT_Mu24_eta2p1_v
+                    self.HLT_Mu27_v[0] = self.treeMine.HLT_BIT_HLT_Mu27_v
+                    self.HLT_Ele105_CaloIdVT_GsfTrkIdT_v[0] = self.treeMine.HLT_BIT_HLT_Ele105_CaloIdVT_GsfTrkIdT_v
+
      
                 #saving whether an event passes desired trigger (bb = HT800 pass, sj = pass any of the five saved triggers
                 self.matched = 0
@@ -1306,7 +1322,7 @@ class miniTreeProducer:
                 self.jet1_puppi_tau21[0] = self.jet_puppi_tau21[self.idxH1]
                 self.jet1_puppi_msoftdrop[0] = self.jet_puppi_msoftdrop[self.idxH1]
                 self.jet1_puppi_msoftdrop_corrL2L3[0] = self.jet_puppi_msoftdrop_corrL2L3[self.idxH1]
-#                self.jet1_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[idxH1]
+                self.jet1_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[idxH1]
 
                 self.jet1_puppi_TheaCorr[0] = getPUPPIweight(self.jet_puppi_pt[self.idxH1], self.jet_puppi_eta[self.idxH1])
 
@@ -1338,7 +1354,7 @@ class miniTreeProducer:
                     self.jet2_puppi_msoftdrop[0] = self.jet_puppi_msoftdrop[self.idxH2]
                     self.jet2_puppi_msoftdrop_corrL2L3[0] = self.jet_puppi_msoftdrop_corrL2L3[self.idxH2]
                     self.jet2_puppi_TheaCorr[0] = getPUPPIweight(self.jet_puppi_pt[self.idxH2], self.jet_puppi_eta[self.idxH2])
-#                    self.jet2_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[idxH2]
+                    self.jet2_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[idxH2]
 
                     self.jet2_reg_beforeL2L3 = ROOT.TLorentzVector()
                     self.jet2_reg_beforeL2L3.SetPtEtaPhiM(self.jet2pt[0],self.jet2eta[0],self.jet2phi[0], self.jet2pmassunc[0])
@@ -1360,14 +1376,6 @@ class miniTreeProducer:
                     self.dijetmass_corr[0] = (self.jets[self.idxH1] + self.jets[self.idxH2]).M() - (self.jet1pmass[0]-125)-(self.jet2pmass[0]-125)
                     self.dijetmass_corr_punc[0] = (self.jets[self.idxH1] + self.jets[self.idxH2]).M() - (self.jet1pmassunc[0]-125)-(self.jet2pmassunc[0]-125)
                     self.dijetmass_reg[0]=(self.jet1_ureg+self.jet2_ureg).M() - (self.jet1mass[0]-125)-(self.jet2mass[0]-125)#(jet1_ureg.M()-125)-(jet2_ureg.M()-125)
-                    self.dijetmass_TLpruned_Subpruned[0] = (self.jet1_pruned+self.jet2_pruned).M() - (self.jet1pmass[0]-125)-(self.jet2pmass[0]-125)
-                    self.dijetmass_TLpruned_Subregressed[0] = (self.jet1_pruned+self.jet2_pruned).M() - (self.jet1mass_reg[0]-125)-(self.jet2mass_reg[0]-125)
-                    self.dijetmass_TLregressed_Subpruned[0] = (self.jet1_reg+self.jet2_reg).M() - (self.jet1pmass[0]-125)-(self.jet2pmass[0]-125)
-                    self.dijetmass_TLregressed_Subregressed[0] = (self.jet1_reg+self.jet2_reg).M() - (self.jet1mass_reg[0]-125)-(self.jet2mass_reg[0]-125)
-                    self.dijetmass_TLungroomed_Subregressed[0] = (self.jets[self.idxH1] + self.jets[self.idxH2]).M() - (self.jet1mass_reg[0]-125)-(self.jet2mass_reg[0]-125)
-                    self.dijetmass_TLungroomed_Subpruned[0] = (self.jets[self.idxH1] + self.jets[self.idxH2]).M() - (self.jet1pmass[0]-125)-(self.jet2pmass[0]-125)
-                    self.dijetmass_TLregressed_Subungroomed[0] = (self.jet1_reg+self.jet2_reg).M() - (self.jet1mass[0]-125)-(self.jet2mass[0]-125)
-                    self.dijetmass_TLpruned_Subungroomed[0] = (self.jet1_pruned+self.jet2_pruned).M() - (self.jet1mass[0]-125)-(self.jet2mass[0]-125)
 
 
                 if self.isMC == 'True':
@@ -1636,6 +1644,26 @@ class miniTreeProducer:
                 self.DeltaPhi3[0] = -100.0
                 self.DeltaPhi4[0] = -100.0
                 #	PUWeight[0]= -100.0
+	        self.jet1_puppi_pt = -100.0
+        	self.jet2_puppi_pt = -100.0
+	        self.jet1_puppi_eta = -100.0
+	        self.jet2_puppi_eta = -100.0
+	        self.jet1_puppi_phi = -100.0
+	        self.jet2_puppi_phi = -100.0
+	        self.jet1_puppi_mass = -100.0
+	        self.jet2_puppi_mass = -100.0
+	        self.jet1_puppi_tau21 = -100.0
+	        self.jet2_puppi_tau21 = -100.0
+	        self.jet1_puppi_msoftdrop = -100.0
+	        self.jet2_puppi_msoftdrop = -100.0
+	        self.jet1_puppi_msoftdrop_corrL2L3 = -100.0
+	        self.jet2_puppi_msoftdrop_corrL2L3 = -100.0
+	        self.jet1_puppi_TheaCorr = -100.0
+	        self.jet2_puppi_TheaCorr = -100.0
+	        self.jet1_puppi_msoftdrop_raw = -100.0
+	        self.jet2_puppi_msoftdrop_raw = -100.0
+
+
 	
             self.f1.Close()
 

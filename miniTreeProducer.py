@@ -1395,42 +1395,62 @@ class miniTreeProducer:
                 #handling hbb tagger SFs
                 self.sf1 = -1
                 self.sf2 = -1
-                self.sf1change = 1000000
-                self.sf2change = 1000000
+                self.sf1changeup = 1000000
+                self.sf2changeup = 1000000
+                self.sf1changedown = 1000000
+                self.sf2changedown = 1000000
 
-                if self.jet1pt[0] < 400:
-                    self.sf1 = 0.929
-                    self.sf1change = 0.078
+                if self.jet1pt[0] > 250 and self.jet1pt[0] < 300:
+                    self.sf1 = 1.05
+                    self.sf1changeup = 0.06
+                    self.sf1changedown = 0.08
+                elif self.jet1pt[0] >= 300 and self.jet1pt[0] < 350:
+                    self.sf1 = 0.9
+                    self.sf1changeup = 0.07
+                    self.sf1changedown = 0.07
+                elif self.jet1pt[0] >= 350 and self.jet1pt[0] < 400:
+                    self.sf1 = 0.94
+                    self.sf1changeup = 0.06
+                    self.sf1changedown = 0.06
                 elif self.jet1pt[0] >= 400 and self.jet1pt[0] < 500:
-                    self.sf1 = 0.999
-                    self.sf1change = 0.126
-                elif self.jet1pt[0] >= 500 and self.jet1pt[0] < 600:
-                    self.sf1 = 0.933
-                    self.sf1change = 0.195
-                elif self.jet1pt[0] >= 600:
-                    self.sf1 = 1.048
-                    self.sf1change = 0.215
+                    self.sf1 = 0.96
+                    self.sf1changeup = 0.05
+                    self.sf1changedown = 0.04
+		elif self.jet1pt[0] > 500:
+                    self.sf1 = 0.89
+                    self.sf1changeup = 0.07
+                    self.sf1changedown = 0.07
+
         
                 if len(self.jets) > 1:
-                    if self.jet2pt[0] < 400:
-                        self.sf2 = 0.929
-                        self.sf2change = 0.078
-                    elif self.jet2pt[0] >= 400 and self.jet2pt[0] < 500:
-                        self.sf2 = 0.999
-                        self.sf2change = 0.126
-                    elif self.jet2pt[0] >= 500 and self.jet2pt[0] < 600:
-                        self.sf2 = 0.933
-                        self.sf2change = 0.195
-                    elif self.jet2pt[0] >= 600:
-                        self.sf2 = 1.048
-                        self.sf2change = 0.215
+                    if self.jet2pt[0] > 250 and self.jet2pt[0] < 300:
+                        self.sf2 = 1.05
+                        self.sf2changeup = 0.06
+                        self.sf2changedown = 0.08
+                    elif self.jet2pt[0] >= 300 and self.jet2pt[0] < 350:
+                        self.sf2 = 0.9
+                        self.sf2changeup = 0.07
+                        self.sf2changedown = 0.07
+                    elif self.jet2pt[0] >= 350 and self.jet2pt[0] < 400:
+                        self.sf2 = 0.94
+                        self.sf2changeup = 0.06
+                        self.sf2changedown = 0.06
+                    elif self.jet2pt[0] >= 400 and selft.jet2pt[0] < 500:
+                        self.sf2 = 0.96
+                        self.sf2changeup = 0.05
+                        self.sf2changedown = 0.04
+                    elif self.jet2pt[0] >= 500 and selft.jet2pt[0] < 700:
+                        self.sf2 = 0.89
+                        self.sf2changeup = 0.07
+                        self.sf2changedown = 0.07
+
 
                 self.bbtag1SF[0] = self.sf1
-                self.bbtag1SFUp[0] = self.sf1*(1+self.sf1change)
-                self.bbtag1SFDown[0] = self.sf1*(1-self.sf1change)
+                self.bbtag1SFUp[0] = self.sf1*(1+self.sf1changeup)
+                self.bbtag1SFDown[0] = self.sf1*(1-self.sf1changedown)
                 self.SF[0] = self.sf1*self.sf2
-                self.SFup[0] = self.sf1*(1+self.sf1change)*self.sf2*(1+self.sf2change)
-                self.SFdown[0] = self.sf1*(1-self.sf1change)*self.sf2*(1-self.sf2change)
+                self.SFup[0] = self.sf1*(1+self.sf1changeup)*self.sf2*(1+self.sf2changeup)
+                self.SFdown[0] = self.sf1*(1-self.sf1changedown)*self.sf2*(1-self.sf2changedown)
                 self.SF4sj[0] = -1
                 self.SF4sjUp[0] = -1
                 self.SF4sjDown[0] = -1

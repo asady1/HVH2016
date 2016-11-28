@@ -376,7 +376,7 @@ class miniTreeProducer:
             self.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v = array('f', [-100.0])
 	    self.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
 	    self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
-	    self.HLT_AK8PFJet360_v = array('f', [-100.0])
+	    self.HLT_AK8PFJet360_TrimMass30_v = array('f', [-100.0])
 	    self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
             self.HLT_PFJet140_v = array('f', [-100.0])
  	    self.HLT_PFJet200_v = array('f', [-100.0])
@@ -581,16 +581,16 @@ class miniTreeProducer:
             self.theTree.Branch('HLT_PFJet80_v', self.HLT_PFJet80_v, 'HLT_PFJet80_v/F')
             self.theTree.Branch('HLT_QuadJet45_TripleBTagCSV_p087_v', self.HLT_QuadJet45_TripleBTagCSV_p087_v, 'HLT_QuadJet45_TripleBTagCSV_p087_v/F')
             self.theTree.Branch('HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v', self.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v, 'HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v/F')
-	    self.theTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
-	    self.theTree.Branch('HLT_AK8PFJet360_v', HLT_AK8PFJet360_v, 'HLT_AK8PFJet360_v/F')
-	    self.theTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
-	    self.theTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
-	    self.theTree.Branch('HLT_PFJet140_v', HLT_PFJet140_v, 'HLT_PFJet140_v/F')
-	    self.theTree.Branch('HLT_PFJet200_v', HLT_PFJet200_v, 'HLT_PFJet200_v/F')
-	    self.theTree.Branch('HLT_PFJet260_v', HLT_PFJet260_v, 'HLT_PFJet260_v/F')
-            self.theTree.Branch('HLT_Mu24_eta2p1_v', HLT_Mu24_eta2p1_v, 'HLT_Mu24_eta2p1_v/F')
-            self.theTree.Branch('HLT_Mu27_v', HLT_Mu27_v, 'HLT_Mu27_v/F')
-            self.theTree.Branch('HLT_Ele105_CaloIdVT_GsfTrkIdT_v', HLT_Ele105_CaloIdVT_GsfTrkIdT_v, 'HLT_Ele105_CaloIdVT_GsfTrkIdT_v/F')
+	    self.theTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
+	    self.theTree.Branch('HLT_AK8PFJet360_TrimMass30_v', self.HLT_AK8PFJet360_TrimMass30_v, 'HLT_AK8PFJet360_TrimMass30_v/F')
+	    self.theTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
+	    self.theTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', self.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
+	    self.theTree.Branch('HLT_PFJet140_v', self.HLT_PFJet140_v, 'HLT_PFJet140_v/F')
+	    self.theTree.Branch('HLT_PFJet200_v', self.HLT_PFJet200_v, 'HLT_PFJet200_v/F')
+	    self.theTree.Branch('HLT_PFJet260_v', self.HLT_PFJet260_v, 'HLT_PFJet260_v/F')
+            self.theTree.Branch('HLT_Mu24_eta2p1_v', self.HLT_Mu24_eta2p1_v, 'HLT_Mu24_eta2p1_v/F')
+            self.theTree.Branch('HLT_Mu27_v', self.HLT_Mu27_v, 'HLT_Mu27_v/F')
+            self.theTree.Branch('HLT_Ele105_CaloIdVT_GsfTrkIdT_v', self.HLT_Ele105_CaloIdVT_GsfTrkIdT_v, 'HLT_Ele105_CaloIdVT_GsfTrkIdT_v/F')
 
 
         self.Files_list	= open_files( inputfile, location )
@@ -790,7 +790,7 @@ class miniTreeProducer:
                     self.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v[0] = self.treeMine.HLT_BIT_HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v
      		    self.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v[0] = self.treeMine.HLT_BIT_HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v
                     self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = self.treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
-                    self.HLT_AK8PFJet360_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFJet360_v
+                    self.HLT_AK8PFJet360_TrimMass30_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFJet360_TrimMass30_v
                     self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
                     self.HLT_PFJet140_v[0] = self.treeMine.HLT_BIT_HLT_PFJet140_v
                     self.HLT_PFJet200_v[0] = self.treeMine.HLT_BIT_HLT_PFJet200_v
@@ -935,7 +935,7 @@ class miniTreeProducer:
                 self.jet_puppi_tau21=[]
                 self.jet_puppi_msoftdrop=[]
                 self.jet_puppi_msoftdrop_corrL2L3=[]
-               # self.jet_puppi_msoftdrop_raw=[]
+                self.jet_puppi_msoftdrop_raw=[]
 
 
                 for j in range(len(self.fjUngroomedPt)):
@@ -994,7 +994,7 @@ class miniTreeProducer:
                             self.jet_puppi_tau21.append(100)
                         self.jet_puppi_msoftdrop.append(self.treeMine.FatjetAK08ungroomed_puppi_msoftdrop[j])
                         self.jet_puppi_msoftdrop_corrL2L3.append(self.treeMine.FatjetAK08ungroomed_puppi_msoftdrop_corrL2L3[j])
-#                        self.jet_puppi_msoftdrop_raw.append(treeMine.FatjetAK08ungroomed_puppi_msoftdrop_raw[j])
+                        self.jet_puppi_msoftdrop_raw.append(self.treeMine.FatjetAK08ungroomed_puppi_msoftdrop_raw[j])
 
 
                         if self.isMC == 'True':
@@ -1322,7 +1322,7 @@ class miniTreeProducer:
                 self.jet1_puppi_tau21[0] = self.jet_puppi_tau21[self.idxH1]
                 self.jet1_puppi_msoftdrop[0] = self.jet_puppi_msoftdrop[self.idxH1]
                 self.jet1_puppi_msoftdrop_corrL2L3[0] = self.jet_puppi_msoftdrop_corrL2L3[self.idxH1]
-                self.jet1_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[idxH1]
+                self.jet1_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[self.idxH1]
 
                 self.jet1_puppi_TheaCorr[0] = getPUPPIweight(self.jet_puppi_pt[self.idxH1], self.jet_puppi_eta[self.idxH1])
 
@@ -1354,7 +1354,7 @@ class miniTreeProducer:
                     self.jet2_puppi_msoftdrop[0] = self.jet_puppi_msoftdrop[self.idxH2]
                     self.jet2_puppi_msoftdrop_corrL2L3[0] = self.jet_puppi_msoftdrop_corrL2L3[self.idxH2]
                     self.jet2_puppi_TheaCorr[0] = getPUPPIweight(self.jet_puppi_pt[self.idxH2], self.jet_puppi_eta[self.idxH2])
-                    self.jet2_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[idxH2]
+                    self.jet2_puppi_msoftdrop_raw[0] = self.jet_puppi_msoftdrop_raw[self.idxH2]
 
                     self.jet2_reg_beforeL2L3 = ROOT.TLorentzVector()
                     self.jet2_reg_beforeL2L3.SetPtEtaPhiM(self.jet2pt[0],self.jet2eta[0],self.jet2phi[0], self.jet2pmassunc[0])
@@ -1400,7 +1400,7 @@ class miniTreeProducer:
                 self.sf1changedown = 1000000
                 self.sf2changedown = 1000000
 
-                if self.jet1pt[0] > 250 and self.jet1pt[0] < 300:
+                if self.jet1pt[0] >= 250 and self.jet1pt[0] < 300:
                     self.sf1 = 1.05
                     self.sf1changeup = 0.06
                     self.sf1changedown = 0.08
@@ -1416,14 +1416,14 @@ class miniTreeProducer:
                     self.sf1 = 0.96
                     self.sf1changeup = 0.05
                     self.sf1changedown = 0.04
-		elif self.jet1pt[0] > 500:
+		elif self.jet1pt[0] >= 500:
                     self.sf1 = 0.89
                     self.sf1changeup = 0.07
                     self.sf1changedown = 0.07
 
         
                 if len(self.jets) > 1:
-                    if self.jet2pt[0] > 250 and self.jet2pt[0] < 300:
+                    if self.jet2pt[0] >= 250 and self.jet2pt[0] < 300:
                         self.sf2 = 1.05
                         self.sf2changeup = 0.06
                         self.sf2changedown = 0.08
@@ -1435,11 +1435,11 @@ class miniTreeProducer:
                         self.sf2 = 0.94
                         self.sf2changeup = 0.06
                         self.sf2changedown = 0.06
-                    elif self.jet2pt[0] >= 400 and selft.jet2pt[0] < 500:
+                    elif self.jet2pt[0] >= 400 and self.jet2pt[0] < 500:
                         self.sf2 = 0.96
                         self.sf2changeup = 0.05
                         self.sf2changedown = 0.04
-                    elif self.jet2pt[0] >= 500 and selft.jet2pt[0] < 700:
+                    elif self.jet2pt[0] >= 500:
                         self.sf2 = 0.89
                         self.sf2changeup = 0.07
                         self.sf2changedown = 0.07
@@ -1464,22 +1464,31 @@ class miniTreeProducer:
                 self.SF3sjDown[0] =-1.
 	
                 if len(self.jets) > 1:
-                    if self.jets[1].Pt() < 400:
-                        self.sf2 = 0.929
-                        self.sf2change = 0.078
+                    if self.jets[1].Pt() >= 250 and self.jets[1].Pt() < 300:
+                        self.sf2 = 1.05
+                        self.sf2changeup = 0.06
+                        self.sf2changedown = 0.08
+                    elif self.jets[1].Pt() >= 300 and self.jets[1].Pt() < 350:
+                        self.sf2 = 0.9
+                        self.sf2changeup = 0.07
+                        self.sf2changedown = 0.07
+                    elif self.jets[1].Pt() >= 350 and self.jets[1].Pt() < 400:
+                        self.sf2 = 0.94
+                        self.sf2changeup = 0.06
+                        self.sf2changedown = 0.06
                     elif self.jets[1].Pt() >= 400 and self.jets[1].Pt() < 500:
-                        self.sf2 = 0.999
-                        self.sf2change = 0.126
-                    elif self.jets[1].Pt() >= 500 and self.jets[1].Pt() < 600:
-                        self.sf2 = 0.933
-                        self.sf2change = 0.195
-                    elif self.jets[1].Pt() >= 600:
-                        self.sf2 = 1.048
-                        self.sf2change = 0.215
+                        self.sf2 = 0.96
+                        self.sf2changeup = 0.05
+                        self.sf2changedown = 0.04
+                    elif self.jets[1].Pt() >= 500:
+                        self.sf2 = 0.89
+                        self.sf2changeup = 0.07
+                        self.sf2changedown = 0.07
+
 
                 self.bbtag2SF[0] = self.sf2
-                self.bbtag2SFUp[0] = self.sf2*(1+self.sf2change)
-                self.bbtag2SFDown[0] = self.sf2*(1-self.sf2change)
+                self.bbtag2SFUp[0] = self.sf2*(1+self.sf2changeup)
+                self.bbtag2SFDown[0] = self.sf2*(1-self.sf2changedown)
 
 
                 if len(self.jets) > 1 and self.jets[0].Pt() > 300 and self.jets[1].Pt() > 300 and abs(self.jets[0].Eta() - self.jets[1].Eta()) < 1.3 and ((self.jets[self.idxH1] + self.jets[self.idxH2]).M() - (self.jet1pmass[0]-125)-(self.jet2pmass[0]-125)) > 800 and self.jet1tau21[0] < 0.6 and self.jet2tau21[0] < 0.6 and self.jet1pmass[0] > 105 and self.jet1pmass[0] < 135 and self.jet2pmass[0] > 105 and self.jet2pmass[0] < 135 and self.jet1bbtag[0] > 0.6 and self.jet2bbtag[0] > 0.6:
@@ -1664,24 +1673,24 @@ class miniTreeProducer:
                 self.DeltaPhi3[0] = -100.0
                 self.DeltaPhi4[0] = -100.0
                 #	PUWeight[0]= -100.0
-	        self.jet1_puppi_pt = -100.0
-        	self.jet2_puppi_pt = -100.0
-	        self.jet1_puppi_eta = -100.0
-	        self.jet2_puppi_eta = -100.0
-	        self.jet1_puppi_phi = -100.0
-	        self.jet2_puppi_phi = -100.0
-	        self.jet1_puppi_mass = -100.0
-	        self.jet2_puppi_mass = -100.0
-	        self.jet1_puppi_tau21 = -100.0
-	        self.jet2_puppi_tau21 = -100.0
-	        self.jet1_puppi_msoftdrop = -100.0
-	        self.jet2_puppi_msoftdrop = -100.0
-	        self.jet1_puppi_msoftdrop_corrL2L3 = -100.0
-	        self.jet2_puppi_msoftdrop_corrL2L3 = -100.0
-	        self.jet1_puppi_TheaCorr = -100.0
-	        self.jet2_puppi_TheaCorr = -100.0
-	        self.jet1_puppi_msoftdrop_raw = -100.0
-	        self.jet2_puppi_msoftdrop_raw = -100.0
+	        self.jet1_puppi_pt[0] = -100.0
+        	self.jet2_puppi_pt[0] = -100.0
+	        self.jet1_puppi_eta[0] = -100.0
+	        self.jet2_puppi_eta[0] = -100.0
+	        self.jet1_puppi_phi[0] = -100.0
+	        self.jet2_puppi_phi[0] = -100.0
+	        self.jet1_puppi_mass[0] = -100.0
+	        self.jet2_puppi_mass[0] = -100.0
+	        self.jet1_puppi_tau21[0] = -100.0
+	        self.jet2_puppi_tau21[0] = -100.0
+	        self.jet1_puppi_msoftdrop[0] = -100.0
+	        self.jet2_puppi_msoftdrop[0] = -100.0
+	        self.jet1_puppi_msoftdrop_corrL2L3[0] = -100.0
+	        self.jet2_puppi_msoftdrop_corrL2L3[0] = -100.0
+	        self.jet1_puppi_TheaCorr[0] = -100.0
+	        self.jet2_puppi_TheaCorr[0] = -100.0
+	        self.jet1_puppi_msoftdrop_raw[0] = -100.0
+	        self.jet2_puppi_msoftdrop_raw[0] = -100.0
 
 
 	

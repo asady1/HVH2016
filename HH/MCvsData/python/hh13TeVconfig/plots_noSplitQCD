@@ -1,0 +1,185 @@
+[Plot_general]
+
+lumi = 12900.
+
+#!! Samples to be used for plotting. it also can be <!Samples|allBKG!>
+#samples:'HH800','HH900','HH1000','HH1200','HH1400','HH1600','HH1800','HH2000','HH2500','HH3000','HH4000','HH4500'
+#samples:<!Samples|QCDHT300!>,<!Samples|QCDHT700!>,<!Samples|QCDHT1000!>,<!Samples|QCDHT1500!>,<!Samples|QCDHT2000!>,<!Samples|QCDHT500!>,'TT','ZJets100','ZJets200','ZJets400','ZJets600','ZJets800','ZJets1200','ZJets2500'
+#samples:<!Samples|QCDHT300!>,<!Samples|QCDHT700!>,<!Samples|QCDHT1000!>,<!Samples|QCDHT1500!>,<!Samples|QCDHT2000!>,<!Samples|QCDHT500!>,'TT','WJets100','WJets200','WJets400','WJets600','WJets800','WJets1200','WJets2500','ZJets100','ZJets200','ZJets400','ZJets600','ZJets800','ZJets1200','ZJets2500'
+samples:'WQQ','WW','WZ','ZZ','QCD700','QCD1000','QCD1500','QCD2000','QCD500','QCD300','TT'
+#,<!Samples|QCDHT300!>,<!Samples|QCDHT200!>,<!Samples|QCDHT100!>
+#<!Samples|WJets!>,<!Samples|s_Top!>,'TT'
+
+#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. it also can be <!Samples|Group!>
+Group: {'JetHT':'Data','Zee':'Data','Zmm':'Data','Zm':'Data','TT':'TT','WJetsHT0_light':'WJudsg','WJetsHT100_light':'WJudsg','WJetsHT200_light':'WJudsg','WJetsHT400_light':'WJudsg','WJetsHT600_light':'WJudsg', 'WJetsHT800_light':'WJudsg','WJetsHT1200_light':'WJudsg','WJetsHT2500_light':'WJudsg','WJetsHT0_c':'WJc','WJetsHT100_c':'WJc','WJetsHT200_c':'WJc','WJetsHT400_c':'WJc','WJetsHT600_c':'WJc', 'WJetsHT800_c':'WJc','WJetsHT1200_c':'WJc','WJetsHT2500_c':'WJc','WJetsHT0_1b':'WJ1b','WJetsHT100_1b':'WJ1b','WJetsHT200_1b':'WJ1b','WJetsHT400_1b':'WJ1b','WJetsHT600_1b':'WJ1b','WJetsHT800_1b':'WJ1b','WJetsHT1200_1b':'WJ1b','WJetsHT2500_1b':'WJ1b','WJetsHT0_2b':'WJ2b','WJetsHT100_2b':'WJ2b','WJetsHT200_2b':'WJ2b','WJetsHT400_2b':'WJ2b','WJetsHT600_2b':'WJ2b','WJetsHT800_2b':'WJ2b','WJetsHT1200_2b':'WJ2b','WJetsHT2500_2b':'WJ2b','ST_s':'ST','ST_t':'ST','ST_tW_antitop':'ST','ST_tW_top':'ST','WQQ':'V','ZQQ':'V','QCD300udsg':'QCDlight','QCD500udsg':'QCDlight','QCD700udsg':'QCDlight','QCD1000udsg':'QCDlight','QCD1500udsg':'QCDlight','QCD2000udsg':'QCDlight','QCD300cc':'QCDc','QCD500cc':'QCDc','QCD700cc':'QCDc','QCD1000cc':'QCDc','QCD1500cc':'QCDc','QCD2000cc':'QCDc','QCD3001b':'QCD1b', 'QCD5001b':'QCD1b','QCD7001b':'QCD1b','QCD10001b':'QCD1b','QCD15001b':'QCD1b','QCD20001b':'QCD1b','QCD3002b':'QCD2b','QCD5002b':'QCD2b','QCD5002b':'QCD2b','QCD7002b':'QCD2b','QCD10002b':'QCD2b','QCD15002b':'QCD2b','QCD20002b':'QCD2b','WZ':'VV','ZZ':'VV','WW':'VV','HH2000':'HH','HH800':'HH','HH900':'HH','HH1000':'HH','HH1200':'HH','HH1400':'HH','HH1600':'HH','HH1800':'HH','HH2500':'HH','HH3000':'HH','HH4000':'HH','HH4500':'HH','QCD300udsg':'QCDlight','QCD300cc':'QCDc','QCD3001b':'QCD1b','QCD3002b':'QCD2b','QCD200udsg':'QCDlight','QCD200cc':'QCDc','QCD2001b':'QCD1b','QCD2002b':'QCD2b','QCD100udsg':'QCDlight','QCD100cc':'QCDc','QCD1001b':'QCD1b','QCD1002b':'QCD2b','TTHT600':'TTHT','TTHT800':'TTHT','TTHT1200':'TTHT','TTHT2500':'TTHT','TTHT0':'TTHT','ZJets100':'ZJets','ZJets200':'ZJets','ZJets400':'ZJets','ZJets600':'ZJets','ZJets800':'ZJets','ZJets1200':'ZJets','ZJets2500':'ZJets','WJets100':'WJets','WJets200':'WJets','WJets400':'WJets','WJets600':'WJets','WJets800':'WJets','WJets1200':'WJets','WJets2500':'WJets','QCD300':'QCD','QCD500':'QCD','QCD700':'QCD','QCD1000':'QCD','QCD1500':'QCD','QCD2000':'QCD'}
+
+
+#!! Here the order and the groups that will go in the plots
+#setup: HH
+#setup: QCDlight,QCDc,QCD1b,QCD2b,TT,ZJets
+#setup: QCD300,QCD500,QCD700,QCD1000,QCD1500,QCD2000,V,VV,TT
+setup: QCD,V,VV,TT
+
+#setupLog: QCDlight,QCDc,QCD1b,QCD2b,TT,ZJets
+#setupLog: HH
+#setupLog: QCD300,QCD500,QCD700,QCD1000,QCD1500,QCD2000,V,VV,TT
+setupLog: QCD,V,VV,TT
+
+#!! Colors dictionary and legend
+colorDict: {'QCD300':401,'QCD500':402,'QCD700':5,'QCD1000':41,'QCD1500':401,'QCD2000':401,'TT':596,'ST':840,'VV':922,'V':18,'ZZb':18,'WZb':18,'ZH':2,'DYlc':401,'':1,'TTHT':596,'HH':18,'ZJets':401,'WJudsg':2,'WJc':2,'WJ1b':2,'WJ2b':2,'WJets':2,'QCD':401}
+typLegendDict: {'DYlight':'Z+udscg','DYc':'Z + c#bar{c}','DYlc':'Z+udscg','DY2b':'Z + b#bar{b}','DY1b':'Z + b','WJudsg':'W+udscg','WJ1b':'W + b','WJ2b':'W + b#bar{b}','WJc':'W+udscg','TT':'t#bar{t}','ST':'Single top','VV':'VV','VVlight':'VV(udscg)','VVb':'VZ(b#bar{b})','ZH':'ZH','WH':'VH(b#bar{b}) 125','VH':'VH','QCD':'QCD','Overlay':'X(2 TeV) to HH','QCD300':'QCD300','QCD500':'QCD500','QCD700':'QCD700','QCD1000':'QCD1000','QCD1500':'QCD1500','QCD2000':'QCD2000','V':'V','VV':'VV','':'','TTHT':'t#bar{t}','HH':'Bulk Grav','ZJets':'Z+Jets','WJudsg':'W+Jets(udsg)','WJc':'W+Jets(c)','WJ1b':'W+Jets(1b)','WJ2b':'W+Jets(2b)','WJets':'W+Jets','QCD':'QCD'}
+
+#!! Add overflow bin in the plots
+addOverFlow = False
+
+#!! List of regions to be submitted in case of bacth submission
+List: ZLight_HighPt_Zee,ZLight_HighPt_Zmm,ZLight_HighPt
+
+#!! Possibility to add an additional blinding cut for the plot
+#addBlindingCut = EVENT.run < 203002
+
+#!! Variables definition
+leptons_var:vleptons_ptMax,vleptons_etaMax
+met_var:Jet0CSV,Jet1CSV,Jet2CSV,Jet3CSV,Jet0pt,Jet1pt,Jet2pt,Jet3pt,met_pt,maxCSV,minCSV
+boosted_var:jet1pt,jet2pt,jet1eta,jet2eta,jet1mass,jet2mass,jet1bbtag,jet2bbtag,jet1tau21,jet2tau21,jet1ID,jet2ID
+
+#!! Additional global variables
+BDT_plot_blind: False
+BDT_plot_log: False
+plot_mass = HH2000 
+Normalize = False
+
+#!! -----------------------
+#!! Plot regions definition
+#!! -----------------------
+
+[Plot:SignalvsBackground]
+Datas: HH600,HH650,HH700,HH750,HH800,HH900,HH1000,HH1200,HH1400,HH1600,HH1800,HH2000,HH2500,HH3000,HH4000,HH4500
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: False
+blind: False
+
+[Plot:SR]
+#!! which data to compare to
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+#Signal: <!Plot_general|plot_mass!>
+log: True
+blind: False
+
+[Plot:CR_bbtag_inverted]
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: False
+blind: False
+
+[Plot:CR_bbtag_2inverted]
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: False
+blind: False
+
+[Plot:CR_bbtag_jet1inverted]
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: False
+blind: False
+
+[Plot:SR_expanded]
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: False
+blind: False
+
+[Plot:CR_SignalSamples]
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: True
+blind: False
+
+[Plot:CR_no_bbtag_cut]
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: False
+blind: False
+
+[Plot:MET_100_trigger]
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+log: False
+blind: False
+
+[Plot:CR_mass_inverted]
+#!! which data to compare to
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+###Signal: <!Plot_general|plot_mass!>
+log: False
+blind: False
+
+[Plot:CR_tau_inverted]
+#!! which data to compare to
+Datas: JetHT
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|boosted_var!>
+#Signal: <!Plot_general|plot_mass!>
+log: False
+blind: False
+
+#!! Plot name should match the cut name in the cuts config
+[Plot:dy_heppy_test]
+#!! which data to compare to
+Datas: Zee
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|met_var!>
+Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: False
+#!! apply blinding cut
+blind: False
+
+
+[Plot:tt_kinematic]
+Datas: Zm
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|met_var!>
+log: False
+blind: False
+Signal: <!Plot_general|plot_mass!>
+
+[Plot:tt_btag]
+Datas: Zm
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|met_var!>
+log: False
+blind: False
+
+[Plot:tt_kinematic_trigger2CSV]
+Datas: Zm
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|met_var!>
+log: False
+blind: False
+Signal: <!Plot_general|plot_mass!>
+
+[Plot:tt_btag_trigger2CSV]
+Datas: Zm
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|met_var!>
+log: False
+blind: False
+
+
+#!! which data to compare to
+
+#

@@ -282,17 +282,26 @@ class miniTreeProducer:
         self.puWeightsDown = array('f', [-100.0])
         self.json = array('f', [-100.0])
 
-        self.bbtag1SF = array('f', [-100.0])
-        self.bbtag2SF = array('f', [-100.0])
-        self.bbtag1SFUp = array('f', [-100.0])
-        self.bbtag2SFUp = array('f', [-100.0])
-        self.bbtag1SFDown = array('f', [-100.0])
-        self.bbtag2SFDown = array('f', [-100.0])
+        self.bbtag1SFTight = array('f', [-100.0])
+        self.bbtag2SFTight = array('f', [-100.0])
+        self.bbtag1SFTightUp = array('f', [-100.0])
+        self.bbtag2SFTightUp = array('f', [-100.0])
+        self.bbtag1SFTightDown = array('f', [-100.0])
+        self.bbtag2SFTightDown = array('f', [-100.0])
+        self.bbtag1SFLoose = array('f', [-100.0])
+        self.bbtag2SFLoose = array('f', [-100.0])
+        self.bbtag1SFLooseUp = array('f', [-100.0])
+        self.bbtag2SFLooseUp = array('f', [-100.0])
+        self.bbtag1SFLooseDown = array('f', [-100.0])
+        self.bbtag2SFLooseDown = array('f', [-100.0])
         self.passesBoosted = array('f', [-100.0])
         self.passesResolved = array('f', [-100.0])
-        self.SF = array('f', [-100.0])
-        self.SFup = array('f', [-100.0])
-        self.SFdown = array('f', [-100.0])
+        self.SFTight = array('f', [-100.0])
+        self.SFTightup = array('f', [-100.0])
+        self.SFTightdown = array('f', [-100.0])
+        self.SFLoose = array('f', [-100.0])
+        self.SFLooseup = array('f', [-100.0])
+        self.SFLoosedown = array('f', [-100.0])
         self.SF4sj = array('f', [-100.0])
         self.SF4sjUp = array('f', [-100.0])
         self.SF4sjDown = array('f', [-100.0])
@@ -491,18 +500,28 @@ class miniTreeProducer:
         self.theTree.Branch('DeltaPhi3', self.DeltaPhi3, 'DeltaPhi3/F')
         self.theTree.Branch('DeltaPhi4', self.DeltaPhi4, 'DeltaPhi4/F')
 
-        self.theTree.Branch('bbtag1SF', self.bbtag1SF, 'bbtag1SF/F')
-        self.theTree.Branch('bbtag2SF', self.bbtag2SF, 'bbtag2SF/F')
-        self.theTree.Branch('bbtag1SFUp', self.bbtag1SFUp, 'bbtag1SFUp/F')
-        self.theTree.Branch('bbtag2SFUp', self.bbtag2SFUp, 'bbtag2SFUp/F')
-        self.theTree.Branch('bbtag1SFDown', self.bbtag1SFDown, 'bbtag1SFDown/F')
-        self.theTree.Branch('bbtag2SFDown', self.bbtag2SFDown, 'bbtag2SFDown/F')
+        self.theTree.Branch('bbtag1SFTight', self.bbtag1SFTight, 'bbtag1SFTight/F')
+        self.theTree.Branch('bbtag2SFTight', self.bbtag2SFTight, 'bbtag2SFTight/F')
+        self.theTree.Branch('bbtag1SFTightUp', self.bbtag1SFTightUp, 'bbtag1SFTightUp/F')
+        self.theTree.Branch('bbtag2SFTightUp', self.bbtag2SFTightUp, 'bbtag2SFTightUp/F')
+        self.theTree.Branch('bbtag1SFTightDown', self.bbtag1SFTightDown, 'bbtag1SFTightDown/F')
+        self.theTree.Branch('bbtag2SFTightDown', self.bbtag2SFTightDown, 'bbtag2SFTightDown/F')
+        self.theTree.Branch('bbtag1SFLoose', self.bbtag1SFLoose, 'bbtag1SFLoose/F')
+        self.theTree.Branch('bbtag2SFLoose', self.bbtag2SFLoose, 'bbtag2SFLoose/F')
+        self.theTree.Branch('bbtag1SFLooseUp', self.bbtag1SFLooseUp, 'bbtag1SFLooseUp/F')
+        self.theTree.Branch('bbtag2SFLooseUp', self.bbtag2SFLooseUp, 'bbtag2SFLooseUp/F')
+        self.theTree.Branch('bbtag1SFLooseDown', self.bbtag1SFLooseDown, 'bbtag1SFLooseDown/F')
+        self.theTree.Branch('bbtag2SFLooseDown', self.bbtag2SFLooseDown, 'bbtag2SFLooseDown/F')
+
         self.theTree.Branch('passesBoosted', self.passesBoosted, 'passesBoosted/F')
         self.theTree.Branch('passesResolved', self.passesResolved, 'passesResolved/F')
 
-        self.theTree.Branch('SF', self.SF, 'SF/F')
-        self.theTree.Branch('SFup', self.SFup, 'SFup/F')
-        self.theTree.Branch('SFdown', self.SFdown, 'SFdown/F')
+        self.theTree.Branch('SFTight', self.SFTight, 'SFTight/F')
+        self.theTree.Branch('SFTightup', self.SFTightup, 'SFTightup/F')
+        self.theTree.Branch('SFTightdown', self.SFTightdown, 'SFTightdown/F')
+        self.theTree.Branch('SFLoose', self.SFLoose, 'SFLoose/F')
+        self.theTree.Branch('SFLooseup', self.SFLooseup, 'SFLooseup/F')
+        self.theTree.Branch('SFLoosedown', self.SFLoosedown, 'SFLoosedown/F')
         self.theTree.Branch('SF4sj', self.SF4sj, 'SF4sj/F')
         self.theTree.Branch('SF4sjUp', self.SF4sjUp, 'SF4sjUp/F')
         self.theTree.Branch('SF4sjDown', self.SF4sjDown, 'SF4sjDown/F')
@@ -959,7 +978,7 @@ class miniTreeProducer:
                             self.jettemp*=self.correction_factor
 	
 	
-                    if self.jettemp.Pt() > 250. and abs(self.jettemp.Eta()) < 2.4:
+                    if self.jettemp.Pt() > 200. and abs(self.jettemp.Eta()) < 2.4:
                         self.jets.append(self.jettemp)
                         self.jets_noL2L3.append(self.jettemp_noL2L3)
                         if self.fjUngroomedTau1[j] > 0:
@@ -1393,64 +1412,106 @@ class miniTreeProducer:
                     self.isData[0] = 0
 
                 #handling hbb tagger SFs
-                self.sf1 = -1
-                self.sf2 = -1
-                self.sf1changeup = 1000000
-                self.sf2changeup = 1000000
-                self.sf1changedown = 1000000
-                self.sf2changedown = 1000000
+                self.sf1Tight = -1
+                self.sf2Tight = -1
+                self.sf1Tightchangeup = 1000000
+                self.sf2Tightchangeup = 1000000
+                self.sf1Tightchangedown = 1000000
+                self.sf2Tightchangedown = 1000000
+                self.sf1Loose = -1
+                self.sf2Loose = -1
+                self.sf1Loosechangeup = 1000000
+                self.sf2Loosechangeup = 1000000
+                self.sf1Loosechangedown = 1000000
+                self.sf2Loosechangedown = 1000000
 
                 if self.jet1pt[0] >= 250 and self.jet1pt[0] < 300:
-                    self.sf1 = 1.05
-                    self.sf1changeup = 0.06
-                    self.sf1changedown = 0.08
+                    self.sf1Tight = 1.05
+                    self.sf1Tightchangeup = 0.06
+                    self.sf1Tightchangedown = 0.08
+                    self.sf1Loose = 0.97
+                    self.sf1Loosechangeup = 0.04
+                    self.sf1Loosechangedown = 0.04
                 elif self.jet1pt[0] >= 300 and self.jet1pt[0] < 350:
-                    self.sf1 = 0.9
-                    self.sf1changeup = 0.07
-                    self.sf1changedown = 0.07
+                    self.sf1Tight = 0.9
+                    self.sf1Tightchangeup = 0.07
+                    self.sf1Tightchangedown = 0.07
+                    self.sf1Loose = 0.95
+                    self.sf1Loosechangeup = 0.04
+                    self.sf1Loosechangedown = 0.04
                 elif self.jet1pt[0] >= 350 and self.jet1pt[0] < 400:
-                    self.sf1 = 0.94
-                    self.sf1changeup = 0.06
-                    self.sf1changedown = 0.06
+                    self.sf1Tight = 0.94
+                    self.sf1Tightchangeup = 0.06
+                    self.sf1Tightchangedown = 0.06
+                    self.sf1Loose = 0.97
+                    self.sf1Loosechangeup = 0.04
+                    self.sf1Loosechangedown = 0.09
                 elif self.jet1pt[0] >= 400 and self.jet1pt[0] < 500:
-                    self.sf1 = 0.96
-                    self.sf1changeup = 0.05
-                    self.sf1changedown = 0.04
+                    self.sf1Tight = 0.96
+                    self.sf1Tightchangeup = 0.05
+                    self.sf1Tightchangedown = 0.04
+                    self.sf1Loose = 0.96
+                    self.sf1Loosechangeup = 0.05
+                    self.sf1Loosechangedown = 0.03
 		elif self.jet1pt[0] >= 500:
-                    self.sf1 = 0.89
-                    self.sf1changeup = 0.07
-                    self.sf1changedown = 0.07
+                    self.sf1Tight = 0.89
+                    self.sf1Tightchangeup = 0.07
+                    self.sf1Tightchangedown = 0.07
+                    self.sf1Loose = 0.99
+                    self.sf1Loosechangeup = 0.04
+                    self.sf1Loosechangedown = 0.04
 
         
                 if len(self.jets) > 1:
                     if self.jet2pt[0] >= 250 and self.jet2pt[0] < 300:
-                        self.sf2 = 1.05
-                        self.sf2changeup = 0.06
-                        self.sf2changedown = 0.08
+                        self.sf2Tight = 1.05
+                        self.sf2Tightchangeup = 0.06
+                        self.sf2Tightchangedown = 0.08
+                        self.sf2Loose = 0.97
+                        self.sf2Loosechangeup = 0.04
+                        self.sf2Loosechangedown = 0.04
                     elif self.jet2pt[0] >= 300 and self.jet2pt[0] < 350:
-                        self.sf2 = 0.9
-                        self.sf2changeup = 0.07
-                        self.sf2changedown = 0.07
+                        self.sf2Tight = 0.9
+                        self.sf2Tightchangeup = 0.07
+                        self.sf2Tightchangedown = 0.07
+                        self.sf2Loose = 0.95
+                        self.sf2Loosechangeup = 0.04
+                        self.sf2Loosechangedown = 0.04
                     elif self.jet2pt[0] >= 350 and self.jet2pt[0] < 400:
-                        self.sf2 = 0.94
-                        self.sf2changeup = 0.06
-                        self.sf2changedown = 0.06
+                        self.sf2Tight = 0.94
+                        self.sf2Tightchangeup = 0.06
+                        self.sf2Tightchangedown = 0.06
+                        self.sf2Loose = 0.97
+                        self.sf2Loosechangeup = 0.04
+                        self.sf2Loosechangedown = 0.09
                     elif self.jet2pt[0] >= 400 and self.jet2pt[0] < 500:
-                        self.sf2 = 0.96
-                        self.sf2changeup = 0.05
-                        self.sf2changedown = 0.04
+                        self.sf2Tight = 0.96
+                        self.sf2Tightchangeup = 0.05
+                        self.sf2Tightchangedown = 0.04
+                        self.sf2Loose = 0.96
+                        self.sf2Loosechangeup = 0.05
+                        self.sf2Loosechangedown = 0.03
                     elif self.jet2pt[0] >= 500:
-                        self.sf2 = 0.89
-                        self.sf2changeup = 0.07
-                        self.sf2changedown = 0.07
+                        self.sf2Tight = 0.89
+                        self.sf2Tightchangeup = 0.07
+                        self.sf2Tightchangedown = 0.07
+                        self.sf2Loose = 0.99
+                        self.sf2Loosechangeup = 0.04
+                        self.sf2Loosechangedown = 0.04
 
 
-                self.bbtag1SF[0] = self.sf1
-                self.bbtag1SFUp[0] = self.sf1*(1+self.sf1changeup)
-                self.bbtag1SFDown[0] = self.sf1*(1-self.sf1changedown)
-                self.SF[0] = self.sf1*self.sf2
-                self.SFup[0] = self.sf1*(1+self.sf1changeup)*self.sf2*(1+self.sf2changeup)
-                self.SFdown[0] = self.sf1*(1-self.sf1changedown)*self.sf2*(1-self.sf2changedown)
+                self.bbtag1SFTight[0] = self.sf1Tight
+                self.bbtag1SFTightUp[0] = self.sf1Tight*(1+self.sf1Tightchangeup)
+                self.bbtag1SFTightDown[0] = self.sf1Tight*(1-self.sf1Tightchangedown)
+                self.bbtag1SFLoose[0] = self.sf1Loose
+                self.bbtag1SFLooseUp[0] = self.sf1Loose*(1+self.sf1Loosechangeup)
+                self.bbtag1SFLooseDown[0] = self.sf1Loose*(1-self.sf1Loosechangedown)
+                self.SFTight[0] = self.sf1Tight*self.sf2Tight
+                self.SFTightup[0] = self.sf1Tight*(1+self.sf1Tightchangeup)*self.sf2Tight*(1+self.sf2Tightchangeup)
+                self.SFTightdown[0] = self.sf1Tight*(1-self.sf1Tightchangedown)*self.sf2Tight*(1-self.sf2Tightchangedown)
+                self.SFLoose[0] = self.sf1Loose*self.sf2Loose
+                self.SFLooseup[0] = self.sf1Loose*(1+self.sf1Loosechangeup)*self.sf2Loose*(1+self.sf2Loosechangeup)
+                self.SFLoosedown[0] = self.sf1Loose*(1-self.sf1Loosechangedown)*self.sf2Loose*(1-self.sf2Loosechangedown)
                 self.SF4sj[0] = -1
                 self.SF4sjUp[0] = -1
                 self.SF4sjDown[0] = -1
@@ -1463,32 +1524,13 @@ class miniTreeProducer:
                 self.SF3sjUp[0] =-1.
                 self.SF3sjDown[0] =-1.
 	
-                if len(self.jets) > 1:
-                    if self.jets[1].Pt() >= 250 and self.jets[1].Pt() < 300:
-                        self.sf2 = 1.05
-                        self.sf2changeup = 0.06
-                        self.sf2changedown = 0.08
-                    elif self.jets[1].Pt() >= 300 and self.jets[1].Pt() < 350:
-                        self.sf2 = 0.9
-                        self.sf2changeup = 0.07
-                        self.sf2changedown = 0.07
-                    elif self.jets[1].Pt() >= 350 and self.jets[1].Pt() < 400:
-                        self.sf2 = 0.94
-                        self.sf2changeup = 0.06
-                        self.sf2changedown = 0.06
-                    elif self.jets[1].Pt() >= 400 and self.jets[1].Pt() < 500:
-                        self.sf2 = 0.96
-                        self.sf2changeup = 0.05
-                        self.sf2changedown = 0.04
-                    elif self.jets[1].Pt() >= 500:
-                        self.sf2 = 0.89
-                        self.sf2changeup = 0.07
-                        self.sf2changedown = 0.07
 
-
-                self.bbtag2SF[0] = self.sf2
-                self.bbtag2SFUp[0] = self.sf2*(1+self.sf2changeup)
-                self.bbtag2SFDown[0] = self.sf2*(1-self.sf2changedown)
+                self.bbtag2SFTight[0] = self.sf2Tight
+                self.bbtag2SFTightUp[0] = self.sf2Tight*(1+self.sf2Tightchangeup)
+                self.bbtag2SFTightDown[0] = self.sf2Tight*(1-self.sf2Tightchangedown)
+                self.bbtag2SFLoose[0] = self.sf2Loose
+                self.bbtag2SFLooseUp[0] = self.sf2Loose*(1+self.sf2Loosechangeup)
+                self.bbtag2SFLooseDown[0] = self.sf2Loose*(1-self.sf2Loosechangedown)
 
 
                 if len(self.jets) > 1 and self.jets[0].Pt() > 300 and self.jets[1].Pt() > 300 and abs(self.jets[0].Eta() - self.jets[1].Eta()) < 1.3 and ((self.jets[self.idxH1] + self.jets[self.idxH2]).M() - (self.jet1pmass[0]-125)-(self.jet2pmass[0]-125)) > 800 and self.jet1tau21[0] < 0.6 and self.jet2tau21[0] < 0.6 and self.jet1pmass[0] > 105 and self.jet1pmass[0] < 135 and self.jet2pmass[0] > 105 and self.jet2pmass[0] < 135 and self.jet1bbtag[0] > 0.6 and self.jet2bbtag[0] > 0.6:

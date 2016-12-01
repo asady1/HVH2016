@@ -140,6 +140,9 @@ htJet30 = array('f', [-100.0])
 xsec = array('f', [-100.0])
 HLT_PFHT800_v = array('f', [-100.0])
 HLT_PFJet80_v = array('f', [-100.0])
+HLT_PFJet140_v = array('f', [-100.0])
+HLT_PFJet200_v = array('f', [-100.0])
+HLT_PFJet260_v = array('f', [-100.0])
 HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v = array('f', [-100.0])
 HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
 HLT_AK8PFJet360_V = array('f', [-100.0])
@@ -222,7 +225,10 @@ mynewTree.Branch('HLT_AK8PFJet360_V', HLT_AK8PFJet360_V, 'HLT_AK8PFJet360_V/F')
 mynewTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
 mynewTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
 
-#mynewTree.Branch('HLT_PFJet80_v', HLT_PFJet80_v, 'HLT_PFJet80_v/F')
+mynewTree.Branch('HLT_PFJet80_v', HLT_PFJet80_v, 'HLT_PFJet80_v/F')
+mynewTree.Branch('HLT_PFJet140_v', HLT_PFJet140_v, 'HLT_PFJet140_v/F')
+mynewTree.Branch('HLT_PFJet200_v', HLT_PFJet200_v, 'HLT_PFJet200_v/F')
+mynewTree.Branch('HLT_PFJet260_v', HLT_PFJet260_v, 'HLT_PFJet260_v/F')
 
 print outputfilename
 
@@ -246,6 +252,28 @@ for i in range(num1, num2):
 
 	if abs(treeMine.jet1eta - treeMine.jet2eta) > 1.3:
 	    continue
+
+        if abs(treeMine.jet1eta) > 2.4:
+            continue
+
+        if abs(treeMine.jet2eta) > 2.4:
+            continue
+
+        if treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr < 50:
+            continue
+
+        if treeMine.jet2_puppi_msoftdrop*treeMine.jet2_puppi_TheaCorr < 50:
+            continue
+
+
+        if treeMine.jet1_puppi_pt < 0 or treeMine.jet2_puppi_pt < 0:
+            continue
+
+        if treeMine.jet1pt < 200:
+            continue
+
+        if treeMine.jet2pt < 200:
+            continue
 
 #	if treeMine.HLT_PFHT800_v == 0:
 #	    continue
@@ -321,7 +349,10 @@ for i in range(num1, num2):
         HLT_AK8PFJet360_V[0] = treeMine.HLT_AK8PFJet360_V
         HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
 
-#        HLT_PFJet80_v[0] = treeMine.HLT_PFJet80_v
+        HLT_PFJet80_v[0] = treeMine.HLT_PFJet80_v
+        HLT_PFJet140_v[0] = treeMine.HLT_PFJet140_v
+        HLT_PFJet200_v[0] = treeMine.HLT_PFJet200_v
+        HLT_PFJet260_v[0] = treeMine.HLT_PFJet260_v
 
         jet1_puppi_TL = ROOT.TLorentzVector()
         jet1_puppi_TL.SetPtEtaPhiM(jet1_puppi_pt[0], jet1_puppi_eta[0], jet1_puppi_phi[0], treeMine.jet1_puppi_msoftdrop*treeMine.jet1_puppi_TheaCorr)

@@ -115,7 +115,6 @@ jet1_puppi_msoftdrop_raw = array('f', [-100.0])
 jet2_puppi_msoftdrop_raw = array('f', [-100.0])
 dijetmass_puppi = array('f', [-100.0])
 dijetmass_puppi_uncorr = array('f', [-100.0])
-dijetmass_TLpuppi_SubsoftdropTheaCorr = array('f', [-100.0])
 
 nTrueInt = array('f', [-100])
 vtype = array('f', [-100.0])
@@ -124,9 +123,25 @@ puWeights = array('f', [-100.0])
 puWeightsUp = array('f', [-100.0])
 puWeightsDown = array('f', [-100.0])
 json = array('f', [-100.0])
-SF = array('f', [-100.0])
-SFup = array('f', [-100.0])
-SFdown = array('f', [-100.0])
+bbtag1SFTight = array('f', [-100.0])
+bbtag2SFTight = array('f', [-100.0])
+bbtag1SFTightUp = array('f', [-100.0])
+bbtag2SFTightUp = array('f', [-100.0])
+bbtag1SFTightDown = array('f', [-100.0])
+bbtag2SFTightDown = array('f', [-100.0])
+bbtag1SFLoose = array('f', [-100.0])
+bbtag2SFLoose = array('f', [-100.0])
+bbtag1SFLooseUp = array('f', [-100.0])
+bbtag2SFLooseUp = array('f', [-100.0])
+bbtag1SFLooseDown = array('f', [-100.0])
+bbtag2SFLooseDown = array('f', [-100.0])
+SFTight = array('f', [-100.0])
+SFTightup = array('f', [-100.0])
+SFTightdown = array('f', [-100.0])
+SFLoose = array('f', [-100.0])
+SFLooseup = array('f', [-100.0])
+SFLoosedown = array('f', [-100.0])
+
 SF4sj = array('f', [-100.0])
 SF4sjUp = array('f', [-100.0])
 SF4sjDown = array('f', [-100.0])
@@ -194,7 +209,6 @@ mynewTree.Branch('jet2_puppi_TheaCorr', jet2_puppi_TheaCorr, 'jet2_puppi_TheaCor
 mynewTree.Branch('jet1_puppi_msoftdrop_raw', jet1_puppi_msoftdrop_raw, 'jet1_puppi_msoftdrop_raw/F')
 mynewTree.Branch('jet2_puppi_msoftdrop_raw', jet2_puppi_msoftdrop_raw, 'jet2_puppi_msoftdrop_raw/F')
 mynewTree.Branch('dijetmass_puppi_uncorr', dijetmass_puppi_uncorr, 'dijetmass_puppi_uncorr/F')
-mynewTree.Branch('dijetmass_TLpuppi_SubsoftdropTheaCorr', dijetmass_TLpuppi_SubsoftdropTheaCorr, 'dijetmass_TLpuppi_SubsoftdropTheaCorr/F')
 
 mynewTree.Branch('nTrueInt',nTrueInt,'nTrueInt/F')
 mynewTree.Branch('puWeights',puWeights,'puWeights/F')
@@ -205,9 +219,25 @@ mynewTree.Branch('jet2ID', jet2ID, 'jet2ID/F')
 mynewTree.Branch('vtype', vtype, 'vtype/F')
 mynewTree.Branch('isData', isData, 'isData/F')
 mynewTree.Branch('json', json, 'json/F')
-mynewTree.Branch('SF', SF, 'SF/F')
-mynewTree.Branch('SFup', SFup, 'SFup/F')
-mynewTree.Branch('SFdown', SFdown, 'SFdown/F')
+mynewTree.Branch('bbtag1SFTight', bbtag1SFTight, 'bbtag1SFTight/F')
+mynewTree.Branch('bbtag2SFTight', bbtag2SFTight, 'bbtag2SFTight/F')
+mynewTree.Branch('bbtag1SFTightUp', bbtag1SFTightUp, 'bbtag1SFTightUp/F')
+mynewTree.Branch('bbtag2SFTightUp', bbtag2SFTightUp, 'bbtag2SFTightUp/F')
+mynewTree.Branch('bbtag1SFTightDown', bbtag1SFTightDown, 'bbtag1SFTightDown/F')
+mynewTree.Branch('bbtag2SFTightDown', bbtag2SFTightDown, 'bbtag2SFTightDown/F')
+mynewTree.Branch('bbtag1SFLoose', bbtag1SFLoose, 'bbtag1SFLoose/F')
+mynewTree.Branch('bbtag2SFLoose', bbtag2SFLoose, 'bbtag2SFLoose/F')
+mynewTree.Branch('bbtag1SFLooseUp', bbtag1SFLooseUp, 'bbtag1SFLooseUp/F')
+mynewTree.Branch('bbtag2SFLooseUp', bbtag2SFLooseUp, 'bbtag2SFLooseUp/F')
+mynewTree.Branch('bbtag1SFLooseDown', bbtag1SFLooseDown, 'bbtag1SFLooseDown/F')
+mynewTree.Branch('bbtag2SFLooseDown', bbtag2SFLooseDown, 'bbtag2SFLooseDown/F')
+mynewTree.Branch('SFTight', SFTight, 'SFTight/F')
+mynewTree.Branch('SFTightup', SFTightup, 'SFTightup/F')
+mynewTree.Branch('SFTightdown', SFTightdown, 'SFTightdown/F')
+mynewTree.Branch('SFLoose', SFLoose, 'SFLoose/F')
+mynewTree.Branch('SFLooseup', SFLooseup, 'SFLooseup/F')
+mynewTree.Branch('SFLoosedown', SFLoosedown, 'SFLoosedown/F')
+
 mynewTree.Branch('SF4sj', SF4sj, 'SF4sj/F')
 mynewTree.Branch('SF4sjUp', SF4sjUp, 'SF4sjUp/F')
 mynewTree.Branch('SF4sjDown', SF4sjDown, 'SF4sjDown/F')
@@ -282,7 +312,7 @@ for i in range(num1, num2):
         jet1mass[0] = treeMine.jet1mass
         jet2mass[0] = treeMine.jet2mass
         etadiff[0] = abs(treeMine.jet1eta - treeMine.jet2eta)
-        dijetmass[0] = treeMine.dijetmass
+        dijetmass[0] = treeMine.dijetmass	
         dijetmass_corr[0] = treeMine.dijetmass_corr
         dijetmass_corr_punc[0] = treeMine.dijetmass_corr_punc
         jet1tau21[0] = treeMine.jet1tau21
@@ -309,7 +339,6 @@ for i in range(num1, num2):
         jet2_puppi_TheaCorr[0] = treeMine.jet2_puppi_TheaCorr
 	jet1_puppi_msoftdrop_raw[0] = treeMine.jet1_puppi_msoftdrop_raw
         jet2_puppi_msoftdrop_raw[0] = treeMine.jet2_puppi_msoftdrop_raw
-	dijetmass_TLpuppi_SubsoftdropTheaCorr[0] = treeMine.dijetmass_TLpuppi_SubsoftdropTheaCorr
 
         jet1_puppi_msoftdrop_TheaCorr[0] = jet1_puppi_msoftdrop[0]*jet1_puppi_TheaCorr[0]
         jet2_puppi_msoftdrop_TheaCorr[0] = jet2_puppi_msoftdrop[0]*jet2_puppi_TheaCorr[0]
@@ -325,9 +354,25 @@ for i in range(num1, num2):
         isData[0] = treeMine.isData
         json[0] = treeMine.json
 
-        SF[0] = treeMine.SF
-        SFup[0] = treeMine.SFup
-        SFdown[0] = treeMine.SFdown
+	bbtag1SFTight[0] = treeMine.bbtag1SFTight
+	bbtag2SFTight[0] = treeMine.bbtag2SFTight
+	bbtag1SFTightUp[0] = treeMine.bbtag1SFTightUp
+	bbtag2SFTightUp[0] = treeMine.bbtag2SFTightUp
+	bbtag1SFTightDown[0] = treeMine.bbtag1SFTightDown
+	bbtag2SFTightDown[0] = treeMine.bbtag2SFTightDown
+	bbtag1SFLoose[0] = treeMine.bbtag1SFLoose
+	bbtag2SFLoose[0] = treeMine.bbtag2SFLoose
+	bbtag1SFLooseUp[0] = treeMine.bbtag1SFLooseUp
+	bbtag2SFLooseUp[0] = treeMine.bbtag2SFLooseUp
+	bbtag1SFLooseDown[0] = treeMine.bbtag1SFLooseDown
+	bbtag2SFLooseDown[0] = treeMine.bbtag2SFLooseDown
+	SFTight[0] = treeMine.SFTight
+	SFTightup[0] = treeMine.SFTightup
+	SFTightdown[0] = treeMine.SFTightdown
+	SFLoose[0] = treeMine.SFLoose
+	SFLooseup[0] = treeMine.SFLooseup
+	SFLoosedown[0] = treeMine.SFLoosedown
+
         SF4sj[0] = treeMine.SF4sj
         SF4sjUp[0] = treeMine.SF4sjUp
         SF4sjDown[0] = treeMine.SF4sjDown
@@ -343,7 +388,7 @@ for i in range(num1, num2):
         HLT_PFHT800_v[0] = treeMine.HLT_PFHT800_v
         HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v[0] = treeMine.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v
         HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = treeMine.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
-        HLT_AK8PFJet360_V[0] = treeMine.HLT_AK8PFJet360_V
+        HLT_AK8PFJet360_V[0] = treeMine.HLT_AK8PFJet360_TrimMass30_v
         HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = treeMine.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
         HLT_PFJet260_v[0] = treeMine.HLT_PFJet260_v
 
@@ -362,6 +407,8 @@ for i in range(num1, num2):
         dijetmass_puppi[0] = (jet1_puppi_TL + jet2_puppi_TL).M() - (jet1_puppi_msoftdrop[0]*jet1_puppi_TheaCorr[0]-125)-(jet2_puppi_msoftdrop[0]*jet2_puppi_TheaCorr[0]-125)
 
 	dijetmass_puppi_uncorr[0] = (jet1_puppi_raw_TL + jet2_puppi_raw_TL).M()
+
+
 
 	if math.isnan(dijetmass_corr[0]):
            trigWeight[0] = 1

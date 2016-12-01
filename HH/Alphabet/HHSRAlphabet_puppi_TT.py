@@ -60,14 +60,14 @@ parser.add_option('-I', '--inject', metavar='Inj', type='string', dest='inject',
 parser.add_option('--workspace', metavar='WSPC', type='string', dest='workspace', default="alphabet")
 (Options, args) = parser.parse_args()
 
-preselection    =       "&(vtype==-1||vtype==4)&jet2_puppi_pt>200&json==1&jet1_puppi_pt>200&abs(jet1_puppi_eta-jet2_puppi_eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_puppi>800&jet2ID==1&jet1ID==1&abs(jet1_puppi_eta)<2.4&abs(jet2_puppi_eta)<2.4&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
+preselection    =       "&(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
 #preselection	= 	"&vtype==-1&jet2pt>250&json==1&jet1pt>250&etadiff<1.3&jet1tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&HLT_PFHT800_v==1"
 TightPre 		=	Options.tightpre + preselection
 TightAT                 =       TightPre + "&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr<135&(jet1bbtag<"+str(Options.tightcut)+")"
 #TightAT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag<"+str(Options.tightcut)+")"
 TightT          =       TightPre + "&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr<135&(jet1bbtag>"+str(Options.tightcut)+")"
 #TightT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"
-TightT2         = "jet2bbtag > 0.8 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  &(vtype==-1||vtype==4)&jet2_puppi_pt>200&json==1&jet1_puppi_pt>200&abs(jet1_puppi_eta-jet2_puppi_eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_TLpuppi_SubsoftdropTheaCorr>800&jet2ID==1&jet1ID==1&abs(jet1_puppi_eta)<2.4&abs(jet2_puppi_eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.8)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
+TightT2         = "jet2bbtag > 0.8 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  &(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.8)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
 #TightT2         = "jet2bbtag > 0.3 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 110 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 140  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))&(vtype==-1||vtype==4)&jet2_puppi_pt>200&json==1&jet1_puppi_pt>200&abs(jet1_puppi_eta-jet2_puppi_eta)<1.3&jet1_puppi_tau21<0.6&dijetmass_TLpuppi_SubsoftdropTheaCorr>800&jet2ID==1&jet1ID==1&abs(jet1_puppi_eta)<2.4&abs(jet2_puppi_eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>110&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<140&(jet1bbtag>0.3)"
 
 if Options.finebins:
@@ -77,8 +77,8 @@ if Options.finebins:
 else:
 	binBoundaries =[800, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509]
 
-variable = "dijetmass_puppi"
-variable2 = "dijetmass_TLpuppi_SubsoftdropTheaCorr"
+variable = "dijetmass_corr"
+variable2 = "dijetmass_corr"
 #variable = "dijetmass_corr"
 
 ############# DATASETS: #################
@@ -101,7 +101,7 @@ sigpath = "/uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/"
 #sigpath = "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24/BulkGrav_Correct/Alphabet/"
 if Options.inject != "none":
 	normI = GetNom(sigpath+"BulkGrav_M-"+Options.inject+"_0.root")
-	INJ = DIST("INJ", sigpath+"BulkGrav_M-"+Options.inject+"_0.root","mynewTree",str(Options.lumi)+"*0.01*puWeights*SF/"+str(normI))
+	INJ = DIST("INJ", sigpath+"BulkGrav_M-"+Options.inject+"_0.root","mynewTree",str(Options.lumi)+"*0.01*puWeights*SFTight/"+str(normI))
 	whichdataorQCD = "QCD w/ Injected Signal"
 	DistsWeWantToEstimate.append(INJ)
 #### SOME SIGNALS WE'LL USE:
@@ -113,9 +113,9 @@ SIG0 = TH1F("Signal1200", "", len(binBoundaries)-1, array('d',binBoundaries))
 SIG1 = TH1F("Signal1800", "", len(binBoundaries)-1, array('d',binBoundaries))
 SIG2 = TH1F("Signal2500", "", len(binBoundaries)-1, array('d',binBoundaries))
 
-quickplot(sigpath+"BulkGrav_M-1200_0.root", "mynewTree", SIG0, variable2, TightT2, "puWeights*SF/1.")
-quickplot(sigpath+"BulkGrav_M-1800_0.root", "mynewTree", SIG1, variable2, TightT2, "puWeights*SF/1.")
-quickplot(sigpath+"BulkGrav_M-2500_0.root", "mynewTree", SIG2, variable2, TightT2, "puWeights*SF/1.")
+quickplot(sigpath+"BulkGrav_M-1200_0.root", "mynewTree", SIG0, variable2, TightT2, "puWeights*SFTight/1.")
+quickplot(sigpath+"BulkGrav_M-1800_0.root", "mynewTree", SIG1, variable2, TightT2, "puWeights*SFTight/1.")
+quickplot(sigpath+"BulkGrav_M-2500_0.root", "mynewTree", SIG2, variable2, TightT2, "puWeights*SFTight/1.")
 
 SIG0.Scale(Options.lumi*0.01/norm0)
 SIG1.Scale(Options.lumi*0.01/norm1)
@@ -314,7 +314,7 @@ if Options.workspace == "alphabet":
 	mass=[750,800,1000,1200,1400,1600,1800,2000,2500, 3000, 4000, 4500]
 	for m in mass:
 		print str(m)
-		SF_tau21 = 0.963
+		SF_tau21 = 0.963*0.963
 		UD = ['Up','Down']
 
 		output_file = TFile("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV.root", "RECREATE")
@@ -335,13 +335,13 @@ if Options.workspace == "alphabet":
 		Signal_mX_MJEC_Up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_massJECUp", "", len(binBoundaries)-1, array('d',binBoundaries))
 		Signal_mX_MJEC_Down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_massJECDown", "", len(binBoundaries)-1, array('d',binBoundaries))
 
-		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SF/1.")
-		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_btag_up, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFup/1.")
-		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_btag_down, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFdown/1.")
-		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_trig_up, variable2, TightT2, "trigWeightUp*puWeights*SF/1.")
-		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_trig_down, variable2, TightT2, "trigWeightDown*puWeights*SF/1.")
-		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_pu_up, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeightsUp*SF/1.")
-		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_pu_down, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeightsDown*SF/1.")
+		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFTight/1.")
+		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_btag_up, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFTightup/1.")
+		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_btag_down, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFTightdown/1.")
+		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_trig_up, variable2, TightT2, "trigWeightUp*puWeights*SFTight/1.")
+		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_trig_down, variable2, TightT2, "trigWeightDown*puWeights*SFTight/1.")
+		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_pu_up, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeightsUp*SFTight/1.")
+		quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_pu_down, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeightsDown*SFTight/1.")
 
 		norm = GetNom(sigpath+"BulkGrav_M-%s_0.root"%(m))
 
@@ -438,7 +438,7 @@ if Options.workspace == "alphabet":
 		text_file.write("-------------------------------------------------------------------------------\n")
 		text_file.write("lumi_13TeV lnN                          1.027       -\n")	
 	
-		text_file.write("CMS_eff_tau21_sf lnN                    1.027       -\n") #(0.028/0.979)
+		text_file.write("CMS_eff_tau21_sf lnN                    1.060       -\n") #(0.028/0.979)
 		#text_file.write("CMS_eff_Htag_sf lnN                    1.1       -\n")   
 		text_file.write("CMS_JEC lnN 		     %f        -\n"%(FJEClnN)) 	
 		text_file.write("CMS_massJEC lnN                 %f        -\n"%(MJEClnN))

@@ -1,0 +1,15 @@
+universe = vanilla
+Executable = runJetHT_HH_G_750.sh
+Requirements = OpSys == "LINUX"&& (Arch != "DUMMY" )
+request_disk = 100000
+request_memory = 2000
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_VH/ttreeAnalyzer_vh_alphabet_VbbTag.py, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_VH/cmsset_default.sh
+use_x509userproxy = true
+x509userproxy = /tmp/x509up_u47835
+Output = JetHT_HH_G_750_dif.stdout
+Error =JetHT_HH_G_750_dif.stderr
+Log =JetHT_HH_G_750_dif.log
+Queue 1
+

@@ -1,0 +1,8 @@
+condor_submit QCD1500_0_0.jdl
+condor_submit QCD1500_0_10.jdl
+condor_submit QCD1500_0_20.jdl
+condor_submit QCD1500_0_30.jdl
+condor_submit QCD1500_0_40.jdl
+condor_submit QCD1500_0_50.jdl
+condor_submit QCD1500_0_60.jdl
+condor_submit QCD1500_0_70.jdl

@@ -1,0 +1,15 @@
+universe = vanilla
+Executable = runQCD700_60.sh
+Requirements = OpSys == "LINUX"&& (Arch != "DUMMY" )
+request_disk = 100000
+request_memory = 2000
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_HH_MC/ttreeAnalyzer_hh_alphabet_MC_QCD700.py, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_HH_MC/cmsset_default.sh, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_HH_MC/JetHT_TriggerComparisons.root
+use_x509userproxy = true
+x509userproxy = /tmp/x509up_u47835
+Output = QCD700_60_dif.stdout
+Error =QCD700_60_dif.stderr
+Log =QCD700_60_dif.log
+Queue 1
+

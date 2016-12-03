@@ -1,0 +1,15 @@
+universe = vanilla
+Executable = runQCD1000_10.sh
+Requirements = OpSys == "LINUX"&& (Arch != "DUMMY" )
+request_disk = 100000
+request_memory = 2000
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_HH_MC/ttreeAnalyzer_hh_alphabet_MC_QCD1000.py, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_HH_MC/cmsset_default.sh, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/Condor_HH_MC/JetHT_TriggerComparisons.root
+use_x509userproxy = true
+x509userproxy = /tmp/x509up_u47835
+Output = QCD1000_10_dif.stdout
+Error =QCD1000_10_dif.stderr
+Log =QCD1000_10_dif.log
+Queue 1
+

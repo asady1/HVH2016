@@ -81,7 +81,8 @@ jet1mass = array('f', [-100.0])
 jet2mass = array('f', [-100.0])
 etadiff = array('f', [-100.0])
 dijetmass = array('f', [-100.0])
-dijetmass_corr = array('f', [-100.0])
+dijetmass_pruned_corr = array('f', [-100.0])
+dijetmass_softdrop_corr = array('f', [-100.0])
 dijetmass_corr_punc = array('f', [-100.0])
 jet1tau21 = array('f', [-100.0])
 jet2tau21 = array('f', [-100.0])
@@ -159,7 +160,8 @@ mynewTree.Branch('jet1mass', jet1mass, 'jet1mass/F')
 mynewTree.Branch('jet2mass', jet2mass, 'jet2mass/F')
 mynewTree.Branch('etadiff', etadiff, 'etadiff/F')
 mynewTree.Branch('dijetmass', dijetmass, 'dijetmass/F')
-mynewTree.Branch('dijetmass_corr', dijetmass_corr, 'dijetmass_corr/F')
+mynewTree.Branch('dijetmass_pruned_corr', dijetmass_pruned_corr, 'dijetmass_pruned_corr/F')
+mynewTree.Branch('dijetmass_softdrop_corr', dijetmass_softdrop_corr, 'dijetmass_softdrop_corr/F')
 mynewTree.Branch('dijetmass_corr_punc', dijetmass_corr_punc, 'dijetmass_corr_punc/F')
 mynewTree.Branch('jet1tau21', jet1tau21, 'jet1tau21/F')
 mynewTree.Branch('jet2tau21', jet2tau21, 'jet2tau21/F')
@@ -290,7 +292,7 @@ for i in range(num1, num2):
         jet2mass[0] = treeMine.jet2mass
         etadiff[0] = abs(treeMine.jet1eta - treeMine.jet2eta)
         dijetmass[0] = treeMine.dijetmass
-        dijetmass_corr[0] = treeMine.dijetmass_corr
+        dijetmass_pruned_corr[0] = treeMine.dijetmass_corr
         dijetmass_corr_punc[0] = treeMine.dijetmass_corr_punc
         jet1tau21[0] = treeMine.jet1tau21
         jet2tau21[0] = treeMine.jet2tau21
@@ -362,7 +364,18 @@ for i in range(num1, num2):
 
         dijetmass_puppi[0] = (jet1_puppi_TL + jet2_puppi_TL).M() - (jet1_puppi_msoftdrop[0]*jet1_puppi_TheaCorr[0]-125)-(jet2_puppi_msoftdrop[0]*jet2_puppi_TheaCorr[0]-125)
 
-        mynewTree.Fill()
+        jet1_ungroomed_TL = ROOT.TLorentzVector()
+        jet1_ungroomed_TL.SetPtEtaPhiM(treeMine.jet1pt, treeMine.jet1eta, treeMine.jet1phi, treeMine.jet1mass)
+
+        jet2_ungroomed_TL = ROOT.TLorentzVector()
+        jet2_ungroomed_TL.SetPtEtaPhiM(treeMine.jet2pt, treeMine.jet2eta, treeMine.jet2phi, treeMine.jet2mass)
+
+
+        dijetmass_softdrop_corr[0] = (jet1_ungroomed_TL + jet2_ungroomed_TL).M() - (jet1_puppi_msoftdrop[0]*jet1_puppi_TheaCorr[0]-125)-(jet2_puppi_msoftdrop[0]*jet2_puppi_TheaCorr[0]-125)
+        
+
+
+	mynewTree.Fill()
 
     f1.Close()
 

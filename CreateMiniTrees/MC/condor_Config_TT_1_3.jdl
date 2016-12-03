@@ -1,0 +1,14 @@
+universe = vanilla
+Executable = 76X_TT_1_3.sh
+Requirements = OpSys == "LINUX"&& (Arch != "DUMMY" )
+request_disk = 10000000
+request_memory = 30000
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_80X_V24/cmsset_default.sh, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_80X_V24/TT_1.txt, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_80X_V24/getMiniTrees_pT200.py, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_80X_V24/trigger_objects.root, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_80X_V24/TMVARegression_BDTG.weights.xml, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_signalSamples_80X/puppiCorr.root, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_80X_V24/miniTreeFunctions.py, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_80X_V24/miniTreeProducer_pT200.py
+use_x509userproxy = true
+x509userproxy = /tmp/x509up_u47835
+Output = TT_dif_1_3.stdout
+Error =TT_dif_1_3.stderr
+Log =TT_dif_1_3.log
+Queue 1

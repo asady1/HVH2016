@@ -1,0 +1,14 @@
+universe = vanilla
+Executable = BulkGrav_M-300.sh
+Requirements = OpSys == "LINUX"&& (Arch != "DUMMY" )
+request_disk = 10000000
+request_memory = 10000
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_signalSamples/cmsset_default.sh, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_signalSamples/BulkGrav_M-300.txt, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_signalSamples/generalTreeAnalyzer_76X_noTriggerBits_300.py, /uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/Condor_signalSamples/trigger_objects.root
+use_x509userproxy = true
+x509userproxy = /tmp/x509up_u47835
+Output = BulkGrav300_dif.stdout
+Error =BulkGrav300_dif.stderr
+Log =BulkGrav300_dif.log
+Queue 1

@@ -1,0 +1,12 @@
+condor_submit condor_Config_BulkGrav_M-1000.jdl
+condor_submit condor_Config_BulkGrav_M-1200.jdl
+condor_submit condor_Config_BulkGrav_M-1400.jdl
+condor_submit condor_Config_BulkGrav_M-1600.jdl
+condor_submit condor_Config_BulkGrav_M-1800.jdl
+condor_submit condor_Config_BulkGrav_M-2000.jdl
+condor_submit condor_Config_BulkGrav_M-2500.jdl
+condor_submit condor_Config_BulkGrav_M-3000.jdl
+condor_submit condor_Config_BulkGrav_M-4000.jdl
+condor_submit condor_Config_BulkGrav_M-4500.jdl
+condor_submit condor_Config_BulkGrav_M-750.jdl
+condor_submit condor_Config_BulkGrav_M-800.jdl

@@ -823,7 +823,7 @@ class miniTreeProducer:
                 self.matched = 0
                 self.matchedsj = 0
                 if self.saveTrig == 'True':
-                    if self.HLT_PFHT800_v[0] > 0:
+                    if self.HLT_PFHT800_v[0] > 0 or self.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v[0] > 0 or self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] > 0 or self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] > 0 or self.HLT_AK8PFJet360_TrimMass30_v[0] > 0:
                         self.matched += 1
             
                 self.triggerpassbb[0] = self.matched

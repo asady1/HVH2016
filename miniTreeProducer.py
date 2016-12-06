@@ -978,7 +978,7 @@ class miniTreeProducer:
                             self.jettemp*=self.correction_factor
 	
 	
-                    if self.jettemp.Pt() > 200. and abs(self.jettemp.Eta()) < 2.4:
+                    if self.jettemp.Pt() > 250. and abs(self.jettemp.Eta()) < 2.4:
                         self.jets.append(self.jettemp)
                         self.jets_noL2L3.append(self.jettemp_noL2L3)
                         if self.fjUngroomedTau1[j] > 0:
@@ -1229,11 +1229,12 @@ class miniTreeProducer:
                         self.j2 = MatchCollection2(self.ujets, self.jets[self.idxH2],self.j1)
            
                     #filling gen jet info
-                    self.gen1Pt[0] = self.ujets[self.j1].Pt()
-                    self.gen1phi[0] = self.ujets[self.j1].Phi()
-                    self.gen1Eta[0] = self.ujets[self.j1].Eta()
-                    self.gen1Mass[0] = self.ujets[self.j1].M()
-                    self.gen1ID[0] = self.j1
+		    if len(self.ujets) > 0:
+                        self.gen1Pt[0] = self.ujets[self.j1].Pt()
+                        self.gen1phi[0] = self.ujets[self.j1].Phi()
+                        self.gen1Eta[0] = self.ujets[self.j1].Eta()
+                        self.gen1Mass[0] = self.ujets[self.j1].M()
+                        self.gen1ID[0] = self.j1
                     if len(self.jets) > 1:
                         self.gen2Pt[0] = self.ujets[self.j2].Pt()
                         self.gen2Phi[0] = self.ujets[self.j2].Phi()
@@ -1628,12 +1629,13 @@ class miniTreeProducer:
                         self.ak4jetCMVA.push_back(self.fJetCMVA[j])
 
                         if self.isMC == 'True':
-                            self.akj = MatchCollection(self.ujets, self.jettemp)
-                            self.ak4genJetPt.push_back(self.ujets[self.akj].Pt())
-                            self.ak4genJetEta.push_back(self.ujets[self.akj].Eta())
-                            self.ak4genJetPhi.push_back(self.ujets[self.akj].Phi())
-                            self.ak4genJetMass.push_back(self.ujets[self.akj].M())
-                            self.ak4genJetID.push_back(self.akj)
+                            if len(self.ujets) > 0:
+                               self.akj = MatchCollection(self.ujets, self.jettemp)
+                               self.ak4genJetPt.push_back(self.ujets[self.akj].Pt())
+                               self.ak4genJetEta.push_back(self.ujets[self.akj].Eta())
+                               self.ak4genJetPhi.push_back(self.ujets[self.akj].Phi())
+                               self.ak4genJetMass.push_back(self.ujets[self.akj].M())
+                               self.ak4genJetID.push_back(self.akj)
         
 
                 #resolved

@@ -254,6 +254,7 @@ class miniTreeProducer:
         self.nHiggsTags = array('f', [-100.0])
         self.nTrueInt = array('f', [-100])
         self.vtype = array('f', [-100.0])
+	self.nPVs = array('f', [-100.0])
         self.isData = array('f', [100.0])
         self.jet1nbHadron = array('f', [-100.0])
         self.jet2nbHadron = array('f', [-100.0])
@@ -471,6 +472,7 @@ class miniTreeProducer:
         self.theTree.Branch('jet1ID', self.jet1ID, 'jet1ID/F')
         self.theTree.Branch('jet2ID', self.jet2ID, 'jet2ID/F')
         self.theTree.Branch('vtype', self.vtype, 'vtype/F')
+	self.theTree.Branch('nPVs', nPVs, 'nPVs/F')
         self.theTree.Branch('isData', self.isData, 'isData/F')
         self.theTree.Branch('jet1nbHadron', self.jet1nbHadron, 'jet1nbHadron/F')
         self.theTree.Branch('jet2nbHadron', self.jet2nbHadron, 'jet2nbHadron/F')
@@ -1404,9 +1406,10 @@ class miniTreeProducer:
                     self.puWeightsDown[0] = self.puweightDown
                     self.nTrueInt[0] = self.nTInt
                     self.xsec[0] = float(self.xsecs)
-                    self.json[0] = self.JSON
-                    self.evt[0] = self.EVT
-                    self.vtype[0] = self.vType
+                self.json[0] = self.JSON
+                self.evt[0] = self.EVT
+                self.vtype[0] = self.vType
+	        self.nPVs[0] = treeMine.nPVs	
                 if self.Data:
                     self.isData[0] = 1
                 else:

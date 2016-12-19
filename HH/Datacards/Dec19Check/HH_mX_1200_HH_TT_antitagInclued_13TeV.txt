@@ -1,0 +1,64 @@
+max    1     number of categories
+jmax   1     number of samples minus one
+kmax    *     number of nuisance parameters
+-------------------------------------------------------------------------------
+shapes * * HH_mX_1200_HH_TT_antitagInclued_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC
+-------------------------------------------------------------------------------
+bin                                            vh4b
+observation                                    477.000000
+-------------------------------------------------------------------------------
+bin                                             vh4b            vh4b
+process                                          0      1
+process                                         Signal_mX_1200_HH_TT_antitagInclued  HH_TT_antitagIncluedEST
+rate                                            19.658127  477.401707
+-------------------------------------------------------------------------------
+lumi_13TeV lnN                          1.027       -
+CMS_eff_tau21_sf lnN                    1.162084       -
+CMS_JEC lnN 		     1.020000        -
+CMS_massJEC lnN                 1.020000        -
+CMS_eff_bbtag_sf lnN                    1.114449       -
+CMS_JER lnN                    1.020000        -
+CMS_PU lnN                    1.025986        -
+CMS_eff_trig shapeN2           1.0   -
+CMS_scaleHH_TT_antitagInclued_13TeV shapeN2                           -       1.000
+CMS_PDF_Scales lnN   1.02 -       
+CMS_statHH_TT_antitagInclued_13TeV_bin0 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin1 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin2 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin3 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin4 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin5 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin6 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin7 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin8 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin9 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin10 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin11 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin12 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin13 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin14 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin15 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin16 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin17 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin18 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin19 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin20 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin21 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin22 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin23 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin24 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin25 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin26 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin27 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin28 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin29 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin30 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin31 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin32 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin33 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin34 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin35 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin36 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin37 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin38 shapeN2                           -       1.000
+CMS_statHH_TT_antitagInclued_13TeV_bin39 shapeN2                           -       1.000

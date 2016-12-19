@@ -60,14 +60,14 @@ parser.add_option('-I', '--inject', metavar='Inj', type='string', dest='inject',
 parser.add_option('--workspace', metavar='WSPC', type='string', dest='workspace', default="alphabet")
 (Options, args) = parser.parse_args()
 
-preselection    =       "&(vtype==-1||vtype==4)&jet2pt>250&json==1&jet1pt>250&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
+preselection    =       "&(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
 #preselection	= 	"&vtype==-1&jet2pt>250&json==1&jet1pt>250&etadiff<1.3&jet1tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&HLT_PFHT800_v==1"
 TightPre 		=	Options.tightpre + preselection
 TightAT                 =       TightPre + "&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr<135&(jet1bbtag<"+str(Options.tightcut)+")"
 #TightAT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag<"+str(Options.tightcut)+")"
 TightT          =       TightPre + "&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr<135&(jet1bbtag>"+str(Options.tightcut)+")"
 #TightT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"
-TightT2         = "jet2bbtag > 0.8 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  &(vtype==-1||vtype==4)&jet2pt>250&json==1&jet1pt>250&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.8)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
+TightT2         = "jet2bbtag > 0.8 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  &(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.8)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
 #TightT2         = "jet2bbtag > 0.3 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 110 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 140  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))&(vtype==-1||vtype==4)&jet2_puppi_pt>200&json==1&jet1_puppi_pt>200&abs(jet1_puppi_eta-jet2_puppi_eta)<1.3&jet1_puppi_tau21<0.6&dijetmass_TLpuppi_SubsoftdropTheaCorr>800&jet2ID==1&jet1ID==1&abs(jet1_puppi_eta)<2.4&abs(jet2_puppi_eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>110&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<140&(jet1bbtag>0.3)"
 
 if Options.finebins:
@@ -158,7 +158,7 @@ leg.AddEntry(Hbb.Fit.fit, "fit", "L")
 leg.AddEntry(Hbb.Fit.ErrUp, "fit errors", "L")
 plotforplotting = TH1F("empty_"+Options.name, "", 24, -75, 80)
 plotforplotting.SetStats(0)
-plotforplotting.GetYaxis().SetRangeUser(0.,0.25)
+plotforplotting.GetYaxis().SetRangeUser(0.04,0.12)
 plotforplotting.GetXaxis().SetTitle("m_{J} - m_{H} (GeV)")
 plotforplotting.GetYaxis().SetTitle("R_{p/f}")
 plotforplotting.GetYaxis().SetTitleOffset(1.5)
@@ -173,6 +173,14 @@ Hbb.truthG.SetLineWidth(2)
 if Options.Truth:
 	Hbb.truthG.Draw("P same") # TURN ON FOR TRUTH BINS
 Hbb.Fit.fit.Draw("same")
+
+FunctionChiSquared = Hbb.Fit.fit.GetChisquare()
+
+THILABL = TLatex()
+THILABL.SetNDC()
+THILABL.SetTextSize(0.04)
+THILABL.DrawLatex(0.651,0.91,"#chi^{2} = %s"%(FunctionChiSquared))
+
 Hbb.Fit.ErrUp.SetLineStyle(2)
 Hbb.Fit.ErrUp.Draw("same")
 Hbb.Fit.ErrDn.SetLineStyle(2)
@@ -194,6 +202,7 @@ maxy = PULL[1]
 Boxes = PULL[2]
 sBoxes = PULL[3]
 pBoxes = PULL[4]
+fBoxes = PULL[5]
 
 vartitle = "m_{X} (GeV)"
 
@@ -205,12 +214,15 @@ D.SetMarkerColor(1)
 D.SetMarkerStyle(20)
 N.GetYaxis().SetTitle("events")
 N.GetXaxis().SetTitle(vartitle)
+A.GetYaxis().SetTitle("events")
+A.GetXaxis().SetTitle(vartitle)
 if Options.log:
 #        N.GetYaxis().SetRangeUser(0.05,maxy*1.5)
-	N.GetYaxis().SetRangeUser(0.01,maxy*1.5)
+	A.GetYaxis().SetRangeUser(0.000005,maxy*30)
 else:
 	N.GetYaxis().SetRangeUser(0.,maxy*1.2)
 N.SetLineColor(kBlue)
+A.SetLineColor(kGreen + 2)
 
 Pull.GetXaxis().SetTitle("")
 Pull.SetStats(0)
@@ -245,18 +257,23 @@ for i in pBoxes:
 for i in sBoxes:
 	i.SetFillColor(41)
 	i.SetFillStyle(3344)
+for i in fBoxes:
+        i.SetFillColor(46)
+        i.SetFillStyle(3444)
 
 leg2 = TLegend(0.6,0.6,0.89,0.89)
 leg2.SetLineColor(0)
 leg2.SetFillColor(0)
 leg2.AddEntry(D, whichdataorQCD, "PL")
 leg2.AddEntry(N, "background prediction", "LF")
-leg2.AddEntry(Boxes[0], "total uncertainty", "F")
+#leg2.AddEntry(Boxes[0], "total uncertainty", "F")
 leg2.AddEntry(sBoxes[0], "background statistical component", "F")
-if Options.Sig:
-	leg2.AddEntry(SIG0, "Bulk Graviton (1200 GeV, 27 fb)", "F")
-	leg2.AddEntry(SIG1, "Bulk Graviton (1800 GeV, 27 fb)", "F")
-	leg2.AddEntry(SIG2, "Bulk Graviton (2500 GeV, 27 fb)", "F")
+leg2.AddEntry(fBoxes[0], "alphabet fit component", "F")
+leg2.AddEntry(A, "anti-tag", "LF")
+#if Options.Sig:
+#	leg2.AddEntry(SIG0, "Bulk Graviton (1200 GeV, 27 fb)", "F")
+#	leg2.AddEntry(SIG1, "Bulk Graviton (1800 GeV, 27 fb)", "F")
+#	leg2.AddEntry(SIG2, "Bulk Graviton (2500 GeV, 27 fb)", "F")
 
 T0 = TLine(800,0.,4509,0.)
 T0.SetLineColor(kBlue)
@@ -274,6 +291,7 @@ Tm1.SetLineColor(kBlue)
 Tm1.SetLineStyle(3)
 
 N.SetStats(0)
+A.SetStats(0)
 
 C4 = TCanvas("C4", "", 800, 600)
 plot = TPad("pad1", "The pad 80% of the height",0,0.15,1,1)
@@ -281,17 +299,20 @@ pull = TPad("pad2", "The pad 20% of the height",0,0,1.0,0.15)
 plot.Draw()
 pull.Draw()
 plot.cd()
-N.Draw("Hist")
+A.Draw("Hist")
+N.Draw("Hist SAME")
 if Options.Truth:
 	D.Draw("same E0")
-for i in Boxes:
-	i.Draw("same")
+#for i in Boxes:
+#	i.Draw("same")
 for i in sBoxes:
 	i.Draw("same")
-if Options.Sig:
-	SIG0.Draw("same hist")
-	SIG1.Draw("same hist")
-	SIG2.Draw("same hist")
+for i in fBoxes:
+        i.Draw("same")
+#if Options.Sig:
+#	SIG0.Draw("same hist")
+#	SIG1.Draw("same hist")
+#	SIG2.Draw("same hist")
 N.Draw("Hist same")
 if Options.log:
 	plot.SetLogy()
@@ -314,7 +335,7 @@ if Options.workspace == "alphabet":
 	mass=[750,800,1000,1200,1400,1600,1800,2000,2500, 3000, 4000, 4500]
 	for m in mass:
 		print str(m)
-		SF_tau21 = 0.963*0.963
+		SF_tau21 = 1.03*1.03
 		UD = ['Up','Down']
 
 		output_file = TFile("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV.root", "RECREATE")
@@ -438,7 +459,7 @@ if Options.workspace == "alphabet":
 		text_file.write("-------------------------------------------------------------------------------\n")
 		text_file.write("lumi_13TeV lnN                          1.027       -\n")	
 	
-		text_file.write("CMS_eff_tau21_sf lnN                    1.060       -\n") #(0.028/0.979)
+		text_file.write("CMS_eff_tau21_sf lnN                    1.162084       -\n") #(0.028/0.979)
 		#text_file.write("CMS_eff_Htag_sf lnN                    1.1       -\n")   
 		text_file.write("CMS_JEC lnN 		     %f        -\n"%(FJEClnN)) 	
 		text_file.write("CMS_massJEC lnN                 %f        -\n"%(MJEClnN))

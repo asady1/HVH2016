@@ -216,6 +216,9 @@ N.GetYaxis().SetTitle("events")
 N.GetXaxis().SetTitle(vartitle)
 A.GetYaxis().SetTitle("events")
 A.GetXaxis().SetTitle(vartitle)
+print "Integrals:"
+print A.Integral()
+print N.Integral()
 if Options.log:
 #        N.GetYaxis().SetRangeUser(0.05,maxy*1.5)
 	A.GetYaxis().SetRangeUser(0.000005,maxy*10)

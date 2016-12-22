@@ -82,11 +82,11 @@ variable2 = "dijetmass_softdrop_corr"
 #variable = "dijetmass_corr"
 
 ############# DATASETS: #################
-QCD1 = DIST("DATA1", "/eos/uscms/store/user/mkrohn/HHTo4b/V23/miniTrees_80X_ICHEP/QCD_HT500To700.root","myTree",str(Options.lumi)+"*31630./19665695")
-QCD2 = DIST("DATA2", "/eos/uscms/store/user/mkrohn/HHTo4b/V23/miniTrees_80X_ICHEP/QCD_HT700To1000.root","myTree",str(Options.lumi)+"*6802./15547962")
-QCD3 = DIST("DATA3", "/eos/uscms/store/user/mkrohn/HHTo4b/V23/miniTrees_80X_ICHEP/QCD_HT1000To1500.root","myTree",str(Options.lumi)+"*1206./5049267")
-QCD4 = DIST("DATA4", "/eos/uscms/store/user/mkrohn/HHTo4b/V23/miniTrees_80X_ICHEP/QCD_HT1500To2000.root","myTree",str(Options.lumi)+"*120.4/3939077")
-QCD5 = DIST("DATA5", "/eos/uscms/store/user/mkrohn/HHTo4b/V23/miniTrees_80X_ICHEP/QCD_HT2000ToInf.root","myTree",str(Options.lumi)+"*25.25/1981228")
+QCD1 = DIST("DATA1", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT500To700.root","myTree",str(Options.lumi)+"*31630./16563300.")
+QCD2 = DIST("DATA2", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT700To1000.root","myTree",str(Options.lumi)+"*6802./10206600.")
+QCD3 = DIST("DATA3", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1000To1500.root","myTree",str(Options.lumi)+"*1206./3407530.")
+QCD4 = DIST("DATA4", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1500To2000.root","myTree",str(Options.lumi)+"*120.4/3161430.")
+QCD5 = DIST("DATA5", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT2000ToInf.root","myTree",str(Options.lumi)+"*25.25/3234700.")
 DATA = DIST("DATA", "/uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/JetHT.root","mynewTree","1.")
 #DATA = DIST("DATA", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24/JetHT.root","myTree","1.")
 if Options.isData:

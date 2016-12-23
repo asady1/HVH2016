@@ -1,0 +1,1 @@
+miniTreeProducer in main directory makes miniTrees that can then be fed to slimTreeMaker.py, which is run on condor by condor_Config_2p1_trees.jdl which runs run_2p1_trees.sh - it takes ~4 days to run, so perhaps there's a faster way, but this works for now.  

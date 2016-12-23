@@ -472,7 +472,7 @@ class miniTreeProducer:
         self.theTree.Branch('jet1ID', self.jet1ID, 'jet1ID/F')
         self.theTree.Branch('jet2ID', self.jet2ID, 'jet2ID/F')
         self.theTree.Branch('vtype', self.vtype, 'vtype/F')
-	self.theTree.Branch('nPVs', nPVs, 'nPVs/F')
+	self.theTree.Branch('nPVs', self.nPVs, 'nPVs/F')
         self.theTree.Branch('isData', self.isData, 'isData/F')
         self.theTree.Branch('jet1nbHadron', self.jet1nbHadron, 'jet1nbHadron/F')
         self.theTree.Branch('jet2nbHadron', self.jet2nbHadron, 'jet2nbHadron/F')
@@ -1409,7 +1409,7 @@ class miniTreeProducer:
                 self.json[0] = self.JSON
                 self.evt[0] = self.EVT
                 self.vtype[0] = self.vType
-	        self.nPVs[0] = treeMine.nPVs	
+	        self.nPVs[0] = self.treeMine.nPVs	
                 if self.Data:
                     self.isData[0] = 1
                 else:

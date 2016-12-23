@@ -1,5 +1,15 @@
 This repository contains the code necessary for the boosted HH4b, semi-resloved HH4b, and HVbbjj analyses. 
 
+New code:
+
+getMiniTrees.py is a shell that handles miniTreeFunctions.py and miniTreeProducer.py, where the functions code has a bunch of different functions and the producer has a class that handles the majority of miniTree production
+
+running looks like:
+
+python getMiniTrees.py --pathIn=root://cmsxrootd.fnal.gov//store/user/lpchbb/HeppyNtuples/V24b/BulkGravTohhTohbbhbb_narrow_M-1000_13TeV-madgraph/VHBB_HEPPY_V24a_BulkGravTohhTohbbhbb_narrow_M-1000_13TeV-madgraph__spr16MAv2-puspr16_HLT_80r2as_v14-v3/161014_191835/0000/ --outName=BG_1000_V24b_V1 --isMC='True' --saveTrig='True' --xsec=1.0 --min=0 --max=3 --file=three.txt --syst=None
+
+Old code:
+
 generalTreeAnalyzer_80X.py is designed to run over heppy ntuples to produce miniTrees for analysis:
 
 python generalTreeAnalyzer_80X.py --pathIn=root://cmsxrootd.fnal.gov//store/user/lpchbb/HeppyNtuples/V23/BulkGravTohhTohbbhbb_narrow_M-1800_13TeV-madgraph/VHBB_HEPPY_V23_BulkGravTohhTohbbhbb_narrow_M-1800_13TeV-madgraph__spr16MAv2-puspr16_HLT_80r2as_v14-v1/160716_234632/0000/  --outName=BG_1800_80X_2p1 --jets='True' --isMC='True' --is2p1='True' --xsec=1.0 --min=0 --max=1 --file=TxtFiles/one.txt --syst=None

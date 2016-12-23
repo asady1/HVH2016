@@ -43,20 +43,23 @@ g1 = array('f', [-100.0])
 h1 = array('f', [-100.0])
 i1 = array('f', [-100.0])
 l1 = array('f', [-100.0])
-m1 = array('f', [-100.0])
-q1 = array('f', [-100.0])
 o1 = array('f', [-100.0])
-p1 = array('f', [-100.0])
-r1 = array('f', [-100.0])
-s1 = array('f', [-100.0])
-t1 = array('f', [-100.0])
 u1 = array('f', [-100.0])
 LL = array('f', [-100.0])
 TT = array('f', [-100.0])
 v1 = array('f', [-100.0])
 fatjetPT = array('f', [-100.0])
+fatjetETA = array('f', [-100.0])
+fatjetPHI = array('f', [-100.0])
+fatjetM = array('f', [-100.0])
 bjet1PT = array('f', [-100.0])
+bjet1ETA = array('f', [-100.0])
+bjet1PHI = array('f', [-100.0])
+bjet1M = array('f', [-100.0])
 bjet2PT = array('f', [-100.0])
+bjet2ETA = array('f', [-100.0])
+bjet2PHI = array('f', [-100.0])
+bjet2M = array('f', [-100.0])
 HT = array('f', [-100.0])
 ak4btag1 = array('f', [-100.0])
 ak4btag2 = array('f', [-100.0])
@@ -93,20 +96,23 @@ mynewTree.Branch("dijet_mass", g1, "dijet_mass")
 mynewTree.Branch("fatjet_mass", h1, "fatjet_mass")
 mynewTree.Branch("cross_section", i1, "cross_section")
 mynewTree.Branch("fatjet_hbb", l1, "fatjet_hbb")
-mynewTree.Branch("isCR", m1, "isCR")#
-mynewTree.Branch("Vtype", q1, "Vtype")
 mynewTree.Branch("puWeight", o1, "puWeight")
-mynewTree.Branch("norm", p1, "norm")
-mynewTree.Branch("n_OkJets", r1, "n_OkJets")
-mynewTree.Branch("n_OkFj", s1, "n_OkFj")
-mynewTree.Branch("evt", t1, "evt")
 mynewTree.Branch("boosted", u1, "boosted")
 mynewTree.Branch("LL", LL, "LL")
 mynewTree.Branch("TT", TT, "TT")
 mynewTree.Branch("resolved", v1, "resolved")
 mynewTree.Branch("fatjetPT", fatjetPT, "fatjetPT")
+mynewTree.Branch("fatjetETA", fatjetETA, "fatjetETA")
+mynewTree.Branch("fatjetPHI", fatjetPHI, "fatjetPHI")
+mynewTree.Branch("fatjetM", fatjetM, "fatjetM")
 mynewTree.Branch("bjet1PT", bjet1PT, "bjet1PT")
+mynewTree.Branch("bjet1ETA", bjet1ETA, "bjet1ETA")
+mynewTree.Branch("bjet1PHI", bjet1PHI, "bjet1PHI")
+mynewTree.Branch("bjet1M", bjet1M, "bjet1M")
 mynewTree.Branch("bjet2PT", bjet2PT, "bjet2PT")
+mynewTree.Branch("bjet2ETA", bjet2ETA, "bjet2ETA")
+mynewTree.Branch("bjet2PHI", bjet2PHI, "bjet2PHI")
+mynewTree.Branch("bjet2M", bjet2M, "bjet2M")
 mynewTree.Branch("HT", HT, "HT")
 mynewTree.Branch("ak4btag1", ak4btag1, "ak4btag1")
 mynewTree.Branch("ak4btag2", ak4btag2, "ak4btag2")
@@ -190,8 +196,8 @@ for i in range(0, nevent) :
     
     ak4jets1Pre = []
     ak4jets2Pre = []
-    ak4jets1cmva = []
-    ak4jets2cmva = []
+    ak4jets1csv = []
+    ak4jets2csv = []
     ak4jet1ID = []
     ak4jet2ID = []
     for j in range(len(treeMine.ak4jet_pt)):
@@ -199,13 +205,13 @@ for i in range(0, nevent) :
         j_p4.SetPtEtaPhiM(treeMine.ak4jet_pt[j], treeMine.ak4jet_eta[j], treeMine.ak4jet_phi[j], treeMine.ak4jet_mass[j])
         deltaR1=j_p4.DeltaR(ak8Jet1)
         deltaR2=j_p4.DeltaR(ak8Jet2)
-        if deltaR1 > 1.5 and treeMine.ak4jetCMVA[j] > 0.185:
+        if deltaR1 > 0.8 and treeMine.ak4jetCSV[j] > 0.5426:
             ak4jets1Pre.append(j_p4)
-            ak4jets1cmva.append(treeMine.ak4jetCMVA[j])
+            ak4jets1csv.append(treeMine.ak4jetCSV[j])
             ak4jet1ID.append(j)
-        if deltaR2 > 1.5 and treeMine.ak4jetCMVA[j] > 0.185:
+        if deltaR2 > 0.8 and treeMine.ak4jetCSV[j] > 0.5426:
             ak4jets2Pre.append(j_p4)
-            ak4jets2cmva.append(treeMine.ak4jetCMVA[j])
+            ak4jets2csv.append(treeMine.ak4jetCSV[j])
             ak4jet2ID.append(j)
 
     ak4jet1 = TLorentzVector()
@@ -231,13 +237,13 @@ for i in range(0, nevent) :
                 if (l!=k):
                     jet4_p4.SetPtEtaPhiM(ak4jets1Pre[l].Pt(), ak4jets1Pre[l].Eta(), ak4jets1Pre[l].Phi(), ak4jets1Pre[l].M())
                     deltaRak4=jet3_p4.DeltaR(jet4_p4)
-                    b_add = ak4jets1cmva[k] + ak4jets1cmva[l]
+                    b_add = ak4jets1csv[k] + ak4jets1csv[l]
                     if b_min < b_add and deltaRak4 < 1.5:
                         ak4jet1 = ak4jets1Pre[k]
-                        ak4jet1btag = ak4jets1cmva[k]
+                        ak4jet1btag = ak4jets1csv[k]
                         ak4jet1i = ak4jet1ID[k]
                         ak4jet2 = ak4jets1Pre[l]
-                        ak4jet2btag = ak4jets1cmva[l]
+                        ak4jet2btag = ak4jets1csv[l]
                         ak4jet2i = ak4jet1ID[l]
                         b_min = b_add
     if b_min == 0 and len(ak4jets2Pre) > 1 and ak8Jet2.Pt() > 250 and treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr > 40:
@@ -253,13 +259,13 @@ for i in range(0, nevent) :
                 if (l!=k):
                     jet4_p4.SetPtEtaPhiM(ak4jets2Pre[l].Pt(), ak4jets2Pre[l].Eta(), ak4jets2Pre[l].Phi(), ak4jets2Pre[l].M())
                     deltaRak4=jet3_p4.DeltaR(jet4_p4)
-                    b_add = ak4jets2cmva[k] + ak4jets2cmva[l]
+                    b_add = ak4jets2csv[k] + ak4jets2csv[l]
                     if b_min < b_add and deltaRak4 < 1.5:
                         ak4jet1 = ak4jets2Pre[k]
-                        ak4jet1btag= ak4jets2cmva[k]
+                        ak4jet1btag= ak4jets2csv[k]
                         ak4jet1i = ak4jet2ID[k]
                         ak4jet2 = ak4jets2Pre[l]
-                        ak4jet2btag= ak4jets2cmva[l]
+                        ak4jet2btag= ak4jets2csv[l]
                         ak4jet2i = ak4jet2ID[l]
                         b_min = b_add
     if b_min == 0:
@@ -277,22 +283,15 @@ for i in range(0, nevent) :
     h1[0]=mH1
     i1[0]=treeMine.xsec
     l1[0]=bbtag
-    q1[0]=treeMine.vtype
     o1[0]=treeMine.puWeights
     puW_up[0] = treeMine.puWeightsUp
     puW_down[0] = treeMine.puWeightsDown
-        #p1[0]=treeMine.norm
-#        r1[0]=count_jets1outsidef + count_jets2outsidef
- #       s1[0]=count_fatjets
-    m1[0]=0.
-    t1[0]=treeMine.evt
-#    u1[0]=treeMine.passesBoosted
     jet1_ungroomed_TL = ROOT.TLorentzVector()
     jet2_ungroomed_TL = ROOT.TLorentzVector()
     jet1_ungroomed_TL.SetPtEtaPhiM(treeMine.jet1pt, treeMine.jet1eta, treeMine.jet1phi, treeMine.jet1mass)
     jet2_ungroomed_TL.SetPtEtaPhiM(treeMine.jet2pt, treeMine.jet2eta, treeMine.jet2phi, treeMine.jet2mass)
     dijetmass_softdrop_corr = (jet1_ungroomed_TL + jet2_ungroomed_TL).M() - (treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr - 125) - (treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr - 125)
-    if (treeMine.HLT_PFHT800_v > 0 or treeMine.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v > 0or treeMine.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v > 0 or treeMine.HLT_AK8PFJet360_TrimMass30_v > 0 or HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v > 0) and (treeMine.jet1pt > 300 and treeMine.jet2pt > 300 and abs(treeMine.jet1eta) < 2.4 and abs(treeMine.jet2eta) < 2.4) and (abs(treeMine.jet1eta - treeMine.jet2eta) < 1.3) and (treeMine.jet1ID == 1 and treeMine.jet2ID == 1) and (dijetmass_softdrop_corr > 750) and (105 < treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr < 135) and (105 < treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr) and (treeMine.jet1_puppi_tau21 < 0.6 and treeMine.jet2_puppi_tau21 < 0.6):
+    if (treeMine.HLT_PFHT800_v > 0 or treeMine.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v > 0 or treeMine.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v > 0 or treeMine.HLT_AK8PFJet360_TrimMass30_v > 0 or treeMine.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v > 0) and (treeMine.jet1pt > 300 and treeMine.jet2pt > 300 and abs(treeMine.jet1eta) < 2.4 and abs(treeMine.jet2eta) < 2.4) and (abs(treeMine.jet1eta - treeMine.jet2eta) < 1.3) and (treeMine.jet1ID == 1 and treeMine.jet2ID == 1) and (dijetmass_softdrop_corr > 750) and (105 < treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr < 135) and (105 < treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr) and (treeMine.jet1_puppi_tau21 < 0.6 and treeMine.jet2_puppi_tau21 < 0.6):
         u1[0] = 1.
         if (treeMine.jet1bbtag > 0.8 and treeMine.jet2bbtag > 0.8):
             TT[0] = 1.
@@ -306,8 +305,17 @@ for i in range(0, nevent) :
     if options.ttbar == "True":
         ttHT[0] = treeMine.topHT
     fatjetPT[0] = fatjet.Pt()
+    fatjetETA[0] = fatjet.Eta()
+    fatjetPHI[0] = fatjet.Phi()
+    fatjetM[0] = fatjet.M()
     bjet1PT[0] = ak4jet1.Pt()
+    bjet1ETA[0] = ak4jet1.Eta()
+    bjet1PHI[0] = ak4jet1.Phi()
+    bjet1M[0] = ak4jet1.M()
     bjet2PT[0] = ak4jet2.Pt()
+    bjet2ETA[0] = ak4jet2.Eta()
+    bjet2PHI[0] = ak4jet2.Phi()
+    bjet2M[0] = ak4jet2.M()
     HT[0] = treeMine.ht
     ak4btag1[0] = ak4jet1btag
     ak4btag2[0] = ak4jet2btag
@@ -334,12 +342,12 @@ for i in range(0, nevent) :
             SFup[0] = 0.96
             SFdown[0] = 0.82
 
-        ak4btag1SF[0] = treeMine.ak4jetCMVAMSF[ak4jet1i]
-        ak4btag1SFup[0] = treeMine.ak4jetCMVAMSF_Up[ak4jet1i]
-        ak4btag1SFdown[0] = treeMine.ak4jetCMVAMSF_Down[ak4jet1i]
-        ak4btag2SF[0] = treeMine.ak4jetCMVAMSF[ak4jet2i]
-        ak4btag2SFup[0] = treeMine.ak4jetCMVAMSF_Up[ak4jet2i]
-        ak4btag2SFdown[0] = treeMine.ak4jetCMVAMSF_Down[ak4jet2i]
+        ak4btag1SF[0] = treeMine.ak4jetCSVMSF[ak4jet1i]
+        ak4btag1SFup[0] = treeMine.ak4jetCSVMSF_up[ak4jet1i]
+        ak4btag1SFdown[0] = treeMine.ak4jetCSVMSF_Down[ak4jet1i]
+        ak4btag2SF[0] = treeMine.ak4jetCSVMSF[ak4jet2i]
+        ak4btag2SFup[0] = treeMine.ak4jetCSVMSF_up[ak4jet2i]
+        ak4btag2SFdown[0] = treeMine.ak4jetCSVMSF_Down[ak4jet2i]
 
     if options.saveTrig == 'True':
         HLT2_HT800[0]= treeMine.HLT_PFHT800_v

@@ -134,6 +134,7 @@ def FillPlots(Alphabet, V, N, NU, ND, A, variable, binBoundaries, AT, T):
 	Boxes = []
 	sBoxes = []
 	pBoxes = []
+	fBoxes = []
 	maxy = 0.
 	Pull = V.Clone("Pull")
 	Pull.Add(N, -1.)
@@ -152,6 +153,7 @@ def FillPlots(Alphabet, V, N, NU, ND, A, variable, binBoundaries, AT, T):
 		x1 = Pull.GetBinCenter(i) - (0.5*Pull.GetBinWidth(i))
 		y1 = N.GetBinContent(i) - math.sqrt((d*d) + (a*a))
 		s1 = N.GetBinContent(i) - a
+		f1 = N.GetBinContent(i) - d
 		if y1 < 0.:
 			y1 = 0
 		if s1 < 0:
@@ -159,6 +161,7 @@ def FillPlots(Alphabet, V, N, NU, ND, A, variable, binBoundaries, AT, T):
 		x2 = Pull.GetBinCenter(i) + (0.5*Pull.GetBinWidth(i))
 		y2 = N.GetBinContent(i) + math.sqrt((u*u) + (a*a))
 		s2 = N.GetBinContent(i) + a
+		f2 = N.GetBinContent(i) + d
 		if maxy < y2:
 			maxy = y2
 		if Ve > 1.:
@@ -170,10 +173,12 @@ def FillPlots(Alphabet, V, N, NU, ND, A, variable, binBoundaries, AT, T):
 		tempbox = TBox(x1,y1,x2,y2)
 		temppbox = TBox(x1,yP1,x2,yP2)
 		tempsbox = TBox(x1,s1,x2,s2)
+		tempfbox = TBox(x1,f1,x2,f2)
 		Boxes.append(tempbox)
 		sBoxes.append(tempsbox)
 		pBoxes.append(temppbox)
-	return [Pull, maxy, Boxes, sBoxes, pBoxes]
+		fBoxes.append(tempfbox)
+	return [Pull, maxy, Boxes, sBoxes, pBoxes, fBoxes]
 
 
 #RooDataHist pred("pred", "Prediction from SB", RooArgList( x ), h_SR_Prediction);

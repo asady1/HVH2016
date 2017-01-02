@@ -7,6 +7,11 @@ import ROOT
 from ROOT import *
 import scipy
 
+#import Alphabet_Header
+#from Alphabet_Header import *
+#import Alphabet
+#from Alphabet import *
+
 def quickplot(File, tree, plot, var, Cut, Weight): # Fills  a plot from a file (needs to have a TTree called "tree"...)
         temp = plot.Clone("temp") # Allows to add multiple distributions to the plot
         chain = ROOT.TChain(tree)
@@ -46,4 +51,4 @@ def FindAndSetMax(someset):
                         maximum = t
         for j in someset:
                 j.GetYaxis().SetRangeUser(0,maximum*1.35)
-	
+

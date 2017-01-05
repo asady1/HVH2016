@@ -1,0 +1,496 @@
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.14393}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 import os\par
+import math\par
+from array import array\par
+import optparse\par
+import ROOT\par
+from ROOT import *\par
+import scipy\par
+import pdb\par
+\par
+# Our functions:\par
+import Alphabet_Header\par
+from Alphabet_Header import *\par
+import Plotting_Header\par
+from Plotting_Header import *\par
+import Converters\par
+from Converters import *\par
+import Distribution_Header\par
+from Distribution_Header import *\par
+import Alphabet\par
+from Alphabet import *\par
+\par
+def GetNom(file_string):\par
+\tab tempFile = TFile(file_string)\par
+\tab tempHist = tempFile.Get("CountWeighted")\par
+\tab norm = tempHist.GetBinContent(1)\par
+\tab tempFile.Close()\par
+\tab return norm\par
+\par
+from optparse import OptionParser\par
+parser = OptionParser()\par
+\par
+parser.add_option('--B', '--binsize', metavar='Bin', type='string', dest='bin', default="15")\par
+\par
+parser.add_option('--T2', '--Selection', metavar='T32', type='string', dest='tightpre', default = "jet2_puppi_msoftdrop_raw > 105 & jet2_puppi_msoftdrop_raw < 135 & jet2bbtag > 0.3 & (!(jet2bbtag > 0.8 & jet1bbtag > 0.8))")\par
+parser.add_option('--T1', '--Cut', metavar='T13', type='float', dest='tightcut', default = 0.3)\par
+\par
+parser.add_option('--N', '--name', metavar='Name', type='string', dest='name', default="test")\par
+parser.add_option('--L', '--lumi', metavar='Name', type='float', dest='lumi', default="27000")\par
+\par
+parser.add_option("--data", action="store_true", dest="isData", default=True)\par
+parser.add_option("--qcd", action="store_false", dest="isData")\par
+\par
+parser.add_option("--quad", action="store_false", dest="Linear", default=False)\par
+parser.add_option("--lin", action="store_true", dest="Linear")\par
+\par
+parser.add_option("--blind", action="store_false", dest="Truth", default=False)\par
+parser.add_option("--unblind", action="store_true", dest="Truth")\par
+\par
+parser.add_option("--finebins", action="store_false", dest="finebins", default=True)\par
+parser.add_option("--dijetbins", action="store_true", dest="finsbines")\par
+\par
+parser.add_option("--log", action="store_true", dest="log", default=False)\par
+parser.add_option("--nolog", action="store_false", dest="log")\par
+\par
+parser.add_option("--sig", action="store_true", dest="Sig", default=True)\par
+parser.add_option("--nosig", action="store_false", dest="Sig")\par
+\par
+parser.add_option('-I', '--inject', metavar='Inj', type='string', dest='inject', default="none")\par
+\par
+parser.add_option('--workspace', metavar='WSPC', type='string', dest='workspace', default="alphabet")\par
+(Options, args) = parser.parse_args()\par
+\par
+preselection    =       "&(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4"\par
+#preselection\tab = \tab "&vtype==-1&jet2pt>250&json==1&jet1pt>250&etadiff<1.3&jet1tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&HLT_PFHT800_v==1"\par
+TightPre \tab\tab =\tab Options.tightpre + preselection\par
+TightAT                 =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135&(jet1bbtag<"+str(Options.tightcut)+")"\par
+#TightAT \tab\tab =\tab TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag<"+str(Options.tightcut)+")"\par
+TightT          =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135&(jet1bbtag>"+str(Options.tightcut)+")"\par
+#TightT \tab\tab =\tab TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"\par
+TightT2         = "jet2bbtag > 0.8 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  &(vtype==-1||vtype==4)&jet2pt>250&json==1&jet1pt>250&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.8)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"\par
+#TightT2         = "jet2bbtag > 0.3 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 110 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 140  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))&(vtype==-1||vtype==4)&jet2_puppi_pt>200&json==1&jet1_puppi_pt>200&abs(jet1_puppi_eta-jet2_puppi_eta)<1.3&jet1_puppi_tau21<0.6&dijetmass_TLpuppi_SubsoftdropTheaCorr>800&jet2ID==1&jet1ID==1&abs(jet1_puppi_eta)<2.4&abs(jet2_puppi_eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>110&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<140&(jet1bbtag>0.3)"\par
+\par
+\par
+Options.finebins = True\par
+if Options.finebins:\par
+\tab binBoundaries=[]\par
+\tab for i in range(0,1300):\tab\par
+\tab\tab binBoundaries.append(1200+i*1)\par
+\tab print (" 1 GeV bins ...")\par
+\tab\par
+else:\par
+\tab binBoundaries =[800, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4681, 4853, 5025]\par
+\par
+variable = "dijetmass_softdrop_corr"\par
+variable2 = "dijetmass_softdrop_corr"\par
+#variable = "dijetmass_corr"\par
+\par
+############# DATASETS: #################\par
+QCD1 = DIST("DATA1", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT500To700.root","mynewTree",str(Options.lumi)+"*31630./16563300.")\par
+QCD2 = DIST("DATA2", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT700To1000.root","mynewTree",str(Options.lumi)+"*6802./10206600.")\par
+QCD3 = DIST("DATA3", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1000To1500.root","mynewTree",str(Options.lumi)+"*1206./3407530.")\par
+QCD4 = DIST("DATA4", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1500To2000.root","mynewTree",str(Options.lumi)+"*120.4/3161430.")\par
+QCD5 = DIST("DATA5", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT2000ToInf.root","mynewTree",str(Options.lumi)+"*25.25/3234700.")\par
+DATA = DIST("DATA", "/uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/JetHT.root","mynewTree","1.")\par
+#DATA = DIST("DATA", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24/JetHT.root","myTree","1.")\par
+if Options.isData:\par
+\tab DistsWeWantToEstimate = [DATA]\par
+\tab whichdataorQCD = "Data"\par
+else:\par
+\tab DistsWeWantToEstimate = [QCD1,QCD2,QCD3,QCD4,QCD5]\par
+\tab whichdataorQCD = "QCD"\par
+\par
+sigpath = "/uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/"\par
+\par
+#sigpath = "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24/BulkGrav_Correct/Alphabet/"\par
+if Options.inject != "none":\par
+\tab normI = GetNom(sigpath+"BulkGrav_M-"+Options.inject+"_0.root")\par
+\tab INJ = DIST("INJ", sigpath+"BulkGrav_M-"+Options.inject+"_0.root","mynewTree",str(Options.lumi)+"*0.01*puWeights*SFTight/"+str(normI))\par
+\tab whichdataorQCD = "QCD w/ Injected Signal"\par
+\tab DistsWeWantToEstimate.append(INJ)\par
+#### SOME SIGNALS WE'LL USE:\par
+norm0= GetNom(sigpath+"BulkGrav_M-1200_0.root")\par
+norm1 = GetNom(sigpath+"BulkGrav_M-1800_0.root")\par
+norm2 = GetNom(sigpath+"BulkGrav_M-2500_0.root")\par
+\par
+SIG0 = TH1F("Signal1200", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+SIG1 = TH1F("Signal1800", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+SIG2 = TH1F("Signal2500", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\par
+quickplot(sigpath+"BulkGrav_M-1200_0.root", "mynewTree", SIG0, variable2, TightT2, "puWeights*SFTight/1.")\par
+quickplot(sigpath+"BulkGrav_M-1800_0.root", "mynewTree", SIG1, variable2, TightT2, "puWeights*SFTight/1.")\par
+quickplot(sigpath+"BulkGrav_M-2500_0.root", "mynewTree", SIG2, variable2, TightT2, "puWeights*SFTight/1.")\par
+\par
+SIG0.Scale(Options.lumi*0.01/norm0)\par
+SIG1.Scale(Options.lumi*0.01/norm1)\par
+SIG2.Scale(Options.lumi*0.01/norm2)\par
+\par
+SIG0.SetLineColor(kRed-3)\par
+SIG1.SetLineColor(kRed)\par
+SIG2.SetLineColor(kRed+3)\par
+\par
+var_array = ["jet1_puppi_msoftdrop_raw_TheaCorr", "jet1bbtag", 60,50,200, 100, -1., 1.]\par
+#var_array = ["jet1pmass", "jet1bbtag", 60,50,200, 100, -1., 1.]\par
+\par
+Hbb = Alphabetizer(Options.name, DistsWeWantToEstimate, [])\par
+Hbb.SetRegions(var_array, TightPre)\par
+\par
+bins = binCalc(50,200,105,135,Options.bin)\par
+if Options.Linear:\par
+\tab F = LinearFit([0.0,0.0], -75, 85, "linfit", "W")\par
+else:\par
+\tab F = QuadraticFit([0.1,0.1,0.1], -75, 85, "quadfit", "EMRFNEX0")\par
+Hbb.GetRates([Options.tightcut, ">"], bins[0], bins[1], 120., F)\par
+\par
+\par
+leg = TLegend(0.6,0.6,0.89,0.89)\par
+leg.SetLineColor(0)\par
+leg.SetFillColor(4001)\par
+leg.SetTextSize(0.03)\par
+leg.AddEntry(Hbb.G, "events used in fit", "PLE")\par
+if Options.Truth:\par
+\tab leg.AddEntry(Hbb.truthG, "signal region (blind)", "PLE")\par
+leg.AddEntry(Hbb.Fit.fit, "fit", "L")\par
+leg.AddEntry(Hbb.Fit.ErrUp, "fit errors", "L")\par
+plotforplotting = TH1F("empty_"+Options.name, "", 24, -75, 80)\par
+plotforplotting.SetStats(0)\par
+plotforplotting.GetYaxis().SetRangeUser(0.00,0.25)\par
+plotforplotting.GetXaxis().SetTitle("m_\{J\} - m_\{H\} (GeV)")\par
+plotforplotting.GetYaxis().SetTitle("R_\{p/f\}")\par
+plotforplotting.GetYaxis().SetTitleOffset(1.5)\par
+\par
+C2 = TCanvas("C2", "", 800, 600)\par
+C2.cd()\par
+Hbb.G.SetTitle("")\par
+plotforplotting.Draw()\par
+Hbb.G.Draw("P same")\par
+Hbb.truthG.SetLineColor(kBlue)\par
+Hbb.truthG.SetLineWidth(2)\par
+if Options.Truth:\par
+\tab Hbb.truthG.Draw("P same") # TURN ON FOR TRUTH BINS\par
+Hbb.Fit.fit.Draw("same")\par
+\par
+FunctionChiSquared = Hbb.Fit.fit.GetChisquare()\par
+\par
+THILABL = TLatex()\par
+THILABL.SetNDC()\par
+THILABL.SetTextSize(0.04)\par
+THILABL.DrawLatex(0.651,0.91,"#chi^\{2\} = %s"%(FunctionChiSquared))\par
+\par
+Hbb.Fit.ErrUp.SetLineStyle(2)\par
+Hbb.Fit.ErrUp.Draw("same")\par
+Hbb.Fit.ErrDn.SetLineStyle(2)\par
+Hbb.Fit.ErrDn.Draw("same")\par
+leg.Draw()\par
+C2.SaveAs("outputs/HHSR_Fit_"+Options.name+".pdf")\par
+\par
+\par
+FILE = TFile("outputs/HHSR_TT.root", "RECREATE")\par
+FILE.cd()\par
+\par
+D = TH1F("data", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+N = TH1F("est", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+NU = TH1F("est_up", "", len(binBoundaries)-1, array('d',binBoundaries)) \par
+ND = TH1F("est_down", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+A =  TH1F("antitag", "", len(binBoundaries)-1, array('d',binBoundaries)) \par
+\par
+PULL = FillPlots(Hbb, D, N, NU, ND, A, variable, binBoundaries, TightAT, TightT)\par
+\par
+\par
+FILE.Write()\par
+FILE.Save()\par
+\par
+\par
+Pull = PULL[0]\par
+maxy = PULL[1]\par
+Boxes = PULL[2]\par
+sBoxes = PULL[3]\par
+pBoxes = PULL[4]\par
+#fBoxes = PULL[5]\par
+\par
+vartitle = "m_\{X\} (GeV)"\par
+\par
+D.SetStats(0)\par
+D.Sumw2()\par
+D.SetLineColor(1)\par
+D.SetFillColor(0)\par
+D.SetMarkerColor(1)\par
+D.SetMarkerStyle(20)\par
+N.GetYaxis().SetTitle("events")\par
+N.GetXaxis().SetTitle(vartitle)\par
+A.GetYaxis().SetTitle("events")\par
+A.GetXaxis().SetTitle(vartitle)\par
+if Options.log:\par
+#        N.GetYaxis().SetRangeUser(0.05,maxy*1.5)\par
+\tab A.GetYaxis().SetRangeUser(0.000005,maxy*30)\par
+else:\par
+\tab N.GetYaxis().SetRangeUser(0.,maxy*1.2)\par
+N.SetLineColor(kBlue)\par
+A.SetLineColor(kGreen + 2)\par
+\par
+Pull.GetXaxis().SetTitle("")\par
+Pull.SetStats(0)\par
+Pull.SetFillColor(0)\par
+if Options.Truth:\par
+\tab Pull.SetMarkerColor(1)\par
+\tab Pull.SetLineColor(1)\par
+else:\par
+\tab Pull.SetMarkerColor(0)\par
+\tab Pull.SetLineColor(0)\par
+Pull.SetMarkerStyle(20)\par
+Pull.GetXaxis().SetNdivisions(0)\par
+Pull.GetYaxis().SetNdivisions(4)\par
+Pull.GetYaxis().SetTitle("#frac\{Data - Bkg\}\{#sigma_\{data\}\}")\par
+Pull.GetYaxis().SetLabelSize(85/15*Pull.GetYaxis().GetLabelSize())\par
+Pull.GetYaxis().SetTitleSize(4.2*Pull.GetYaxis().GetTitleSize())\par
+Pull.GetYaxis().SetTitleOffset(0.175)\par
+Pull.GetYaxis().SetRangeUser(-3.,3.)\par
+\par
+SIG0.SetFillColor(kRed-3)\par
+SIG0.SetFillStyle(3244)\par
+SIG1.SetFillColor(kRed)\par
+SIG1.SetFillStyle(3244)\par
+SIG2.SetFillColor(kRed+3)\par
+SIG2.SetFillStyle(3244)\par
+\par
+for i in Boxes:\par
+\tab i.SetFillColor(9)\par
+for i in pBoxes:\par
+\tab i.SetFillColor(12)\par
+\tab i.SetFillStyle(3144)\par
+for i in sBoxes:\par
+\tab i.SetFillColor(41)\par
+\tab i.SetFillStyle(3344)\par
+#for i in fBoxes:\par
+#        i.SetFillColor(46)\par
+#        i.SetFillStyle(3444)\par
+\par
+leg2 = TLegend(0.6,0.6,0.89,0.89)\par
+leg2.SetLineColor(0)\par
+leg2.SetFillColor(0)\par
+leg2.AddEntry(D, whichdataorQCD, "PL")\par
+leg2.AddEntry(N, "background prediction", "LF")\par
+#leg2.AddEntry(Boxes[0], "total uncertainty", "F")\par
+leg2.AddEntry(sBoxes[0], "background statistical component", "F")\par
+#leg2.AddEntry(fBoxes[0], "alphabet fit component", "F")\par
+leg2.AddEntry(A, "anti-tag", "LF")\par
+#if Options.Sig:\par
+#\tab leg2.AddEntry(SIG0, "Bulk Graviton (1200 GeV, 27 fb)", "F")\par
+#\tab leg2.AddEntry(SIG1, "Bulk Graviton (1800 GeV, 27 fb)", "F")\par
+#\tab leg2.AddEntry(SIG2, "Bulk Graviton (2500 GeV, 27 fb)", "F")\par
+\par
+T0 = TLine(800,0.,4509,0.)\par
+T0.SetLineColor(kBlue)\par
+T2 = TLine(800,2.,4509,2.)\par
+T2.SetLineColor(kBlue)\par
+T2.SetLineStyle(2)\par
+Tm2 = TLine(800,-2.,4509,-2.)\par
+Tm2.SetLineColor(kBlue)\par
+Tm2.SetLineStyle(2)\par
+T1 = TLine(800,1.,4509,1.)\par
+T1.SetLineColor(kBlue)\par
+T1.SetLineStyle(3)\par
+Tm1 = TLine(800,-1.,4509,-1.)\par
+Tm1.SetLineColor(kBlue)\par
+Tm1.SetLineStyle(3)\par
+\par
+N.SetStats(0)\par
+A.SetStats(0)\par
+\par
+C4 = TCanvas("C4", "", 800, 600)\par
+plot = TPad("pad1", "The pad 80% of the height",0,0.15,1,1)\par
+pull = TPad("pad2", "The pad 20% of the height",0,0,1.0,0.15)\par
+plot.Draw()\par
+pull.Draw()\par
+plot.cd()\par
+A.Draw("Hist")\par
+N.Draw("Hist SAME")\par
+if Options.Truth:\par
+\tab D.Draw("same E0")\par
+#for i in Boxes:\par
+#\tab i.Draw("same")\par
+for i in sBoxes:\par
+\tab i.Draw("same")\par
+#for i in fBoxes:\par
+#        i.Draw("same")\par
+#if Options.Sig:\par
+#\tab SIG0.Draw("same hist")\par
+#\tab SIG1.Draw("same hist")\par
+#\tab SIG2.Draw("same hist")\par
+N.Draw("Hist same")\par
+if Options.log:\par
+\tab plot.SetLogy()\par
+leg2.Draw()\par
+pull.cd()\par
+Pull.Draw("")\par
+for i in pBoxes:\par
+\tab i.Draw("same")\par
+if not Options.finebins:\par
+\tab T0.Draw("same")\par
+\tab T2.Draw("same")\par
+\tab Tm2.Draw("same")\par
+\tab T1.Draw("same")\par
+\tab Tm1.Draw("same")\par
+C4.SaveAs("outputs/HHSR_Plot_"+Options.name+".pdf")\par
+\par
+if Options.workspace == "alphabet":\par
+\tab print "creating workspace and datacard: ALPHABET"\par
+\par
+\tab mass=[750,800,1000,1200,1400,1600,1800,2000,2500, 3000, 4000, 4500]\par
+\tab for m in mass:\par
+\tab\tab print str(m)\par
+\tab\tab SF_tau21 = 1.03*1.03\par
+\tab\tab UD = ['Up','Down']\par
+\par
+\tab\tab output_file = TFile("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV.root", "RECREATE")\par
+\tab\tab vh=output_file.mkdir("vh")\par
+\tab\tab vh.cd()\par
+\par
+\tab\tab Signal_mX = TH1F("Signal_mX_%s_"%(m)+Options.name, "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_antitag = TH1F("Signal_mX_antitag_%s"%(m)+Options.name, "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_trig_up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_trigUp", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_trig_down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_trigDown", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_btag_up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_btagUp", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_btag_down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_btagDown", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_pu_up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_puUp", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab  \tab Signal_mX_pu_down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_puDown", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_FJEC_Up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_JECUp", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_FJEC_Down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_JECDown", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_FJER_Up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_JERUp", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_FJER_Down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_JERDown", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_MJEC_Up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_massJECUp", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab\tab Signal_mX_MJEC_Down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_massJECDown", "", len(binBoundaries)-1, array('d',binBoundaries))\par
+\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFTight/1.")\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_antitag, variable2, TightAT+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*(1.-SFTight)/1.")\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_btag_up, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFTightup/1.")\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_btag_down, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeights*SFTightdown/1.")\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_trig_up, variable2, TightT2, "trigWeightUp*puWeights*SFTight/1.")\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_trig_down, variable2, TightT2, "trigWeightDown*puWeights*SFTight/1.")\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_pu_up, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeightsUp*SFTight/1.")\par
+\tab\tab quickplot(sigpath+"BulkGrav_M-%s_0.root"%(m), "mynewTree", Signal_mX_pu_down, variable2, TightT2+"&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)", "puWeightsDown*SFTight/1.")\par
+\par
+\tab\tab norm = GetNom(sigpath+"BulkGrav_M-%s_0.root"%(m))\par
+\tab\tab print(norm)\par
+\tab\tab print("norm")\par
+\tab\tab print(Signal_mX_btag_up.GetSumOfWeights())\par
+\tab\tab btaglnN= 1.#+ abs(Signal_mX_btag_up.GetSumOfWeights()-Signal_mX_btag_down.GetSumOfWeights())/(2.*Signal_mX_btag_up.GetSumOfWeights())\par
+\tab\tab PUlnN= 1.#+ abs(Signal_mX_pu_up.GetSumOfWeights()-Signal_mX_pu_down.GetSumOfWeights())/(2.*Signal_mX.GetSumOfWeights())\par
+\par
+\tab\tab Signal_mX.Scale(SF_tau21*Options.lumi*0.01/norm)\par
+\tab\tab Signal_mX_antitag.Scale(SF_tau21*Options.lumi*0.01/norm)\par
+\tab\tab Signal_mX_btag_up.Scale(SF_tau21*Options.lumi*0.01/norm)\par
+\tab\tab Signal_mX_btag_down.Scale(SF_tau21*Options.lumi*0.01/norm)\par
+\tab\tab Signal_mX_trig_up.Scale(SF_tau21*0.01*Options.lumi/norm)\par
+\tab\tab Signal_mX_trig_down.Scale(SF_tau21*0.01*Options.lumi/norm)\par
+\tab\tab Signal_mX_pu_up.Scale(Options.lumi*SF_tau21*0.01/norm)\par
+\tab\tab Signal_mX_pu_down.Scale(Options.lumi*SF_tau21*0.01/norm)\par
+\par
+\par
+\tab\tab MJEClnN= 1.02 ## add variation from ntuples\par
+\tab\tab FJEClnN= 1.02\par
+\tab\tab FJERlnN= 1.02\par
+\par
+\tab\tab signal_integral = Signal_mX.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))\par
+\tab\tab print(signal_integral)\par
+\tab\tab print("signal_integral")\par
+\tab\tab signal_integral_anti = Signal_mX_antitag.Integral(Signal_mX_antitag.FindBin(1200),Signal_mX_antitag.FindBin(2500))\par
+\tab\tab print(signal_integral_anti)\par
+\tab\tab print("signal_integral_anti")\par
+\par
+\tab\tab #Getting R parameter for card:\par
+\tab\tab AntitagIntegral = A.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))\par
+\tab\tab AverageRate = N.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))/AntitagIntegral \par
+\tab\tab AverageErrorRate = NU.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))/AntitagIntegral \par
+\tab\tab AverageError = math.fabs(AverageErrorRate - AverageRate)\par
+\par
+\tab\tab qcd_integral = N.Integral(N.FindBin(1200),N.FindBin(2500))\par
+\tab\tab qcd = N.Clone(Options.name+"EST")\par
+\tab\tab qcd_antitag = A.Clone(Options.name+"EST_antitag")\par
+\tab\tab qcd_up = NU.Clone(Options.name+"EST_CMS_scale"+Options.name+"_13TeVUp")\par
+\tab\tab qcd_down = ND.Clone(Options.name+"EST_CMS_scale"+Options.name+"_13TeVDown")\par
+\tab\tab data_obs = D.Clone("data_obs")\par
+\tab\tab data_integral = data_obs.Integral(data_obs.FindBin(1200),data_obs.FindBin(2500)) \par
+\tab\par
+\tab\tab for bin in range(0,len(binBoundaries)-1):\par
+\tab\tab     for Q in UD:\par
+\tab\tab         qcd_syst =TH1F("%s_bin%s%s"%(Options.name+"EST_CMS_stat"+Options.name+"_13TeV",bin,Q),"",len(binBoundaries)-1, array('d',binBoundaries))\par
+\tab  \tab\tab bin_stat = qcd.GetBinContent(bin+1)\par
+\tab\tab\tab for bin1 in range(0,len(binBoundaries)-1):\par
+\tab\tab\tab\tab bin_stat1 = qcd.GetBinContent(bin1+1)\par
+\tab\tab\tab\tab qcd_syst.SetBinContent(bin1+1,bin_stat1)\par
+\tab\tab\tab #if bin_stat==0 :\tab\par
+\tab\tab\tab #\tab bin_stat = 1.5\par
+\tab\tab\tab bin_at = qcd_antitag.GetBinContent(bin+1)\par
+\tab\tab\tab if bin_at < 1 and bin_at >0:  \par
+\tab\tab\tab\tab bin_at=1.\par
+\tab\tab         if Q == 'Up':\par
+\tab\tab\tab\tab if bin_at >0 :\par
+\tab\tab                        qcd_syst.SetBinContent(bin+1,bin_stat+qcd_antitag.GetBinError(bin+1)/bin_at*bin_stat)\par
+\tab\tab\tab\tab else : \par
+\tab\tab\tab\tab\tab qcd_syst.SetBinContent(bin+1,bin_stat)\par
+\tab\tab\tab\tab\par
+\tab\tab         if Q == 'Down':\par
+\tab\tab\tab\tab if bin_at >0 :\par
+\tab\tab\tab\tab\tab if ( bin_stat-qcd_antitag.GetBinError(bin+1)/bin_at*bin_stat >0 ):\par
+\tab\tab                 \tab\tab qcd_syst.SetBinContent(bin+1,bin_stat-qcd_antitag.GetBinError(bin+1)/bin_at*bin_stat)\par
+\tab\tab\tab\tab\tab else :\par
+\tab\tab\tab\tab\tab\tab qcd_syst.SetBinContent(bin+1, 0.1)\par
+\tab\tab\tab\tab else : \tab\par
+\tab\tab\tab\tab\tab qcd_syst.SetBinContent(bin+1,bin_stat)\par
+\tab\tab\tab output_file.cd()\par
+\tab\tab\tab vh.cd()\par
+\tab\tab\tab qcd_syst.Write()\par
+\tab\tab\par
+\par
+\tab\tab #qcd_trigger_up.Write()\par
+\tab\tab #qcd_trigger_low.Write()\par
+\tab\tab qcd.Write()\par
+\tab\tab qcd_up.Write()\par
+\tab\tab qcd_down.Write()\par
+\tab\tab Signal_mX.Write()\par
+\tab\tab Signal_mX.Write()\par
+\tab\tab Signal_mX_btag_up.Write()\par
+\tab\tab Signal_mX_btag_down.Write()\par
+\tab\tab Signal_mX_trig_up.Write()\par
+\tab\tab Signal_mX_trig_down.Write()\par
+\tab\tab data_obs.Write()\par
+\tab\tab vh.Write()\par
+\tab\tab output_file.Write()\par
+\tab\tab output_file.Close()\par
+\par
+\tab\tab text_file = open("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV.txt", "w")\par
+\par
+\tab\tab text_file.write("imax    2     number of categories\\n")\par
+\tab\tab text_file.write("jmax   3     number of samples minus one\\n")\par
+\tab\tab text_file.write("kmax    *     number of nuisance parameters\\n")\par
+\tab\tab text_file.write("-------------------------------------------------------------------------------\\n")\par
+\tab\tab text_file.write("shapes * * HH_mX_%s_"%(m)+Options.name+"_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC\\n")\par
+\tab\tab text_file.write("-------------------------------------------------------------------------------\\n")\par
+\tab\tab text_file.write("bin                                            vh4b_pass\tab\tab\tab vh4b_fail\\n")\par
+\tab\tab text_file.write("observation                                    -1.0\tab\tab\tab\tab\tab -1.0\\n")\par
+\tab\tab text_file.write("-------------------------------------------------------------------------------\\n")\par
+\tab\tab text_file.write("bin                                             vh4b_pass            vh4b_pass\tab vh4b_fail\tab vh4b_fail\\n")\par
+\tab\tab text_file.write("process                                         Signal_mX_%s_"%(m)+Options.name+"  "+Options.name+"EST\tab Signal_mX_antitag_%s_"%(m)+Options.name+"  "+Options.name+"EST_antitag\\n")\par
+\tab\tab text_file.write("process                                          -1      0\tab 1\tab 2\\n")\par
+\tab\tab text_file.write("rate                                            %f \tab 1.0000\tab %f\tab 1.0000\\n"%(signal_integral,signal_integral_anti))\par
+\tab\tab text_file.write("-------------------------------------------------------------------------------\\n")\par
+\tab\tab text_file.write("bgSB_norm rateParam vh4b_fail "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\\n")\par
+\tab\tab text_file.write("R param "+str(AverageRate)+" "+str(AverageError)+"\\n")\par
+\tab\tab text_file.write("n_exp_binHH4b_proc_EST_ EST rateParam vh4b_pass "+Options.name+"EST @0*@1 bgSB_norm,R\\n")\par
+\par
+\tab\tab text_file.close()\par
+\par
+if Options.workspace == "fit":\par
+\tab print "creating workspace and datacard: ALPHABET ASSISTED FIT"\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+}
+ 

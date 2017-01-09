@@ -335,9 +335,22 @@ class miniTreeProducer:
         self.DeltaPhi3 = array('f', [-100.0])
         self.DeltaPhi4 = array('f', [-100.0])
         self.nAK04btagsMWP = array('f', [-100.0])
+        self.nTightEle = array('f', [-100.0])
+        self.nTightMu = array('f', [-100.0])
         self.nLooseEle = array('f', [-100.0])
         self.nLooseMu = array('f', [-100.0])
         self.tPtsum = array('f', [-100.0])
+
+	self.LeadingAK8Jet_MatchedHadW = array('f', [-100.0])
+
+	self.aLeptons_pT = vector('double')()
+	self.aLeptons_eta = vector('double')()
+	self.aLeptons_phi = vector('double')()
+	self.aLeptons_mass = vector('double')()
+        self.vLeptons_pT = vector('double')()
+        self.vLeptons_eta = vector('double')()
+        self.vLeptons_phi = vector('double')()
+        self.vLeptons_mass = vector('double')()
 
         self.ak4jet_pt = vector('double')()
         self.ak4jet_eta = vector('double')()
@@ -536,6 +549,7 @@ class miniTreeProducer:
         self.theTree.Branch('trigWeightDown', self.trigWeightDown, 'trigWeightDown/F')
         self.theTree.Branch('trigWeight2Up', self.trigWeight2Up, 'trigWeight2Up/F')
         self.theTree.Branch('trigWeight2Down', self.trigWeight2Down, 'trigWeight2Down/F')
+        self.theTree.Branch('LeadingAK8Jet_MatchedHadW', self.LeadingAK8Jet_MatchedHadW, 'LeadingAK8Jet_MatchedHadW/F')
 
         self.theTree.Branch('evt',self.evt,'evt/F')
         self.theTree.Branch('ht', self.ht, 'ht/F')
@@ -554,8 +568,19 @@ class miniTreeProducer:
             self.theTree.Branch('genjet2BH', self.genjet2BH, 'genjet2BH/F')
             self.theTree.Branch('genjet1CH', self.genjet1CH, 'genjet1CH/F')
             self.theTree.Branch('genjet2CH', self.genjet2CH, 'genjet2CH/F')
-            self.theTree.Branch('nLooseEle', self.nLooseEle, 'nLooseEle/F')
-            self.theTree.Branch('nLooseMu', self.nLooseMu, 'nLooseMu/F')
+        self.theTree.Branch('nTightEle', self.nTightEle, 'nTightEle/F')
+        self.theTree.Branch('nTightMu', self.nTightMu, 'nTightMu/F')
+        self.theTree.Branch('nLooseEle', self.nLooseEle, 'nLooseEle/F')
+        self.theTree.Branch('nLooseMu', self.nLooseMu, 'nLooseMu/F')
+
+        self.theTree.Branch('aLeptons_pT',self.aLeptons_pT)
+        self.theTree.Branch('aLeptons_eta',self.aLeptons_eta)
+        self.theTree.Branch('aLeptons_phi',self.aLeptons_phi)
+        self.theTree.Branch('aLeptons_mass',self.aLeptons_mass)
+        self.theTree.Branch('vLeptons_pT',self.vLeptons_pT)
+        self.theTree.Branch('vLeptons_eta',self.vLeptons_eta)
+        self.theTree.Branch('vLeptons_phi',self.vLeptons_phi)
+        self.theTree.Branch('vLeptons_mass',self.vLeptons_mass)
 
         self.theTree.Branch('ak4jet_pt',self.ak4jet_pt)
         self.theTree.Branch('ak4jet_eta',self.ak4jet_eta)
@@ -884,49 +909,217 @@ class miniTreeProducer:
 
                 #Determining the number of loose working point muons
                 self.nLooseMuons = 0
-                self.NSelLeptons = self.treeMine.nselLeptons
-                self.isPFMuon = self.treeMine.selLeptons_isPFMuon
-                self.isGlobalMuon = self.treeMine.selLeptons_isGlobalMuon
-                self.isTrackerMuon = self.treeMine.selLeptons_isTrackerMuon
+                self.NSelLeptons = self.treeMine.nvLeptons
+                self.isPFMuon = self.treeMine.vLeptons_isPFMuon
+                self.isGlobalMuon = self.treeMine.vLeptons_isGlobalMuon
+                self.isTrackerMuon = self.treeMine.vLeptons_isTrackerMuon
 
                 self.NAdditLeptons = self.treeMine.naLeptons
                 self.AdditisPFMuon = self.treeMine.aLeptons_isPFMuon
                 self.AdditisGlobalMuon = self.treeMine.aLeptons_isGlobalMuon
                 self.AdditisTrackerMuon = self.treeMine.aLeptons_isTrackerMuon
-                for i in range(0,self.NAdditLeptons):
-                    if self.AdditisPFMuon[i] == 1:
-                        if self.AdditisGlobalMuon[i] == 1 or self.AdditisTrackerMuon[i] == 1:
-                                self.nLooseMuons += 1
+#                for i in range(0,self.NAdditLeptons):
+#                    if self.AdditisPFMuon[i] == 1:
+#                        if self.AdditisGlobalMuon[i] == 1 or self.AdditisTrackerMuon[i] == 1:
+#                                self.nLooseMuons += 1
+#
+#                self.nLooseMu[0] = self.nLooseMuons
 
-                self.nLooseMu[0] = self.nLooseMuons
+	        self.aLeptons_pT.clear()
+       		self.aLeptons_eta.clear()
+        	self.aLeptons_phi.clear()
+	        self.aLeptons_mass.clear()
+	        self.vLeptons_pT.clear()
+	        self.vLeptons_eta.clear()
+	        self.vLeptons_phi.clear()
+	        self.vLeptons_mass.clear()
+
+		#Determining the number of Tight Muons for WTaggerSF
+		self.nTightMuons = 0
+
+		self.vLeptons_dxy = self.treeMine.vLeptons_dxy
+		self.vLeptons_dz = self.treeMine.vLeptons_dz
+		self.vLeptons_nStations = self.treeMine.vLeptons_nStations
+		self.vLeptons_nChamberHits = self.treeMine.vLeptons_nChamberHits
+		self.vLeptons_pixelHits = self.treeMine.vLeptons_pixelHits
+		self.vLeptons_trackerLayers = self.treeMine.vLeptons_trackerLayers
+		self.vLeptons_pt_single = self.treeMine.vLeptons_pt
+		self.vLeptons_eta_single = self.treeMine.vLeptons_eta
+                self.vLeptons_phi_single = self.treeMine.vLeptons_phi
+                self.vLeptons_mass_single = self.treeMine.vLeptons_mass
+		self.vLeptons_pfRelIso04 = self.treeMine.vLeptons_pfRelIso04
+		for i in range(0,self.NSelLeptons):
+		    if self.isGlobalMuon[i] == 1 and self.vLeptons_nChamberHits[i] > 0 and self.vLeptons_nStations[i] > 1 and abs(self.vLeptons_dxy[i]) < 0.2 and abs(self.vLeptons_dz[i]) < 0.5 and self.vLeptons_pixelHits[i] > 0 and self.vLeptons_trackerLayers[i] > 5 and self.vLeptons_pt_single[i] > 53 and abs(self.vLeptons_eta_single[i]) < 2.1 and self.vLeptons_pfRelIso04[i] < 0.25:
+			self.nTightMuons += 1;
+			self.vLeptons_pT.push_back(self.vLeptons_pt_single[i])
+                        self.vLeptons_eta.push_back(self.vLeptons_eta_single[i])
+                        self.vLeptons_phi.push_back(self.vLeptons_phi_single[i])
+                        self.vLeptons_mass.push_back(self.vLeptons_mass_single[i])
+
+                self.aLeptons_dxy = self.treeMine.aLeptons_dxy
+                self.aLeptons_dz = self.treeMine.aLeptons_dz
+                self.aLeptons_nStations = self.treeMine.aLeptons_nStations
+                self.aLeptons_nChamberHits = self.treeMine.aLeptons_nChamberHits
+                self.aLeptons_pixelHits = self.treeMine.aLeptons_pixelHits
+                self.aLeptons_trackerLayers = self.treeMine.aLeptons_trackerLayers
+                self.aLeptons_pt_single = self.treeMine.aLeptons_pt
+                self.aLeptons_eta_single = self.treeMine.aLeptons_eta
+                self.aLeptons_phi_single = self.treeMine.aLeptons_phi
+                self.aLeptons_mass_single = self.treeMine.aLeptons_mass
+                self.aLeptons_pfRelIso04 = self.treeMine.aLeptons_pfRelIso04
+                for i in range(0,self.NAdditLeptons):
+                    if self.AdditisGlobalMuon[i] == 1 and self.aLeptons_nChamberHits[i] > 0 and self.aLeptons_nStations[i] > 1 and abs(self.aLeptons_dxy[i]) < 0.2 and abs(self.aLeptons_dz[i]) < 0.5 and self.aLeptons_pixelHits[i] > 0 and self.aLeptons_trackerLayers[i] > 5 and self.aLeptons_pt_single[i] > 53 and abs(self.aLeptons_eta_single[i]) < 2.1 and self.aLeptons_pfRelIso04[i] < 0.25:
+                        self.nTightMuons += 1;
+                        self.aLeptons_pT.push_back(self.aLeptons_pt_single[i])
+                        self.aLeptons_eta.push_back(self.aLeptons_eta_single[i])
+                        self.aLeptons_phi.push_back(self.aLeptons_phi_single[i])
+                        self.aLeptons_mass.push_back(self.aLeptons_mass_single[i])
+
+		self.nTightMu[0] = self.nTightMuons
+		#Determing the number of Loose Muons for WTaggerSF
+                self.nLooseMuons = 0
+
+#                self.vLeptons_dxy = self.treeMine.vLeptons_dxy
+#                self.vLeptons_dz = self.treeMine.vLeptons_dz
+#                self.vLeptons_nStations = self.treeMine.vLeptons_nStations
+#                self.vLeptons_nChamberHits = self.treeMine.vLeptons_nChamberHits
+#                self.vLeptons_pixelHits = self.treeMine.vLeptons_pixelHits
+#                self.vLeptons_trackerLayers = self.treeMine.vLeptons_trackerLayers
+#                self.vLeptons_pt = self.treeMine.vLeptons_pt
+#                self.vLeptons_eta = self.treeMine.vLeptons_eta
+#                self.vLeptons_pfRelIso04 = self.treeMine.vLeptons_pfRelIso04
+                for i in range(0,self.NSelLeptons):
+                    if self.isGlobalMuon[i] == 1 and self.vLeptons_nChamberHits[i] > 0 and self.vLeptons_nStations[i] > 1 and abs(self.vLeptons_dxy[i]) < 0.2 and abs(self.vLeptons_dz[i]) < 0.5 and self.vLeptons_pixelHits[i] > 0 and self.vLeptons_trackerLayers[i] > 5 and self.vLeptons_pt_single[i] > 20 and abs(self.vLeptons_eta_single[i]) < 2.1 and self.vLeptons_pfRelIso04[i] < 0.25:
+                        self.nLooseMuons += 1;
+
+#                self.aLeptons_dxy = self.treeMine.aLeptons_dxy
+#                self.aLeptons_dz = self.treeMine.aLeptons_dz
+#                self.aLeptons_nStations = self.treeMine.aLeptons_nStations
+#                self.aLeptons_nChamberHits = self.treeMine.aLeptons_nChamberHits
+#                self.aLeptons_pixelHits = self.treeMine.aLeptons_pixelHits
+#                self.aLeptons_trackerLayers = self.treeMine.aLeptons_trackerLayers
+#                self.aLeptons_pt = self.treeMine.aLeptons_pt
+#                self.aLeptons_eta = self.treeMine.aLeptons_eta
+#                self.aLeptons_pfRelIso04 = self.treeMine.aLeptons_pfRelIso04
+                for i in range(0,self.NAdditLeptons):
+                    if self.AdditisGlobalMuon[i] == 1 and self.aLeptons_nChamberHits[i] > 0 and self.aLeptons_nStations[i] > 1 and abs(self.aLeptons_dxy[i]) < 0.2 and abs(self.aLeptons_dz[i]) < 0.5 and self.aLeptons_pixelHits[i] > 0 and self.aLeptons_trackerLayers[i] > 5 and self.aLeptons_pt_single[i] > 20 and abs(self.aLeptons_eta_single[i]) < 2.1 and self.aLeptons_pfRelIso04[i] < 0.25:
+                        self.nLooseMuons += 1;
+
+		self.nLooseMu[0] = self.nLooseMuons
+
+		#Determining the number of tight electrons for WTaggerSF
+                self.nTightElectrons = 0
+
+                self.vetaSc = self.treeMine.vLeptons_etaSc
+                self.vrelIso03 = self.treeMine.vLeptons_relIso03
+                self.veleSieie = self.treeMine.vLeptons_eleSieie
+                self.veleDEta = self.treeMine.vLeptons_eleDEta
+                self.veleDPhi = self.treeMine.vLeptons_eleDPhi
+                self.veleHoE = self.treeMine.vLeptons_eleHoE
+                self.veleExpMissingInnerHits = self.treeMine.vLeptons_eleExpMissingInnerHits
+                self.vLeptons_lostHits = self.treeMine.vLeptons_lostHits
+                self.vLeptons_dr03TkSumPt = self.treeMine.vLeptons_dr03TkSumPt
+
+                self.aetaSc = self.treeMine.aLeptons_etaSc
+                self.arelIso03 = self.treeMine.aLeptons_relIso03
+                self.aeleSieie = self.treeMine.aLeptons_eleSieie
+                self.aeleDEta = self.treeMine.aLeptons_eleDEta
+                self.aeleDPhi = self.treeMine.aLeptons_eleDPhi
+                self.aeleHoE = self.treeMine.aLeptons_eleHoE
+                self.aeleExpMissingInnerHits = self.treeMine.aLeptons_eleExpMissingInnerHits
+		self.aLeptons_lostHits = self.treeMine.aLeptons_lostHits
+		self.aLeptons_dr03TkSumPt = self.treeMine.aLeptons_dr03TkSumPt
+
+                for i in range(0,self.NSelLeptons):
+                    if abs(self.vetaSc[i]) < 1.4442:
+                        if self.vLeptons_pt_single[i] > 120 and abs(self.veleDEta[i]) < 0.004 and abs(self.veleDPhi[i]) < 0.06 and self.vLeptons_dr03TkSumPt[i] < 5 and self.vLeptons_lostHits[i] < 2 and abs(self.vLeptons_dxy[i]) < 0.02:
+                                self.nTightElectrons += 1
+	                        self.vLeptons_pT.push_back(self.vLeptons_pt_single[i])
+        	                self.vLeptons_eta.push_back(self.vLeptons_eta_single[i])
+                	        self.vLeptons_phi.push_back(self.vLeptons_phi_single[i])
+                        	self.vLeptons_mass.push_back(self.vLeptons_mass_single[i])
+
+		for i in range(0,self.NAdditLeptons):
+		    if abs(self.aetaSc[i]) < 1.4442:
+			if self.aLeptons_pt_single[i] > 120 and abs(self.aeleDEta[i]) < 0.004 and abs(self.aeleDPhi[i]) < 0.06 and self.aLeptons_dr03TkSumPt[i] < 5 and self.aLeptons_lostHits[i] < 2 and abs(self.aLeptons_dxy[i]) < 0.02:
+				self.nTightElectrons += 1
+	                        self.aLeptons_pT.push_back(self.aLeptons_pt_single[i])
+        	                self.aLeptons_eta.push_back(self.aLeptons_eta_single[i])
+                	        self.aLeptons_phi.push_back(self.aLeptons_phi_single[i])
+                        	self.aLeptons_mass.push_back(self.aLeptons_mass_single[i])
+
+                for i in range(0,self.NSelLeptons):
+                    if 1.566 < abs(self.vetaSc[i]) < 2.5:
+                        if self.vLeptons_pt_single[i] > 120 and abs(self.veleDEta[i]) < 0.006 and abs(self.veleDPhi[i]) < 0.06 and self.veleSieie[i] < 0.03 and self.vLeptons_dr03TkSumPt[i] < 5 and self.vLeptons_lostHits[i] < 2 and abs(self.vLeptons_dxy[i]) < 0.05:
+                                self.nTightElectrons += 1
+	                        self.vLeptons_pT.push_back(self.vLeptons_pt_single[i])
+        	                self.vLeptons_eta.push_back(self.vLeptons_eta_single[i])
+                	        self.vLeptons_phi.push_back(self.vLeptons_phi_single[i])
+                        	self.vLeptons_mass.push_back(self.vLeptons_mass_single[i])
+
+                for i in range(0,self.NAdditLeptons):
+                    if 1.566 < abs(self.aetaSc[i]) < 2.5:
+                        if self.aLeptons_pt_single[i] > 120 and abs(self.aeleDEta[i]) < 0.006 and abs(self.aeleDPhi[i]) < 0.06 and self.aeleSieie[i] < 0.03 and self.aLeptons_dr03TkSumPt[i] < 5 and self.aLeptons_lostHits[i] < 2 and abs(self.aLeptons_dxy[i]) < 0.05:
+                                self.nTightElectrons += 1
+	                        self.aLeptons_pT.push_back(self.aLeptons_pt_single[i])
+        	                self.aLeptons_eta.push_back(self.aLeptons_eta_single[i])
+                	        self.aLeptons_phi.push_back(self.aLeptons_phi_single[i])
+                        	self.aLeptons_mass.push_back(self.aLeptons_mass_single[i])
+
+		self.nTightEle[0] = self.nTightElectrons
+		#Determining the number of loose working point electrons for WTaggerSF
+		self.nLooseElectrons = 0
+
+                for i in range(0,self.NSelLeptons):
+                    if abs(self.vetaSc[i]) < 1.4442:
+                        if self.vLeptons_pt_single[i] > 35 and abs(self.veleDEta[i]) < 0.004 and abs(self.veleDPhi[i]) < 0.06 and self.vLeptons_dr03TkSumPt[i] < 5 and self.vLeptons_lostHits[i] < 2 and abs(self.vLeptons_dxy[i]) < 0.02:
+                                self.nLooseElectrons += 1
+
+                for i in range(0,self.NAdditLeptons):
+                    if abs(self.aetaSc[i]) < 1.4442:
+                        if self.aLeptons_pt_single[i] > 35 and abs(self.aeleDEta[i]) < 0.004 and abs(self.aeleDPhi[i]) < 0.06 and self.aLeptons_dr03TkSumPt[i] < 5 and self.aLeptons_lostHits[i] < 2 and abs(self.aLeptons_dxy[i]) < 0.02:
+                                self.nLooseElectrons += 1
+
+                for i in range(0,self.NSelLeptons):
+                    if 1.566 < abs(self.vetaSc[i]) < 2.5:
+                        if self.vLeptons_pt_single[i] > 35 and abs(self.veleDEta[i]) < 0.006 and abs(self.veleDPhi[i]) < 0.06 and self.veleSieie[i] < 0.03 and self.vLeptons_dr03TkSumPt[i] < 5 and self.vLeptons_lostHits[i] < 2 and abs(self.vLeptons_dxy[i]) < 0.05:
+                                self.nLooseElectrons += 1
+
+                for i in range(0,self.NAdditLeptons):
+                    if 1.566 < abs(self.aetaSc[i]) < 2.5:
+                        if self.aLeptons_pt_single[i] > 35 and abs(self.aeleDEta[i]) < 0.006 and abs(self.aeleDPhi[i]) < 0.06 and self.aeleSieie[i] < 0.03 and self.aLeptons_dr03TkSumPt[i] < 5 and self.aLeptons_lostHits[i] < 2 and abs(self.aLeptons_dxy[i]) < 0.05:
+                                self.nLooseElectrons += 1
+
+		self.nLooseEle[0] = self.nLooseElectrons
+
 
                 #Determining the number of loose working point electrons
-                self.nLooseElectrons = 0
-                self.SetaSc = self.treeMine.selLeptons_etaSc
-                self.SrelIso03 = self.treeMine.selLeptons_relIso03
-                self.SeleSieie = self.treeMine.selLeptons_eleSieie
-                self.SeleDEta = self.treeMine.selLeptons_eleDEta
-                self.SeleDPhi = self.treeMine.selLeptons_eleDPhi
-                self.SeleHoE = self.treeMine.selLeptons_eleHoE
-                self.SeleExpMissingInnerHits = self.treeMine.selLeptons_eleExpMissingInnerHits
-                self.SeleooEmooP = self.treeMine.selLeptons_eleooEmooP
-                self.AetaSc = self.treeMine.aLeptons_etaSc
-                self.ArelIso03 = self.treeMine.aLeptons_relIso03
-                self.AeleSieie = self.treeMine.aLeptons_eleSieie
-                self.AeleDEta = self.treeMine.aLeptons_eleDEta
-                self.AeleDPhi = self.treeMine.aLeptons_eleDPhi
-                self.AeleHoE = self.treeMine.aLeptons_eleHoE
-                self.AeleExpMissingInnerHits = self.treeMine.aLeptons_eleExpMissingInnerHits
-                self.AeleooEmooP = self.treeMine.aLeptons_eleooEmooP
-                for i in range(0,self.NAdditLeptons):
-                    if abs(self.AetaSc[i]) <= 1.479:
-                        if self.ArelIso03[i] < 0.0994 and self.AeleSieie[i] < 0.011 and abs(self.AeleDEta[i]) < 0.00477 and abs(self.AeleDPhi[i]) < 0.222 and self.AeleHoE[i] < 0.298 and self.AeleooEmooP[i] < 0.241 and self.AeleExpMissingInnerHits[i] <= 1:
-                        	self.nLooseElectrons += 1
-                    elif abs(self.AetaSc[i]) > 1.479:
-                        if self.ArelIso03[i] < 0.107 and self.AeleSieie[i] < 0.0314 and abs(self.AeleDEta[i]) < 0.00868 and abs(self.AeleDPhi[i]) < 0.213 and self.AeleHoE[i] < 0.101 and self.AeleooEmooP[i] < 0.14 and self.AeleExpMissingInnerHits[i] <= 1:
-                        	self.nLooseElectrons += 1
-
-                self.nLooseEle[0] = self.nLooseElectrons
+#                self.nLooseElectrons = 0
+#                self.SetaSc = self.treeMine.selLeptons_etaSc
+#                self.SrelIso03 = self.treeMine.selLeptons_relIso03
+#                self.SeleSieie = self.treeMine.selLeptons_eleSieie
+#                self.SeleDEta = self.treeMine.selLeptons_eleDEta
+#                self.SeleDPhi = self.treeMine.selLeptons_eleDPhi
+#                self.SeleHoE = self.treeMine.selLeptons_eleHoE
+#                self.SeleExpMissingInnerHits = self.treeMine.selLeptons_eleExpMissingInnerHits
+#                self.SeleooEmooP = self.treeMine.selLeptons_eleooEmooP
+#                self.AetaSc = self.treeMine.aLeptons_etaSc
+#                self.ArelIso03 = self.treeMine.aLeptons_relIso03
+#                self.AeleSieie = self.treeMine.aLeptons_eleSieie
+#                self.AeleDEta = self.treeMine.aLeptons_eleDEta
+#                self.AeleDPhi = self.treeMine.aLeptons_eleDPhi
+#                self.AeleHoE = self.treeMine.aLeptons_eleHoE
+#                self.AeleExpMissingInnerHits = self.treeMine.aLeptons_eleExpMissingInnerHits
+#                self.AeleooEmooP = self.treeMine.aLeptons_eleooEmooP
+#                for i in range(0,self.NAdditLeptons):
+#                    if abs(self.AetaSc[i]) <= 1.479:
+#                        if self.ArelIso03[i] < 0.0994 and self.AeleSieie[i] < 0.011 and abs(self.AeleDEta[i]) < 0.00477 and abs(self.AeleDPhi[i]) < 0.222 and self.AeleHoE[i] < 0.298 and self.AeleooEmooP[i] < 0.241 and self.AeleExpMissingInnerHits[i] <= 1:
+#                        	self.nLooseElectrons += 1
+#                    elif abs(self.AetaSc[i]) > 1.479:
+#                        if self.ArelIso03[i] < 0.107 and self.AeleSieie[i] < 0.0314 and abs(self.AeleDEta[i]) < 0.00868 and abs(self.AeleDPhi[i]) < 0.213 and self.AeleHoE[i] < 0.101 and self.AeleooEmooP[i] < 0.14 and self.AeleExpMissingInnerHits[i] <= 1:
+#                        	self.nLooseElectrons += 1
+#
+#                self.nLooseEle[0] = self.nLooseElectrons
 
                 #filling an array with jet 4-vectors for jets pt > 30 and |eta| < 2.5, an array of tau21s, and an array of bbtag values, pmass, id, nbhadrons, nchadrons, flavor, l1l2l3 corr, l2l3 corr, JER
                 self.jets = []
@@ -1332,6 +1525,34 @@ class miniTreeProducer:
                # print "id " + str(self.idxH1)
                # print "pt id " + str(self.jets[self.idxH1].Pt())
                 #writing variables to the tree
+
+		#Matching the leading AK8 jet to a Hadronic W
+		if self.isMC == 'True':
+		   self.Matched = 0
+		   self.FirstQuark = 0
+		   self.GenWZQuark_pt = self.treeMine.GenWZQuark_pt
+                   self.GenWZQuark_phi = self.treeMine.GenWZQuark_phi
+                   self.GenWZQuark_eta = self.treeMine.GenWZQuark_eta
+                   self.GenWZQuark_mass = self.treeMine.GenWZQuark_mass
+		   for genQ in range(1,len(self.GenWZQuark_pt)+1):
+                      self.GenQuark = ROOT.TLorentzVector()
+		      self.GenQuark.SetPtEtaPhiM(self.GenWZQuark_pt[genQ-1],self.GenWZQuark_phi[genQ-1],self.GenWZQuark_eta[genQ-1],self.GenWZQuark_mass[genQ-1])
+		      self.HadW_dR = abs(self.jets[self.idxH1].DeltaR(self.GenQuark))
+		      if self.HadW_dR < 0.8:
+			if (genQ%2) == 1:
+			   self.FirstQuark = 1
+			if (genQ%2) == 0 and self.FirstQuark == 1:
+			   self.Matched = 1
+			if (genQ%2) == 0:
+                           self.FirstQuark = 0
+		      else:
+                           self.FirstQuark = 0
+		   if self.Matched == 1:
+		      self.LeadingAK8Jet_MatchedHadW[0] = 1.
+		   else:
+		      self.LeadingAK8Jet_MatchedHadW[0] = 0.
+
+
                 self.jet1pt[0] = self.jets[self.idxH1].Pt()
                 self.jet1eta[0] = self.jets[self.idxH1].Eta()
                 self.jet1phi[0] = self.jets[self.idxH1].Phi()

@@ -30,9 +30,9 @@ using namespace RooFit;
 int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV
 int iPos =11;
 bool bias= false;
-bool blind = true;
+bool blind = false;
 
-double rebin=10;
+double rebin=1;
 
 std::string tags="nominal"; // MMMM
 
@@ -147,7 +147,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     
     stringstream iimass ;
     iimass << imass;
-    std::string dirName = "outputs/bump/datacards/";
+    std::string dirName = "outputs/datacards/";
     
     
     gStyle->SetOptStat(000000000);
@@ -169,8 +169,22 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     
     TFile *f=new TFile(fname.c_str());
     TH1F *h_mX_EST=(TH1F*)f->Get("est")->Clone("alphabet");
+    double NormOfEst = h_mX_EST->Integral();
+    h_mX_EST->Draw("hist");
+    double OverAllIntegral = h_mX_EST->Integral();
     TH1F *h_mX_EST_antitag=(TH1F*)f->Get("antitag")->Clone("alphabet_SB");	
-	
+    double NormOfEst_AT= h_mX_EST_antitag->Integral();
+    double AllOfEst_AT= h_mX_EST_antitag->Integral();
+    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
+    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
+    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
+    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
+    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
+    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
+    std::cout<<OverAllIntegral<<std::endl;
+    std::cout<<NormOfEst<<std::endl;
+    std::cout<<AllOfEst_AT<<std::endl;
+    std::cout<<NormOfEst_AT<<std::endl;
     	
     TH1F *h_mX_SR=(TH1F*)f->Get("data")->Clone("The_SR");
     double maxdata = h_mX_SR->GetMaximum();
@@ -192,7 +206,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
         h_SR_Prediction=(TH1F*)h_mX_EST->Clone("h_SR_Prediction");
 
     } else {
-        h_SR_Prediction2=(TH1F*)h_mX_SR->Clone("h_SR_Prediction2");
+        h_SR_Prediction2=(TH1F*)h_mX_EST_antitag->Clone("h_SR_Prediction2");
+	h_SR_Prediction2->Rebin(rebin);
         h_mX_SR->Rebin(rebin);
         h_mX_SR->SetLineColor(kBlack);
         h_SR_Prediction=(TH1F*)h_mX_SR->Clone("h_SR_Prediction");
@@ -222,18 +237,21 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 
      TRandom3 R;	
      double normWeight, normWeight2;
-     double N= h_mX_EST_antitag->Integral(h_mX_EST_antitag->FindBin(1200),h_mX_EST_antitag->FindBin(2500));
+     double N= h_mX_EST_antitag->Integral();
      int intPart = TMath::Nint(N);
      double resid = intPart - N;
      double rnd = R.Uniform(1.);
      if (resid > 0) normWeight = rnd > resid ? intPart : intPart-1; 
      else normWeight = rnd > fabs(resid) ?  intPart+0. : intPart+1.; 
 
-     double M = h_mX_EST->Integral(h_mX_EST->FindBin(1200),h_mX_EST->FindBin(2500));
+     double M = h_mX_EST->Integral();
      intPart = TMath::Nint(M);		
      resid = intPart - M;	
      if (resid > 0) normWeight2 = rnd > resid ? intPart : intPart-1;
      else normWeight2 = rnd > fabs(resid) ?  intPart+0. : intPart+1.;	
+
+    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
+    std::cout<<N<<"    "<<M<<std::endl;
     
     RooRealVar nBackgroundSB((std::string("bgSB_")+std::string("_norm")).c_str(),"nbkg",normWeight);
 ///h_mX_EST_antitag->Integral(h_mX_EST_antitag->FindBin(1200),h_mX_EST_antitag->FindBin(2500)));	
@@ -278,7 +296,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     string name_output = "CR_RooFit_Exp";
     
     std::cout<<"Nevents "<<nEventsSR<<std::endl;
-    RooDataHist pred("pred", "Prediction from SB", RooArgList(x), h_SR_Prediction);
+    RooDataHist pred("pred", "Prediction from SB", RooArgList(x), h_SR_Prediction); // MARC I THINK YOU SHOULD LOOK HERE SEARCH FOR ME! SEAACH FOR ME
     RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
     
     RooPlot *aC_plot=x.frame();
@@ -291,7 +309,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     pred.plotOn(aC_plot, RooFit::LineColor(kBlack), RooFit::MarkerColor(kBlack));
     
     TGraph* error_curve[5]; //correct error bands
-    TGraphAsymmErrors* dataGr = new TGraphAsymmErrors(h_SR_Prediction->GetNbinsX()); //data w/o 0 entries
+    TGraphAsymmErrors* dataGr = new TGraphAsymmErrors(h_SR_Prediction->GetNbinsX()); //data w/o 0 entries MARC ALSO LOOK HERE!!!
 
     for (int i=2; i!=5; ++i) {
         error_curve[i] = new TGraph();
@@ -430,7 +448,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     
     aC_plot->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     aC_plot->GetXaxis()->SetLabelOffset(0.02);
-    aC_plot->GetYaxis()->SetRangeUser(0.001, 100.);
+    aC_plot->GetYaxis()->SetRangeUser(0.1, 200.);
     h_SR_Prediction->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     string rebin_ = itoa(rebin);
     
@@ -574,6 +592,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     w->import(nBackgroundSB);	
     w->import(nBackground);
     w->SaveAs((dirName+"/w_background.root").c_str());
+    w->Print();
     
     TH1F *h_mX_SR_fakeData=(TH1F*)h_mX_EST->Clone("h_mX_SR_fakeData");
     //h_mX_SR_fakeData->Scale(nEventsSR/h_mX_SR_fakeData->GetSumOfWeights());
@@ -585,6 +604,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     w_data->import(data_obs_sb);
    // w->import(nBackground);
     w_data->SaveAs((dirName+"/w_data.root").c_str());
+
+    TCanvas *c_rooFit2=new TCanvas("c_rooFit2", "c_rooFit2", 900, 600);
+    c_rooFit2->Divide(2,1);
+    c_rooFit2->cd(1);
+    h_mX_EST_antitag->Draw();
+    c_rooFit2->cd(2);
+    h_mX_EST->Draw();
     
 }
 

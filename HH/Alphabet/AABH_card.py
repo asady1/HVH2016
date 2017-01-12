@@ -494,7 +494,7 @@ if Options.workspace == "alphabet":
 		text_file.write("process                                          0      1	\n")
 		text_file.write("rate                                            %f 	1.0000	\n"%(signal_integral))#,signal_integral_anti))
 		text_file.write("-------------------------------------------------------------------------------\n")
-		#text_file.write("bgSB_norm rateParam HH4b "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")
+		text_file.write("bgSB_norm rateParam HH4b "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")
 		text_file.write("R param "+str(AverageRate)+" "+str(AverageError)+"\n")
 		text_file.write("n_exp_binHH4b_proc_EST_  rateParam HH4b "+Options.name+"EST @0*@1 bgSB_norm,R\n")
 
@@ -523,8 +523,8 @@ if Options.workspace == "alphabet":
 		text_filea.write("rate                                            %f 	1.0000	\n"%(signal_integral_anti))
 		text_filea.write("-------------------------------------------------------------------------------\n")
 		text_filea.write("bgSB_norm rateParam HH4b "+Options.name+"EST_antitag "+str(int(AntitagIntegral))+"\n")
-		#text_file.write("R param "+str(AverageRate)+" "+str(AverageError)+"\n")
-		#text_file.write("n_exp_binHH4b_proc_EST_ EST rateParam HH4b "+Options.name+"EST @0*@1 bgSB_norm,R\n")
+		text_file.write("R param "+str(AverageRate)+" "+str(AverageError)+"\n")
+		text_file.write("n_exp_binHH4b_proc_EST_ EST rateParam HH4b "+Options.name+"EST @0*@1 bgSB_norm,R\n")
 
 		text_file.close()
 

@@ -472,7 +472,7 @@ if Options.workspace == "alphabet":
 		text_file.write("-------------------------------------------------------------------------------\n")
 		text_file.write("bin                                             vh4b_pass            vh4b_pass	\n")
 		text_file.write("process                                         Signal_mX_%s_"%(m)+Options.name+"  "+Options.name+"EST\n")#	Signal_mX_antitag_%s_"%(m)+Options.name+"  "+Options.name+"EST_antitag
-		text_file.write("process                                          -1      0	\n")
+		text_file.write("process                                          0      1	\n")
 		text_file.write("rate                                            %f 	1.0000	\n"%(signal_integral))#,signal_integral_anti))
 		text_file.write("-------------------------------------------------------------------------------\n")
 		#text_file.write("bgSB_norm rateParam vh4b_fail "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")
@@ -494,7 +494,7 @@ if Options.workspace == "alphabet":
 		text_filea.write("-------------------------------------------------------------------------------\n")
 		text_filea.write("bin                                             vh4b_fail            vh4b_fail	\n")
 		text_filea.write("process                                         Signal_mX_antitag_%s_"%(m)+Options.name+"  "+Options.name+"EST_antitag\n")
-		text_filea.write("process                                          -1      0	\n")
+		text_filea.write("process                                          0      1	\n")
 		text_filea.write("rate                                            %f 	1.0000	\n"%(signal_integral_anti))
 		text_filea.write("-------------------------------------------------------------------------------\n")
 		text_filea.write("bgSB_norm rateParam vh4b_fail "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")

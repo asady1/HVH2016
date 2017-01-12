@@ -67,7 +67,7 @@ TightAT                 =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>1
 #TightAT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag<"+str(Options.tightcut)+")"
 TightT          =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135&(jet1bbtag>"+str(Options.tightcut)+")"
 #TightT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"
-TightT2         = "jet2bbtag > 0.8 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  &(vtype==-1||vtype==4)&jet2pt>250&json==1&jet1pt>250&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.8)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
+TightT2         = "jet2bbtag > 0.3 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  &(vtype==-1||vtype==4)&jet2pt>250&json==1&jet1pt>250&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.3)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)& (!(jet2bbtag > 0.8 & jet1bbtag > 0.8))"
 #TightT2         = "jet2bbtag > 0.3 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 110 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 140  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))&(vtype==-1||vtype==4)&jet2_puppi_pt>200&json==1&jet1_puppi_pt>200&abs(jet1_puppi_eta-jet2_puppi_eta)<1.3&jet1_puppi_tau21<0.6&dijetmass_TLpuppi_SubsoftdropTheaCorr>800&jet2ID==1&jet1ID==1&abs(jet1_puppi_eta)<2.4&abs(jet2_puppi_eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>110&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<140&(jet1bbtag>0.3)"
 
 
@@ -139,7 +139,7 @@ bins = binCalc(50,200,105,135,Options.bin)
 if Options.Linear:
 	F = LinearFit([0.0,0.0], -75, 85, "linfit", "W")
 else:
-	F = QuadraticFit([0.1,0.1,0.1], -75, 85, "quadfit", "EMRFNEX0")
+	F = QuadraticFit([0.1,0.1,0.1], -75, 85, "quadfit", "W")
 Hbb.GetRates([Options.tightcut, ">"], bins[0], bins[1], 120., F)
 
 
@@ -185,7 +185,7 @@ leg.Draw()
 C2.SaveAs("outputs/HHSR_Fit_"+Options.name+".pdf")
 
 
-FILE = TFile("outputs/HHSR_TT.root", "RECREATE")
+FILE = TFile("outputs/HHSR_LL.root", "RECREATE")
 FILE.cd()
 
 D = TH1F("data", "", len(binBoundaries)-1, array('d',binBoundaries))
@@ -194,11 +194,33 @@ NU = TH1F("est_up", "", len(binBoundaries)-1, array('d',binBoundaries))
 ND = TH1F("est_down", "", len(binBoundaries)-1, array('d',binBoundaries))
 A =  TH1F("antitag", "", len(binBoundaries)-1, array('d',binBoundaries)) 
 
+AverageRate = Hbb.Fit.fit.Integral(-15,15)
+AverageRate = AverageRate/30
+print "Average Rate = " + str(AverageRate)
+
+AverageError = Hbb.Fit.ErrUp.Integral(-15,15)
+AverageError = AverageError/30 - AverageRate
+print "Average Error = " + str(AverageError )
+
 PULL = FillPlots(Hbb, D, N, NU, ND, A, variable, binBoundaries, TightAT, TightT)
 
+b1 = N.FindBin(1200)
+b2 = N.FindBin(2500)
+AntitagIntegral = A.Integral(b1,b2)
 
 FILE.Write()
 FILE.Save()
+
+
+Acheck = A.Clone("Acheck")
+Acheck.Rebin(50)
+Ncheck = N.Clone("NCheck")
+Ncheck.Rebin(50)
+Ncheck.Divide(Acheck)
+
+TTT = TCanvas("TTT", "", 600, 600)
+TTT.cd()
+Ncheck.Draw()
 
 
 Pull = PULL[0]
@@ -333,6 +355,8 @@ if not Options.finebins:
 	Tm1.Draw("same")
 C4.SaveAs("outputs/HHSR_Plot_"+Options.name+".pdf")
 
+
+
 if Options.workspace == "alphabet":
 	print "creating workspace and datacard: ALPHABET"
 
@@ -347,7 +371,7 @@ if Options.workspace == "alphabet":
 		vh.cd()
 
 		Signal_mX = TH1F("Signal_mX_%s_"%(m)+Options.name, "", len(binBoundaries)-1, array('d',binBoundaries))
-		Signal_mX_antitag = TH1F("Signal_mX_antitag_%s"%(m)+Options.name, "", len(binBoundaries)-1, array('d',binBoundaries))
+		Signal_mX_antitag = TH1F("Signal_mX_antitag_%s_"%(m)+Options.name, "", len(binBoundaries)-1, array('d',binBoundaries))
 		Signal_mX_trig_up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_trigUp", "", len(binBoundaries)-1, array('d',binBoundaries))
 		Signal_mX_trig_down = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_trigDown", "", len(binBoundaries)-1, array('d',binBoundaries))
 		Signal_mX_btag_up = TH1F("Signal_mX_%s_"%(m)+Options.name+"_CMS_eff_btagUp", "", len(binBoundaries)-1, array('d',binBoundaries))
@@ -397,12 +421,6 @@ if Options.workspace == "alphabet":
 		signal_integral_anti = Signal_mX_antitag.Integral(Signal_mX_antitag.FindBin(1200),Signal_mX_antitag.FindBin(2500))
 		print(signal_integral_anti)
 		print("signal_integral_anti")
-
-		#Getting R parameter for card:
-		AntitagIntegral = A.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))
-		AverageRate = N.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))/AntitagIntegral 
-		AverageErrorRate = NU.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))/AntitagIntegral 
-		AverageError = math.fabs(AverageErrorRate - AverageRate)
 
 		qcd_integral = N.Integral(N.FindBin(1200),N.FindBin(2500))
 		qcd = N.Clone(Options.name+"EST")
@@ -460,51 +478,56 @@ if Options.workspace == "alphabet":
 		output_file.Close()
 
 		text_file = open("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV_pass.txt", "w")
-
 		text_file.write("imax    1     number of categories\n")
 		text_file.write("jmax    1     number of samples minus one\n")
 		text_file.write("kmax    *     number of nuisance parameters\n")
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("shapes * * HH_mX_%s_"%(m)+Options.name+"_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC\n")
+		text_file.write("shapes Signal_mX_%s_"%(m)+Options.name+"      HH4b w_signal_%s.root      HH4b:signal_fixed_ \n"%(m))
+		text_file.write("shapes "+Options.name+"EST HH4b w_background.root HH4b:bg_\n")
+		text_file.write("shapes data_obs   HH4b w_data.root                HH4b:data_obs\n")
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("bin                                            vh4b_pass			\n")
+		text_file.write("bin                                            HH4b			\n")
 		text_file.write("observation                                    -1.0				\n")
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("bin                                             vh4b_pass            vh4b_pass	\n")
+		text_file.write("bin                                             HH4b            HH4b	\n")
 		text_file.write("process                                         Signal_mX_%s_"%(m)+Options.name+"  "+Options.name+"EST\n")#	Signal_mX_antitag_%s_"%(m)+Options.name+"  "+Options.name+"EST_antitag
 		text_file.write("process                                          0      1	\n")
 		text_file.write("rate                                            %f 	1.0000	\n"%(signal_integral))#,signal_integral_anti))
 		text_file.write("-------------------------------------------------------------------------------\n")
-		#text_file.write("bgSB_norm rateParam vh4b_fail "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")
+		#text_file.write("bgSB_norm rateParam HH4b "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")
 		text_file.write("R param "+str(AverageRate)+" "+str(AverageError)+"\n")
-		text_file.write("n_exp_binHH4b_proc_EST_ EST rateParam vh4b_pass "+Options.name+"EST @0*@1 bgSB_norm,R\n")
+		text_file.write("n_exp_binHH4b_proc_EST_  rateParam HH4b "+Options.name+"EST @0*@1 bgSB_norm,R\n")
 
 		text_file.close()
 		
-		text_filea = open("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV_fail.txt", "w")
 
+
+
+
+
+		text_filea = open("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV_fail.txt", "w")
 		text_filea.write("imax    1     number of categories\n")
 		text_filea.write("jmax    1     number of samples minus one\n")
 		text_filea.write("kmax    *     number of nuisance parameters\n")
 		text_filea.write("-------------------------------------------------------------------------------\n")
-		text_filea.write("shapes * * HH_mX_%s_"%(m)+Options.name+"_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC\n")
+		text_filea.write("shapes Signal_mX_antitag_%s_"%(m)+Options.name+"      HH4b w_signal_antitag_%s.root      HH4b:signal_fixed_antitag_ \n"%(m))
+		text_filea.write("shapes "+Options.name+"EST_antitag HH4b w_background.root HH4b:bgSB_\n")
+		text_filea.write("shapes data_obs   HH4b w_data.root                HH4b:data_obs_sb\n")
 		text_filea.write("-------------------------------------------------------------------------------\n")
-		text_filea.write("bin                                            vh4b_fail			\n")
+		text_filea.write("bin                                            HH4b			\n")
 		text_filea.write("observation                                    -1.0				\n")
 		text_filea.write("-------------------------------------------------------------------------------\n")
-		text_filea.write("bin                                             vh4b_fail            vh4b_fail	\n")
+		text_filea.write("bin                                             HH4b            HH4b	\n")
 		text_filea.write("process                                         Signal_mX_antitag_%s_"%(m)+Options.name+"  "+Options.name+"EST_antitag\n")
 		text_filea.write("process                                          0      1	\n")
 		text_filea.write("rate                                            %f 	1.0000	\n"%(signal_integral_anti))
 		text_filea.write("-------------------------------------------------------------------------------\n")
-		text_filea.write("bgSB_norm rateParam vh4b_fail "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")
+		text_filea.write("bgSB_norm rateParam HH4b "+Options.name+"EST_antitag "+str(int(AntitagIntegral))+"\n")
 		#text_file.write("R param "+str(AverageRate)+" "+str(AverageError)+"\n")
-		#text_file.write("n_exp_binHH4b_proc_EST_ EST rateParam vh4b_pass "+Options.name+"EST @0*@1 bgSB_norm,R\n")
+		#text_file.write("n_exp_binHH4b_proc_EST_ EST rateParam HH4b "+Options.name+"EST @0*@1 bgSB_norm,R\n")
 
-		text_file.close()	
+		text_file.close()
 
-if Options.workspace == "fit":
-	print "creating workspace and datacard: ALPHABET ASSISTED FIT"
 
 
 

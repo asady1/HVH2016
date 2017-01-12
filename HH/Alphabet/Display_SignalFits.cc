@@ -41,8 +41,9 @@
 int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV
 int iPos =11;
 
-int rebin=10;
+int rebin=1;
 ofstream outfile;
+bool antitag = true;
 
 std::string tostr(float t, int precision=0)
 {
@@ -137,10 +138,15 @@ RooPlot* fitSignal(std::string dirName, TH1D *h, int massNum, std::string mass, 
         //RooGaussian signal_fixed("signal_fixed", "Signal Prediction", *x, signal_p0, signal_p1);
         RooCBShape signalCore_fixed((std::string("signalCore_fixed_")).c_str(), "signalCore", *x, signal_p0, signal_p1,signal_p2, signal_p3);
         RooGaussian signalComb_fixed((std::string("signalComb_fixed_")).c_str(), "Combinatoric", *x, signal_p0, signal_p5);
-        RooAddPdf signal_fixed((std::string("signal_fixed_")).c_str(), "signal", RooArgList(signalCore_fixed, signalComb_fixed), signal_p6);
+	string WhichString;
+	if (antitag) WhichString = "signal_fixed_antitag_";
+	else WhichString = "signal_fixed_";
+	RooAddPdf signal_fixed((WhichString).c_str(), "signal", RooArgList(signalCore_fixed, signalComb_fixed), signal_p6);
         RooWorkspace *w=new RooWorkspace("HH4b");
         w->import(signal_fixed);
-        w->SaveAs((dirName+"/w_signal_"+mass+".root").c_str());
+	if (antitag) w->SaveAs((dirName+"/w_signal_antitag_"+mass+".root").c_str());
+	else w->SaveAs((dirName+"/w_signal_"+mass+".root").c_str());
+	w->Print();
     }
     return plot;
 }
@@ -177,7 +183,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
     
     std::string dirName = "outputs/datacards/";
     
-    std::string file_postfix = std::string("_HH_TT_13TeV.root");
+    std::string file_postfix = std::string("_test_13TeV.root");
     std::cout<< " file input "<< file_postfix<<std::endl;
     
     //gROOT->SetStyle("Plain");
@@ -204,11 +210,24 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
     for (unsigned int i=0; i<masses.size(); ++i) {
         std::cout<<" OPENING FILE: " << (dir_preselection+"/"+file_histograms+masses.at(i)+file_postfix).c_str() <<std::endl;
         TFile *file = new TFile((dir_preselection+"/"+file_histograms+masses.at(i)+file_postfix).c_str());
-        TH1D *h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_"+masses.at(i)+"_HH_TT").c_str());
-        //std::cout<< "distribs_5_10_0__x"<<std::endl;
+	TH1D *h_mX_SR;
+	std::cout<<"Loading histograms"<<std::endl;
+	if (antitag)
+		{
+			std::cout<<"looking for "<<("vh/Signal_mX_antitag_"+masses.at(i)+"_test").c_str()<<std::endl;
+			h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_antitag_"+masses.at(i)+"_test").c_str());
+			h_mX_SR->SetTitle(("m_{X} Peak in Signal MC (m_{X}="+masses.at(i)+" GeV); m_{X} (GeV)").c_str());
+		}
+	else
+		{
+			std::cout<<"looking for "<<("Signal_mX_"+masses.at(i)+"_").c_str()<<std::endl;
+			h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_"+masses.at(i)+"_test").c_str());
+			h_mX_SR->SetTitle(("m_{X} Peak in Signal MC (m_{X}="+masses.at(i)+" GeV); m_{X} (GeV)").c_str());
+		}
+	std::cout<<" FILE OPENED, DONE!: "<<std::endl;
+        std::cout<< "distribs_5_10_0__x"<<std::endl;
         
         double nSignal_init=1.0;
-
         double xPad = 0.3;
         TCanvas *c_mX_SR=new TCanvas(("c_mX_SR_"+masses.at(i)).c_str(), ("c_mX_SR_"+masses.at(i)+"HH_TT").c_str(), 700*(1.-xPad), 700);
         TPad *p_1=new TPad("p_1", "p_1", 0, xPad, 1, 1);
@@ -229,10 +248,11 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
         p_1->Draw();
         p_2->Draw();
         p_1->cd();
-        
-
-        h_mX_SR->SetTitle(("m_{X} Peak in Signal MC (m_{X}="+masses.at(i)+" GeV); m_{X} (GeV)").c_str());
+	std::cout<<"first"<<std::endl;
+        	
+	std::cout<<"Title"<<std::endl;
         h_mX_SR->Rebin(rebin);
+	std::cout<<"rebin"<<std::endl;
         std::cout<<" norm = "<<h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500))<<std::endl;	
         
         TLegend *leg = new TLegend(0.75,0.75,0.5,0.9,NULL,"brNDC");
@@ -266,6 +286,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
         plot_vg->GetXaxis()->SetRangeUser(imass-400, imass+400);
         plot_vg->GetXaxis()->SetLabelOffset(0.03);
         plot_vg->GetXaxis()->SetNdivisions(505);
+	std::cout<<"middle"<<std::endl;
 
         
         plot_vg->Draw("same");
@@ -305,9 +326,9 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
         
         c_mX_SR->SaveAs((dirName+"/c_mX_SR_"+masses.at(i)+"Log.png").c_str());
         c_mX_SR->SaveAs((dirName+"/c_mX_SR_"+masses.at(i)+"Log.root").c_str());
+	std::cout<<"last"<<std::endl;
         
     }
-    
     
     return 0;
 }

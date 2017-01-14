@@ -216,14 +216,14 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
 	std::cout<<"Loading histograms"<<std::endl;
 	if (antitag)
 		{
-			std::cout<<"looking for "<<("vh/Signal_mX_antitag_"+masses.at(i)+"_test").c_str()<<std::endl;
-			h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_antitag_"+masses.at(i)+"_test").c_str());
+			std::cout<<"looking for "<<("vh/Signal_mX_antitag_"+masses.at(i)+"HH_LL").c_str()<<std::endl;
+			h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_antitag_"+masses.at(i)+"HH_LL").c_str());
 			h_mX_SR->SetTitle(("m_{X} Peak in Signal MC (m_{X}="+masses.at(i)+" GeV); m_{X} (GeV)").c_str());
 		}
 	else
 		{
-			std::cout<<"looking for "<<("Signal_mX_"+masses.at(i)+"_").c_str()<<std::endl;
-			h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_"+masses.at(i)+"_test").c_str());
+			std::cout<<"looking for "<<("Signal_mX_"+masses.at(i)+"_HH_LL").c_str()<<std::endl;
+			h_mX_SR=(TH1D*)file->Get(("vh/Signal_mX_"+masses.at(i)+"_HH_LL").c_str());
 			h_mX_SR->SetTitle(("m_{X} Peak in Signal MC (m_{X}="+masses.at(i)+" GeV); m_{X} (GeV)").c_str());
 		}
 	std::cout<<" FILE OPENED, DONE!: "<<std::endl;
@@ -231,7 +231,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
         
         double nSignal_init=1.0;
         double xPad = 0.3;
-        TCanvas *c_mX_SR=new TCanvas(("c_mX_SR_"+masses.at(i)).c_str(), ("c_mX_SR_"+masses.at(i)+"HH_TT").c_str(), 700*(1.-xPad), 700);
+        TCanvas *c_mX_SR=new TCanvas(("c_mX_SR_"+masses.at(i)).c_str(), ("c_mX_SR_"+masses.at(i)+"HH_LL").c_str(), 700*(1.-xPad), 700);
         TPad *p_1=new TPad("p_1", "p_1", 0, xPad, 1, 1);
         p_1->SetFillStyle(4000);
         p_1->SetFrameFillColor(0);

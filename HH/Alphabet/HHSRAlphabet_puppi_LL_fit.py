@@ -373,7 +373,7 @@ if Options.workspace == "alphabet":
 		SF_tau21 = 1.03*1.03
 		UD = ['Up','Down']
 
-		output_file = TFile("outputs/datacards/HH_mX_"+Options.name+"_%s_13TeV.root"(%m), "RECREATE")
+		output_file = TFile("outputs/datacards/HH_mX_"+Options.name+"_%s"%(m)+"_13TeV.root", "RECREATE")
 		vh=output_file.mkdir("vh")
 		vh.cd()
 

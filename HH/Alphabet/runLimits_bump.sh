@@ -7,5 +7,5 @@ do
 	text2workspace.py outputs/datacards/HH_mX_$i\_bump_13TeV.txt  -o outputs/datacards/HH_mX_$i\_bump_13TeV.root
 	combine outputs/datacards/HH_mX_$i\_bump_13TeV.txt --noFitAsimov -m $i -M Asymptotic &> CMS_HH4b_$i\_13TeV_asymptoticCLs.out
 	mv higgsCombineTest.Asymptotic.mH$i\.root Limits/CMS_$i\_HH4b_13TeV_asymptoticCLs.root
-	combine -M MaxLikelihoodFit --rMin=-100 --rMax=100 --saveNormalizations --plot --saveShapes --saveWithUncertainties  -v 4 outputs/datacards/HH_mX_$i\_bump_13TeV.txt --out outputs/datacards
+#	combine -M MaxLikelihoodFit --rMin=-100 --rMax=100 --saveNormalizations --plot --saveShapes --saveWithUncertainties  -v 4 outputs/datacards/HH_mX_$i\_bump_13TeV.txt --out outputs/datacards
 done

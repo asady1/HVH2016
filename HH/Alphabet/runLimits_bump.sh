@@ -1,7 +1,7 @@
 #!/bin/bash
-for i in 1200 
+for i in 1200 1400 1600 1800 2000 2500 
 do
-	combineCards.py Name1=outputs/datacards/HH_mX_$i\_test_13TeV_pass.txt Name2=outputs/datacards/HH_mX_$i\_test_13TeV_fail.txt > outputs/datacards/HH_mX_$i\_bump_13TeV.txt
+	combineCards.py SR=outputs/datacards/HH_mX_$i\_HH_LL_13TeV.txt AT=outputs/datacards/HH_mX_$i\_HH_LL_13TeV_fail.txt > outputs/datacards/HH_mX_$i\_bump_13TeV.txt
 	echo "mass point $i"
 	mkdir Limits/sig$i
 	text2workspace.py outputs/datacards/HH_mX_$i\_bump_13TeV.txt  -o outputs/datacards/HH_mX_$i\_bump_13TeV.root

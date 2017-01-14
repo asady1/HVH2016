@@ -235,24 +235,38 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     */
      RooRealVar x("x", "m_{X} (GeV)", SR_lo, SR_hi);
 
-     TRandom3 R;	
-     double normWeight, normWeight2;
-     double N= h_mX_EST_antitag->Integral();
-     int intPart = TMath::Nint(N);
-     double resid = intPart - N;
-     double rnd = R.Uniform(1.);
-     if (resid > 0) normWeight = rnd > resid ? intPart : intPart-1; 
-     else normWeight = rnd > fabs(resid) ?  intPart+0. : intPart+1.; 
+        TRandom3 R;	
+     double normWeight, normWeight2, rnd, intPart, resid;
 
-     double M = h_mX_EST->Integral();
-     intPart = TMath::Nint(M);		
-     resid = intPart - M;	
-     if (resid > 0) normWeight2 = rnd > resid ? intPart : intPart-1;
-     else normWeight2 = rnd > fabs(resid) ?  intPart+0. : intPart+1.;	
+     for (int i = 1; i <  h_mX_EST_antitag->GetNbinsX()+1; i++){
+       double N= h_mX_EST_antitag->GetBinContent(i);
+       int intPart = TMath::Nint(N);
+       double resid = intPart - N;
+       double rnd = R.Uniform(1.);
+       if (resid > 0) normWeight = rnd > resid ? intPart : intPart-1; 
+       else normWeight = rnd > fabs(resid) ?  intPart+0. : intPart+1.; 
+       h_mX_EST_antitag->SetBinContent(i, normWeight);
+     }
 
-    std::cout<<"-=-=-=-=-=-=-=-=-=-=-=-=-=-"<<std::endl;
-    std::cout<<N<<"    "<<M<<std::endl;
+     cout << "SR integral = " << h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500)) << endl;
+     
+     for (int i = 0; i <  h_mX_EST->GetNbinsX()+1; i++){
+       double M =  h_mX_EST->GetBinContent(i);
+       intPart = TMath::Nint(M);		
+       resid = intPart - M;	
+       double rnd = R.Uniform(1.);
+       if (resid > 0) normWeight2 = rnd > resid ? intPart : intPart-1.;
+       else normWeight2 = rnd > fabs(resid) ?  intPart+0. : intPart+1.;	
+       h_mX_EST->SetBinContent(i, normWeight2);
+     }
+     
+
+     normWeight = h_mX_EST_antitag->Integral();
+     normWeight2 = h_mX_EST->Integral();
     
+     cout << " normWeight = " << normWeight << " normWeight2 = " << normWeight2 << endl;   
+
+ 
     RooRealVar nBackgroundSB((std::string("bgSB_")+std::string("_norm")).c_str(),"nbkg",normWeight);
 ///h_mX_EST_antitag->Integral(h_mX_EST_antitag->FindBin(1200),h_mX_EST_antitag->FindBin(2500)));	
     //RooRealVar nBackgroundSB((std::string("bgSB_")+std::string("_norm")).c_str(),"nbkg",h_mX_EST->Integral(h_mX_EST->FindBin(1200),h_mX_EST->FindBin(2500)));
@@ -589,8 +603,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     RooWorkspace *w=new RooWorkspace("HH4b");
     w->import(bg);
     w->import(bgSB);
-    w->import(nBackgroundSB);	
-    w->import(nBackground);
+//    w->import(nBackgroundSB);	
+//    w->import(nBackground);
     w->SaveAs((dirName+"/w_background.root").c_str());
     w->Print();
     

@@ -41,9 +41,10 @@
 int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV
 int iPos =11;
 
+bool _antitag=false;
+
 int rebin=1;
 ofstream outfile;
-bool antitag = true;
 
 std::string tostr(float t, int precision=0)
 {
@@ -139,12 +140,12 @@ RooPlot* fitSignal(std::string dirName, TH1D *h, int massNum, std::string mass, 
         RooCBShape signalCore_fixed((std::string("signalCore_fixed_")).c_str(), "signalCore", *x, signal_p0, signal_p1,signal_p2, signal_p3);
         RooGaussian signalComb_fixed((std::string("signalComb_fixed_")).c_str(), "Combinatoric", *x, signal_p0, signal_p5);
 	string WhichString;
-	if (antitag) WhichString = "signal_fixed_antitag_";
+	if (_antitag) WhichString = "signal_fixed_antitag_";
 	else WhichString = "signal_fixed_";
 	RooAddPdf signal_fixed((WhichString).c_str(), "signal", RooArgList(signalCore_fixed, signalComb_fixed), signal_p6);
         RooWorkspace *w=new RooWorkspace("HH4b");
         w->import(signal_fixed);
-	if (antitag) w->SaveAs((dirName+"/w_signal_antitag_"+mass+".root").c_str());
+	if (_antitag) w->SaveAs((dirName+"/w_signal_antitag_"+mass+".root").c_str());
 	else w->SaveAs((dirName+"/w_signal_"+mass+".root").c_str());
 	w->Print();
     }
@@ -162,13 +163,14 @@ double lnN(double b, double a, double c)
 
 int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
                        std::string dir_selection="",
-                       std::string file_histograms="HH_mX_",
-                       int imass=1200,
+                       std::string file_histograms="HH_mX_HH_LL_",
+                       int imass=1600,
                        int rebin_factor = 1,
+		       bool antitag = false,
                        bool focus=false)
 {
-    
-    
+    _antitag = antitag;  
+     
     writeExtraText = true;       // if extra text
     extraText  = "Simulation";  // default extra text is "Preliminary"
     lumi_13TeV  = "27.2 fb^{-1} (2016)"; // default is "19.7 fb^{-1}"
@@ -183,7 +185,7 @@ int Display_SignalFits(std::string dir_preselection="outputs/datacards/",
     
     std::string dirName = "outputs/datacards/";
     
-    std::string file_postfix = std::string("_test_13TeV.root");
+    std::string file_postfix = std::string("_13TeV.root");
     std::cout<< " file input "<< file_postfix<<std::endl;
     
     //gROOT->SetStyle("Plain");

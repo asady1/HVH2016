@@ -19,6 +19,9 @@ from Distribution_Header import *
 import Alphabet
 from Alphabet import *
 
+lowBin=1200
+highBin=2500
+
 def GetNom(file_string):
 	tempFile = TFile(file_string)
 	tempHist = tempFile.Get("CountWeighted")
@@ -60,22 +63,24 @@ parser.add_option('-I', '--inject', metavar='Inj', type='string', dest='inject',
 parser.add_option('--workspace', metavar='WSPC', type='string', dest='workspace', default="alphabet")
 (Options, args) = parser.parse_args()
 
-preselection    =       "&(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
-#preselection	= 	"&vtype==-1&jet2pt>250&json==1&jet1pt>250&etadiff<1.3&jet1tau21<0.6&dijetmass_corr>800&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&HLT_PFHT800_v==1"
-TightPre 		=	Options.tightpre + preselection
-TightAT                 =       TightPre + "&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr<135&(jet1bbtag<"+str(Options.tightcut)+")"
-#TightAT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag<"+str(Options.tightcut)+")"
-TightT          =       TightPre + "&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop*jet1_puppi_TheaCorr<135&(jet1bbtag>"+str(Options.tightcut)+")"
-#TightT 		=	TightPre + "&jet1pmass>105&jet1pmass<135&(jet1bbtag>"+str(Options.tightcut)+")"
-#TightT2         = "jet2bbtag > 0.8 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 110 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 140  &vtype==-1&jet2_puppi_pt>200&json==1&jet1_puppi_pt>200&abs(jet1_puppi_eta-jet2_puppi_eta)<1.3&jet1_puppi_tau21<0.6&dijetmass_TLpuppi_SubsoftdropTheaCorr>800&jet2ID==1&jet1ID==1&abs(jet1_puppi_eta)<2.4&abs(jet2_puppi_eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>110&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<140&(jet1bbtag>0.8)"
-TightT2         = "jet2bbtag > 0.3 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))&(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6&dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr>105&jet1_puppi_msoftdrop_raw*jet1_puppi_TheaCorr<135&(jet1bbtag>0.3)&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
+preselection    =       "&(vtype==-1||vtype==4)&jet2pt>300&json==1&jet1pt>300&abs(jet1eta-jet2eta)<1.3 & dijetmass_softdrop_corr>750&jet2ID==1&jet1ID==1&abs(jet1eta)<2.4&abs(jet2eta)<2.4 " 
+tauselection = "&jet1_puppi_tau21<0.6&jet2_puppi_tau21<0.6" 
+triggerselection = "&(HLT_PFHT800_v==1||HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v==1||HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v==1||HLT_AK8PFJet360_V==1||HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v==1)"
+
+TightPre 		=	Options.tightpre + preselection + tauselection 
+if Options.isData : TightPre = TightPre+triggerselection
+TightAT                 =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135&(jet1bbtag<"+str(Options.tightcut)+")"
+TightT          =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135&(jet1bbtag>"+str(Options.tightcut)+")"
+
+TightT2         = "1"+preselection + tauselection +triggerselection +" & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))& jet2bbtag > 0.3 "  #orthogonality with TT
+
 
 Options.finebins = True
 
 if Options.finebins:
 	binBoundaries=[]
-	for i in range(0,1300):	
-		binBoundaries.append(1200+i*1)
+	for i in range(0,highBin-lowBin):	
+		binBoundaries.append(lowBin+i*1)
 else:
 	binBoundaries =[800, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4681, 4853, 5025]
 
@@ -84,11 +89,11 @@ variable2 = "dijetmass_softdrop_corr"
 #variable = "dijetmass_corr"
 
 ############# DATASETS: #################
-QCD1 = DIST("DATA1", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT500To700.root","myTree",str(Options.lumi)+"*31630./16563300.")
-QCD2 = DIST("DATA2", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT700To1000.root","myTree",str(Options.lumi)+"*6802./10206600.")
-QCD3 = DIST("DATA3", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1000To1500.root","myTree",str(Options.lumi)+"*1206./3407530.")
-QCD4 = DIST("DATA4", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1500To2000.root","myTree",str(Options.lumi)+"*120.4/3161430.")
-QCD5 = DIST("DATA5", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT2000ToInf.root","myTree",str(Options.lumi)+"*25.25/3234700.")
+QCD1 = DIST("DATA1", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT500To700.root","mynewTree",str(Options.lumi)+"*31630./16563300.")
+QCD2 = DIST("DATA2", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT700To1000.root","mynewTree",str(Options.lumi)+"*6802./10206600.")
+QCD3 = DIST("DATA3", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1000To1500.root","mynewTree",str(Options.lumi)+"*1206./3407530.")
+QCD4 = DIST("DATA4", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT1500To2000.root","mynewTree",str(Options.lumi)+"*120.4/3161430.")
+QCD5 = DIST("DATA5", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24b/MCvsData/QCD_HT2000ToInf.root","mynewTree",str(Options.lumi)+"*25.25/3234700.")
 DATA = DIST("DATA", "/uscms_data/d3/mkrohn/CMSSW_8_0_12/src/HH2016/SlimMiniTrees/JetHT.root","mynewTree","1.")
 #DATA = DIST("DATA", "/eos/uscms/store/user/mkrohn/HHHHTo4b/V24/JetHT.root","myTree","1.")
 if Options.isData:
@@ -201,8 +206,22 @@ NU = TH1F("est_up", "", len(binBoundaries)-1, array('d',binBoundaries))
 ND = TH1F("est_down", "", len(binBoundaries)-1, array('d',binBoundaries))
 A =  TH1F("antitag", "", len(binBoundaries)-1, array('d',binBoundaries)) 
 
+AverageRate = Hbb.Fit.fit.Integral(-15,15)
+AverageRate = AverageRate/30
+print "Average Rate = " + str(AverageRate)
+
+AverageError = Hbb.Fit.ErrUp.Integral(-15,15)
+AverageError = AverageError/30 - AverageRate
+print "Average Error = " + str(AverageError )
+
+
+
 
 PULL = FillPlots(Hbb, D, N, NU, ND, A, variable, binBoundaries, TightAT, TightT)
+
+b1 = N.FindBin(lowBin)
+b2 = N.FindBin(highBin)
+AntitagIntegral = A.Integral(b1,b2)
 
 
 FILE.Write()
@@ -354,7 +373,7 @@ if Options.workspace == "alphabet":
 		SF_tau21 = 1.03*1.03
 		UD = ['Up','Down']
 
-		output_file = TFile("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV.root", "RECREATE")
+		output_file = TFile("outputs/datacards/HH_mX_"+Options.name+"_%s_13TeV.root"(%m), "RECREATE")
 		vh=output_file.mkdir("vh")
 		vh.cd()
 
@@ -402,8 +421,8 @@ if Options.workspace == "alphabet":
 		FJERlnN= 1.02
 
 		#signal_integral = Signal_mX.Integral()
-		signal_integral = Signal_mX.Integral(Signal_mX.FindBin(1200),Signal_mX.FindBin(2500))
-		signal_integral_anti = Signal_mX_antitag.Integral(Signal_mX_antitag.FindBin(1200),Signal_mX_antitag.FindBin(2500))
+		signal_integral = Signal_mX.Integral(Signal_mX.FindBin(lowBin),Signal_mX.FindBin(highBin))
+		signal_integral_anti = Signal_mX_antitag.Integral(Signal_mX_antitag.FindBin(lowBin),Signal_mX_antitag.FindBin(highBin))
 
 		qcd_integral = N.Integral()
 		qcd = N.Clone(Options.name+"EST")
@@ -463,20 +482,23 @@ if Options.workspace == "alphabet":
 
 		text_file = open("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV.txt", "w")
 
-
+		data_integral = -1
 		text_file.write("max    1     number of categories\n")
 		text_file.write("jmax   1     number of samples minus one\n")
 		text_file.write("kmax    *     number of nuisance parameters\n")
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("shapes * * HH_mX_%s_"%(m)+Options.name+"_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC\n")
+		#text_file.write("shapes * * HH_mX_%s_"%(m)+Options.name+"_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC\n")
+		text_file.write("shapes Signal_mX_%s_"%(m)+Options.name+"      HH4b w_signal_%s.root      HH4b:signal_fixed_ \n"%(m))
+                text_file.write("shapes "+Options.name+"EST HH4b w_background.root HH4b:bg_\n")
+                text_file.write("shapes data_obs   HH4b w_data.root                HH4b:data_obs\n")
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("bin                                            vh4b\n")
+		text_file.write("bin                                            HH4b\n")
 		text_file.write("observation                                    %f\n"%(data_integral))
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("bin                                             vh4b            vh4b\n")
+		text_file.write("bin                                             HH4b            HH4b\n")
 		text_file.write("process                                          0      1\n")
 		text_file.write("process                                         Signal_mX_%s_"%(m)+Options.name+"  "+Options.name+"EST\n")
-		text_file.write("rate                                            %f  %f\n"%(signal_integral,qcd_integral))
+		text_file.write("rate                                            %f  1.00\n"%(signal_integral))
 		text_file.write("-------------------------------------------------------------------------------\n")
 		text_file.write("lumi_13TeV lnN                          1.027       -\n")	
 	
@@ -487,16 +509,55 @@ if Options.workspace == "alphabet":
 		text_file.write("CMS_eff_bbtag_sf lnN                    %f       -\n"%(btaglnN))
 		text_file.write("CMS_JER lnN                    %f        -\n"%(FJERlnN))
 		text_file.write("CMS_PU lnN                    %f        -\n"%(PUlnN))
-		text_file.write("CMS_eff_trig shapeN2           1.0   -\n")
+		#text_file.write("CMS_eff_trig shapeN2           1.0   -\n")
 	 	
-		text_file.write("CMS_scale"+Options.name+"_13TeV shapeN2                           -       1.000\n")
+		#text_file.write("CMS_scale"+Options.name+"_13TeV shapeN2                           -       1.000\n")
 		text_file.write("CMS_PDF_Scales lnN   1.02 -       \n")
 
-		for bin in range(0,len(binBoundaries)-1):
-			text_file.write("CMS_stat"+Options.name+"_13TeV_bin%s shapeN2                           -       1.000\n"%(bin))
+#		for bin in range(0,len(binBoundaries)-1):
+#			text_file.write("CMS_stat"+Options.name+"_13TeV_bin%s shapeN2                           -       1.000\n"%(bin))
 
 
-		text_file.close()
+                text_file.write("R param "+str(AverageRate)+" "+str(AverageError)+"\n")
+                text_file.write("n_exp_binHH4b_proc_EST_  rateParam HH4b "+Options.name+"EST @0*@1 bgSB_norm,R\n")
+
+                text_file.close()
+
+
+                text_filea = open("outputs/datacards/HH_mX_%s_"%(m)+Options.name+"_13TeV_fail.txt", "w")
+                text_filea.write("imax    1     number of categories\n")
+                text_filea.write("jmax    1     number of samples minus one\n")
+                text_filea.write("kmax    *     number of nuisance parameters\n")
+                text_filea.write("-------------------------------------------------------------------------------\n")
+                text_filea.write("shapes Signal_mX_antitag_%s_"%(m)+Options.name+"      HH4b w_signal_antitag_%s.root      HH4b:signal_fixed_antitag_ \n"%(m))
+                text_filea.write("shapes "+Options.name+"EST_antitag HH4b w_background.root HH4b:bgSB_\n")
+                text_filea.write("shapes data_obs   HH4b w_data.root                HH4b:data_obs_sb\n")
+                text_filea.write("-------------------------------------------------------------------------------\n")
+                text_filea.write("bin                                            HH4b                   \n")
+                text_filea.write("observation                                    -1.0                           \n")
+                text_filea.write("-------------------------------------------------------------------------------\n")
+                text_filea.write("bin                                             HH4b            HH4b  \n")
+                text_filea.write("process                                         Signal_mX_antitag_%s_"%(m)+Options.name+"  "+Options.name+"EST_antitag\n")
+                text_filea.write("process                                          0      1     \n")
+                text_filea.write("rate                                            %f    1.0000  \n"%(signal_integral_anti))
+                text_filea.write("-------------------------------------------------------------------------------\n")
+
+	        text_filea.write("lumi_13TeV lnN                          1.027       -\n")
+
+                text_filea.write("CMS_eff_tau21_sf lnN                    1.162084       -\n") #(0.028/0.979)
+                #text_file.write("CMS_eff_Htag_sf lnN                    1.1       -\n")   
+                text_filea.write("CMS_JEC lnN                 %f        -\n"%(FJEClnN))
+                text_filea.write("CMS_massJEC lnN                 %f        -\n"%(MJEClnN))
+                text_filea.write("CMS_eff_bbtag_sf lnN                    %f       -\n"%(btaglnN))
+                text_filea.write("CMS_JER lnN                    %f        -\n"%(FJERlnN))
+                text_filea.write("CMS_PU lnN                    %f        -\n"%(PUlnN))
+	
+		text_filea.write("bgSB_norm rateParam HH4b "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")
+
+	
+		
+
+                text_filea.close()
 
 if Options.workspace == "fit":
 	print "creating workspace and datacard: ALPHABET ASSISTED FIT"

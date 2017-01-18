@@ -38,7 +38,7 @@ parser.add_option('--T2', '--Selection', metavar='T32', type='string', dest='tig
 parser.add_option('--T1', '--Cut', metavar='T13', type='float', dest='tightcut', default = 0.8)
 
 parser.add_option('--N', '--name', metavar='Name', type='string', dest='name', default="test")
-parser.add_option('--L', '--lumi', metavar='Name', type='float', dest='lumi', default="27000")
+parser.add_option('--L', '--lumi', metavar='Name', type='float', dest='lumi', default="27200")
 
 parser.add_option("--data", action="store_true", dest="isData", default=True)
 parser.add_option("--qcd", action="store_false", dest="isData")
@@ -72,7 +72,7 @@ if Options.isData : TightPre = TightPre+triggerselection
 TightAT                 =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135&(jet1bbtag<"+str(Options.tightcut)+")"
 TightT          =       TightPre + "&jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135&(jet1bbtag>"+str(Options.tightcut)+")"
 
-TightT2         = "1"+preselection + tauselection +triggerselection +" & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))& jet2bbtag > 0.3 "  #orthogonality with TT
+TightT2         = "1"+preselection + tauselection +triggerselection +" & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr > 105 & jet2_puppi_msoftdrop_raw*jet2_puppi_TheaCorr < 135  & (!( jet1bbtag > 0.8 & jet2bbtag > 0.8))& jet2bbtag > 0.3 & jet1_puppi_msoftdrop_raw_TheaCorr>105&jet1_puppi_msoftdrop_raw_TheaCorr<135 & jet1bbtag > 0.3"  #orthogonality with TT
 
 
 Options.finebins = True
@@ -132,7 +132,7 @@ SIG0.SetLineColor(kRed-3)
 SIG1.SetLineColor(kRed)
 SIG2.SetLineColor(kRed+3)
 
-var_array = ["jet1_puppi_msoftdrop_TheaCorr", "jet1bbtag", 60,50,200, 100, -1., 1.]
+var_array = ["jet1_puppi_msoftdrop_raw_TheaCorr", "jet1bbtag", 60,50,200, 100, -1., 1.]
 #var_array = ["jet1pmass", "jet1bbtag", 60,50,200, 100, -1., 1.]
 
 Hbb = Alphabetizer(Options.name, DistsWeWantToEstimate, [])
@@ -142,7 +142,8 @@ bins = binCalc(50,200,105,135,Options.bin)
 if Options.Linear:
 	F = LinearFit([0.0,0.0], -75, 85, "linfit", "EMRNSQ")
 else:
-	F = QuadraticFit([0.1,0.1,0.1], -75, 85, "quadfit", "EMRFNEX0")
+        F = QuadraticFit([0.1,0.1,0.1], -75, 85, "quadfit", "W")
+#	F = QuadraticFit([0.1,0.1,0.1], -75, 85, "quadfit", "EMRFNEX0")
 Hbb.GetRates([Options.tightcut, ">"], bins[0], bins[1], 120., F)
 
 
@@ -165,7 +166,7 @@ leg.AddEntry(Hbb.Fit.fit, "fit", "L")
 leg.AddEntry(Hbb.Fit.ErrUp, "fit errors", "L")
 plotforplotting = TH1F("empty_"+Options.name, "", 24, -75, 80)
 plotforplotting.SetStats(0)
-plotforplotting.GetYaxis().SetRangeUser(0.16,0.25)
+plotforplotting.GetYaxis().SetRangeUser(0.,0.25)
 plotforplotting.GetXaxis().SetTitle("m_{J} - m_{H} (GeV)")
 plotforplotting.GetYaxis().SetTitle("R_{p/f}")
 plotforplotting.GetYaxis().SetTitleOffset(1.5)

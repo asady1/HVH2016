@@ -31,13 +31,14 @@ int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV
 int iPos =11;
 bool bias= false;
 bool blind = false;
+bool LLregion = false;
 
-double rebin=1;
+double rebin=50;
 
 std::string tags="nominal"; // MMMM
 
-double SR_lo=1200.;
-double SR_hi=2500.;
+double SR_lo=1100.;
+double SR_hi=3300.;
 
 Double_t ErfExp(Double_t x, Double_t c, Double_t offset, Double_t width){
     if(width<1e-2)width=1e-2;
@@ -143,8 +144,13 @@ TCanvas* comparePlots2(RooPlot *plot_bC, RooPlot *plot_bS, TH1F *data, TH1F *qcd
 void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool plotBands = false)
 {
     rebin = rebin_factor;
-    std::string fname = std::string("outputs/HHSR_LL.root");
-    
+    if (LLregion) {
+      std::string fname = std::string("outputs/HHSR_LL.root");
+    }
+    else{
+      std::string fname = std::string("outputs/HHSR_TT.root");  
+    }
+  
     stringstream iimass ;
     iimass << imass;
     std::string dirName = "outputs/datacards/";
@@ -161,7 +167,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     
     writeExtraText = true;       // if extra text
     extraText  = "Preliminary";  // default extra text is "Preliminary"
-    lumi_13TeV  = "27.2 fb^{-1} (2016)"; // default is "19.7 fb^{-1}"
+    lumi_13TeV  = "36.0 fb^{-1} (2016)"; // default is "19.7 fb^{-1}"
     lumi_7TeV  = "4.9 fb^{-1}";  // default is "5.1 fb^{-1}"
     
     
@@ -189,7 +195,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     TH1F *h_mX_SR=(TH1F*)f->Get("data")->Clone("The_SR");
     double maxdata = h_mX_SR->GetMaximum();
 	 std::cout<<"Open ... "<<std::endl;
-    double nEventsSR = h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500));
+    double nEventsSR = h_mX_SR->Integral(h_mX_SR->FindBin(1100),h_mX_SR->FindBin(3300));
+//    double nEventsSR = h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500));
     ratio_tau=(h_mX_SR->GetSumOfWeights()/(h_mX_EST->GetSumOfWeights()));
     //double nEventsSR = h_mX_SR->Integral(600,4000);
     
@@ -203,7 +210,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
         h_mX_EST->Rebin(rebin);
 	h_mX_EST_antitag->Rebin(rebin);
         h_mX_EST->SetLineColor(kBlack);
-        h_SR_Prediction=(TH1F*)h_mX_EST->Clone("h_SR_Prediction");
+        h_SR_Prediction=(TH1F*)h_mX_EST_antitag->Clone("h_SR_Prediction");
+//        h_SR_Prediction=(TH1F*)h_mX_EST->Clone("h_SR_Prediction");
 
     } else {
         h_SR_Prediction2=(TH1F*)h_mX_EST_antitag->Clone("h_SR_Prediction2");
@@ -248,7 +256,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
        h_mX_EST_antitag->SetBinContent(i, normWeight);
      }
 
-     cout << "SR integral = " << h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500)) << endl;
+     cout << "SR integral = " << h_mX_SR->Integral(h_mX_SR->FindBin(1100),h_mX_SR->FindBin(3300)) << endl;
+//     cout << "SR integral = " << h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500)) << endl;
      
      for (int i = 0; i <  h_mX_EST->GetNbinsX()+1; i++){
        double M =  h_mX_EST->GetBinContent(i);
@@ -310,17 +319,53 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     string name_output = "CR_RooFit_Exp";
     
     std::cout<<"Nevents "<<nEventsSR<<std::endl;
+//    h_SR_Prediction->Sumw2();
+    h_mX_EST_antitag->Sumw2();
+    h_mX_SR->Sumw2();
     RooDataHist pred("pred", "Prediction from SB", RooArgList(x), h_SR_Prediction); // MARC I THINK YOU SHOULD LOOK HERE SEARCH FOR ME! SEAACH FOR ME
-    RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
+    if (blind) {
+	RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_mX_EST_antitag); // MARC I THINK YOU SHOULD LOOK HERE SEARCH FOR ME! SEAACH FOR ME
+    } else {
+	RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_mX_SR);
+    }
+//    RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_mX_SR);
+    Fit0 = TF1("Fit0","[2]*exp(-x*[0]*[1]/(1+(x*[0]*[1])))",1100.,4000.);
+    Fit0.SetParameter(0,0.0278464870825);
+    Fit0.SetParameter(1,0.011349617337);
+    Fit0.SetParameter(2,1);
+
+    integral = Fit0.Integral(1100,3300);
+
+    Fit0.SetParameter(2,8005.85074152/integral);
+    Fit0.SetLineColor(kGreen);
+
+    RooRealVar postfit_1((std::string("postfit_1")).c_str(), "bg_p1",  -10, 10.);
+    RooRealVar postfit_2((std::string("postfit_2")).c_str(), "bg_p2",  -10, 10.);
+    RooRealVar postfit_3((std::string("postfit_3")).c_str(), "bg_p2",  -10, 30000.);
+    postfit_1.setVal(0.0278464870825);
+    postfit_2.setVal(0.011349617337);
+    postfit_3.setVal(8005.85074152/integral);
+
+    RooGenericPdf fit0 = RooGenericPdf((std::string("postfit")).c_str(),"@3*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,postfit_1,postfit_2,postfit_3));
+
+//    Fit0.Draw("SAME");
+
+//    RooFitResult *r_bg=bg.fitTo(pred, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
+    RooFitResult *r_bg=bg.fitTo(pred, RooFit::Minimizer("Minuit2"), RooFit::Range(SR_lo, SR_hi), RooFit::SumW2Error(kTRUE), RooFit::Save());
     
     RooPlot *aC_plot=x.frame();
-    pred.plotOn(aC_plot, RooFit::MarkerColor(kPink+2));
+//    h_SR_Prediction->Draw("SAME");
+    pred2.plotOn(aC_plot, RooFit::MarkerColor(kBlack));
+//    Fit0.Draw("SAME");
+    fit0.plotOn(aC_plot, RooFit::LineColor(kGreen));
+
     if (!plotBands) {
        // bg.plotOn(aC_plot, RooFit::VisualizeError(*r_bg, 2), RooFit::FillColor(kYellow));
        // bg.plotOn(aC_plot, RooFit::VisualizeError(*r_bg, 1), RooFit::FillColor(kGreen));
     }
     bg.plotOn(aC_plot, RooFit::LineColor(kBlue));
-    pred.plotOn(aC_plot, RooFit::LineColor(kBlack), RooFit::MarkerColor(kBlack));
+//    pred2.plotOn(aC_plot, RooFit::LineColor(kBlack), RooFit::DataError(RooAbsData::SumW2),  RooFit::MarkerColor(kBlack));
+//    h_SR_Prediction->Draw("SAME");
     
     TGraph* error_curve[5]; //correct error bands
     TGraphAsymmErrors* dataGr = new TGraphAsymmErrors(h_SR_Prediction->GetNbinsX()); //data w/o 0 entries MARC ALSO LOOK HERE!!!
@@ -462,7 +507,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     
     aC_plot->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     aC_plot->GetXaxis()->SetLabelOffset(0.02);
-    aC_plot->GetYaxis()->SetRangeUser(0.1, 200.);
+    aC_plot->GetYaxis()->SetRangeUser(0.001, 1000.);
     h_SR_Prediction->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     string rebin_ = itoa(rebin);
     
@@ -509,15 +554,26 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     h_SR_Prediction->SetMarkerSize(1.0);
     //h_mMMMMa_3Tag_SR->GetXaxis()->SetTitleSize(0.09);
     if (blind)
-        leg->AddEntry(h_SR_Prediction, "Data: sideband", "ep");
+        leg->AddEntry(h_SR_Prediction, "QCD MC: sideband", "ep");
+//        leg->AddEntry(h_SR_Prediction, "Data: sideband", "ep");
     else {
-            leg->AddEntry(h_SR_Prediction, "Data: SR", "ep");
+            leg->AddEntry(h_SR_Prediction, "QCD MC: SR", "ep");
+//            leg->AddEntry(h_SR_Prediction, "Data: SR", "ep");
         
     }
     
-    leg->AddEntry(error_curve[2], "Fit model", "l");
-    leg->AddEntry(error_curve[0], "Fit #pm1#sigma", "f");
-    leg->AddEntry(error_curve[1], "Fit #pm2#sigma", "f");
+    Fake1 = new TLine(0,1,0,1);
+    Fake1->SetLineColor(kBlue);
+    Fake1->SetLineWidth(2);
+
+    Fake2 = new TLine(0,1,0,1);
+    Fake2->SetLineColor(kGreen);
+    Fake2->SetLineWidth(2);
+
+    leg->AddEntry(Fake1, "Pre-Fit", "l");
+    leg->AddEntry(Fake2, "Post-Fit", "l");
+//    leg->AddEntry(error_curve[0], "Fit #pm1#sigma", "f");
+//    leg->AddEntry(error_curve[1], "Fit #pm2#sigma", "f");
     leg->Draw();
     
     aC_plot->Draw("axis same");
@@ -543,7 +599,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     //frameP->GetXaxis()->SetTitleOffset(1.0);
     frameP->GetXaxis()->SetLabelSize((1.-xPad)/xPad*0.05);
     frameP->GetYaxis()->SetLabelSize((1.-xPad)/xPad*0.05);
-    
+    frameP->GetXaxis()->SetNdivisions(505,kTRUE); 
     
     frameP->Draw();
     if (plotBands) {

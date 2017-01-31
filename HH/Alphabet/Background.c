@@ -31,7 +31,8 @@ int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV
 int iPos =11;
 bool bias= false;
 bool blind = false;
-bool LLregion = false;
+bool LLregion = true;
+bool isQCD = true;
 
 double rebin=50;
 
@@ -44,6 +45,13 @@ Double_t ErfExp(Double_t x, Double_t c, Double_t offset, Double_t width){
     if(width<1e-2)width=1e-2;
     if (c==0)c=-1e-7;
     return TMath::Exp(c*x)*(1.+TMath::Erf((x-offset)/width))/2. ;
+}
+
+std::string tostr(float t, int precision=0)
+{
+    std::ostringstream os;
+    os<<std::setprecision(precision)<<t;
+    return os.str();
 }
 
 double quad(double a, double b, double c=0, double d=0, double e=0, double f=0)
@@ -144,11 +152,25 @@ TCanvas* comparePlots2(RooPlot *plot_bC, RooPlot *plot_bS, TH1F *data, TH1F *qcd
 void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool plotBands = false)
 {
     rebin = rebin_factor;
+    std::string fname = std::string("outputs/HHSR_LL.root");    
     if (LLregion) {
-      std::string fname = std::string("outputs/HHSR_LL.root");
-    }
-    else{
-      std::string fname = std::string("outputs/HHSR_TT.root");  
+      if(isQCD){
+	std::string fname = std::string("outputs/HHSR_LL.root");
+	cout << "QCD LL" << endl;
+      }
+      else{
+        std::string fname = std::string("outputs/HHSR_LL_Data.root");
+	cout << "Data LL" << endl;
+      }
+    }else{
+      if(isQCD){
+        std::string fname = std::string("outputs/HHSR_TT.root");
+	cout << "QCD TT" << endl;
+      }
+      else{
+        std::string fname = std::string("outputs/HHSR_TT_Data.root");
+	cout << "Data TT" << endl;
+      }
     }
   
     stringstream iimass ;
@@ -167,7 +189,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     
     writeExtraText = true;       // if extra text
     extraText  = "Preliminary";  // default extra text is "Preliminary"
-    lumi_13TeV  = "36.0 fb^{-1} (2016)"; // default is "19.7 fb^{-1}"
+    lumi_13TeV  = "36.8 fb^{-1} (2016)"; // default is "19.7 fb^{-1}"
     lumi_7TeV  = "4.9 fb^{-1}";  // default is "5.1 fb^{-1}"
     
     
@@ -199,6 +221,14 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 //    double nEventsSR = h_mX_SR->Integral(h_mX_SR->FindBin(1200),h_mX_SR->FindBin(2500));
     ratio_tau=(h_mX_SR->GetSumOfWeights()/(h_mX_EST->GetSumOfWeights()));
     //double nEventsSR = h_mX_SR->Integral(600,4000);
+
+    TH1F *LinCalcNum=(TH1F*)f->Get("data")->Clone("numer");
+    TH1F *LinCalcDen=(TH1F*)f->Get("antitag")->Clone("denom");
+    LinCalcNum->Divide(LinCalcDen);
+    TFitResultPtr rLin = LinCalcNum->Fit("pol1", "SQ0");
+    double mjjlinINIT = rLin->Parameter(1);
+    double mjjlinINITerror = rLin->ParError(1);
+    std::cout<<"Linear Rpf term:  "<<mjjlinINIT<<" / "<<mjjlinINITerror<<std::endl;
     
     std::cout<<"ratio tau "<<ratio_tau<<std::endl;
     
@@ -294,11 +324,12 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     //RooRealVar bg_p0((std::string("bg_p0_")).c_str(), "bg_p0", 0., -1000, 200.);
     RooRealVar bg_p1((std::string("bg_p1_")).c_str(), "bg_p1",  -10, 10.);
     RooRealVar bg_p2((std::string("bg_p2_")).c_str(), "bg_p2",  -10, 10.);
+    RooRealVar mjjlin((std::string("mjjlin_")).c_str(), "mjjlin",  -10, 10.);
     //bg_p0.setConstant(kTRUE);
     //RooGenericPdf bg_pure = RooGenericPdf((std::string("bg_pure_")+blah).c_str(),"(pow(@0/12500,@1+@2*log(@0/12500)))",RooArgList(x,bg_p1,bg_p2));
    // RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"(pow(@0/12500,@1+@2*log(@0/12500)))",RooArgList(x,bg_p1,bg_p2));
-    RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2));
-    RooGenericPdf bgSB = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2));	
+    RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"(1 + @0*@3)*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2,mjjlin));
+    RooGenericPdf bgSB = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2));
 
     /*TF1* biasFunc = new TF1("biasFunc","(0.63*x/1000-1.45)",1350,3600);
     TF1* biasFunc2 = new TF1("biasFunc2","TMath::Min(2.,2.3*x/1000-3.8)",1350,3600);
@@ -322,13 +353,18 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 //    h_SR_Prediction->Sumw2();
     h_mX_EST_antitag->Sumw2();
     h_mX_SR->Sumw2();
+//    RooDataHist pred2;
     RooDataHist pred("pred", "Prediction from SB", RooArgList(x), h_SR_Prediction); // MARC I THINK YOU SHOULD LOOK HERE SEARCH FOR ME! SEAACH FOR ME
     if (blind) {
 	RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_mX_EST_antitag); // MARC I THINK YOU SHOULD LOOK HERE SEARCH FOR ME! SEAACH FOR ME
     } else {
 	RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_mX_SR);
     }
-//    RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_mX_SR);
+    RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_mX_EST_antitag);
+
+////////////////////////////////////////////////////////////
+// Post Fit Info
+////////////////////////////////////////////////////////////
     Fit0 = TF1("Fit0","[2]*exp(-x*[0]*[1]/(1+(x*[0]*[1])))",1100.,4000.);
     Fit0.SetParameter(0,0.0278464870825);
     Fit0.SetParameter(1,0.011349617337);
@@ -357,7 +393,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 //    h_SR_Prediction->Draw("SAME");
     pred2.plotOn(aC_plot, RooFit::MarkerColor(kBlack));
 //    Fit0.Draw("SAME");
-    fit0.plotOn(aC_plot, RooFit::LineColor(kGreen));
+//  PLOTTING THE POST FIT
+//    fit0.plotOn(aC_plot, RooFit::LineColor(kGreen));
 
     if (!plotBands) {
        // bg.plotOn(aC_plot, RooFit::VisualizeError(*r_bg, 2), RooFit::FillColor(kYellow));
@@ -554,12 +591,19 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     h_SR_Prediction->SetMarkerSize(1.0);
     //h_mMMMMa_3Tag_SR->GetXaxis()->SetTitleSize(0.09);
     if (blind)
-        leg->AddEntry(h_SR_Prediction, "QCD MC: sideband", "ep");
-//        leg->AddEntry(h_SR_Prediction, "Data: sideband", "ep");
-    else {
-            leg->AddEntry(h_SR_Prediction, "QCD MC: SR", "ep");
-//            leg->AddEntry(h_SR_Prediction, "Data: SR", "ep");
-        
+	if(isQCD){
+          leg->AddEntry(h_SR_Prediction, "QCD MC: sideband", "ep");
+	}
+	else{
+          leg->AddEntry(h_SR_Prediction, "Data: sideband", "ep");
+	}
+    else{
+        if(isQCD){
+          leg->AddEntry(h_SR_Prediction, "QCD MC: sideband", "ep");
+        }
+        else{
+          leg->AddEntry(h_SR_Prediction, "Data: sideband", "ep");
+        }
     }
     
     Fake1 = new TLine(0,1,0,1);
@@ -655,13 +699,15 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     std::cout<<" --------------------- Building Envelope --------------------- "<<std::endl;
     std::cout<< "bg_p1_   param   "<<bg_p1.getVal() <<  " "<<bg_p1.getError()<<std::endl;
     std::cout<< "bg_p2_   param   "<<bg_p2.getVal() <<  " "<<bg_p2.getError()<<std::endl;
+    std::cout<< "mjjlin_  param   "<<mjjlin.getVal() <<  " "<<mjjlin.getError()<<std::endl;
+
     
     RooWorkspace *w=new RooWorkspace("HH4b");
     w->import(bg);
     w->import(bgSB);
 //    w->import(nBackgroundSB);	
 //    w->import(nBackground);
-    w->SaveAs((dirName+"/w_background.root").c_str());
+    w->SaveAs((dirName+"/w_background_LL.root").c_str());
     w->Print();
     
     TH1F *h_mX_SR_fakeData=(TH1F*)h_mX_EST->Clone("h_mX_SR_fakeData");
@@ -673,7 +719,42 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     w_data->import(data_obs);
     w_data->import(data_obs_sb);
    // w->import(nBackground);
-    w_data->SaveAs((dirName+"/w_data.root").c_str());
+    w_data->SaveAs((dirName+"/w_data_LL.root").c_str());
+
+    FILE *passtxt=fopen("outputs/datacards/HH_mX_1200_HH_LL_QCD_13TeV.txt", "a");
+    fprintf(passtxt,("bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
+    fprintf(passtxt,("bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
+    fprintf(passtxt,("mjjlin param " + tostr(mjjlinINIT,4) + " " + tostr(mjjlinINITerror,4) +"\n").c_str());
+
+    FILE *passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_LL_QCD_13TeV.txt", "a");
+    fprintf(passtxt2,("bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
+    fprintf(passtxt2,("bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
+    fprintf(passtxt2,("mjjlin param " + tostr(mjjlinINIT,4) + " " + tostr(mjjlinINITerror,4) +"\n").c_str());
+
+    FILE *passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_LL_QCD_13TeV.txt", "a");
+    fprintf(passtxt3,("bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
+    fprintf(passtxt3,("bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
+    fprintf(passtxt3,("mjjlin param " + tostr(mjjlinINIT,4) + " " + tostr(mjjlinINITerror,4) +"\n").c_str());
+
+    FILE *passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_LL_QCD_13TeV.txt", "a"); 
+    fprintf(passtxt4,("bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
+    fprintf(passtxt4,("bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
+    fprintf(passtxt4,("mjjlin param " + tostr(mjjlinINIT,4) + " " + tostr(mjjlinINITerror,4) +"\n").c_str());
+
+    FILE *passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_LL_QCD_13TeV.txt", "a");
+    fprintf(passtxt5,("bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
+    fprintf(passtxt5,("bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
+    fprintf(passtxt5,("mjjlin param " + tostr(mjjlinINIT,4) + " " + tostr(mjjlinINITerror,4) +"\n").c_str());
+
+    FILE *passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_LL_QCD_13TeV.txt", "a");
+    fprintf(passtxt6,("bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
+    fprintf(passtxt6,("bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
+    fprintf(passtxt6,("mjjlin param " + tostr(mjjlinINIT,4) + " " + tostr(mjjlinINITerror,4) +"\n").c_str());
+
+    FILE *passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_LL_QCD_13TeV.txt", "a");
+    fprintf(passtxt7,("bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
+    fprintf(passtxt7,("bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
+    fprintf(passtxt7,("mjjlin param " + tostr(mjjlinINIT,4) + " " + tostr(mjjlinINITerror,4) +"\n").c_str());
 
     TCanvas *c_rooFit2=new TCanvas("c_rooFit2", "c_rooFit2", 900, 600);
     c_rooFit2->Divide(2,1);
@@ -681,6 +762,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     h_mX_EST_antitag->Draw();
     c_rooFit2->cd(2);
     h_mX_EST->Draw();
+
+    mjjlin.Print();
     
 }
 

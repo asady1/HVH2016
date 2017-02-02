@@ -57,3 +57,8 @@ This is for TT category only:
  4) Run limits:
 
    bash runLimits_bump_TT.sh
+
+
+TO COMBINE THE CATEGORIES:
+
+bash runLimits_bump_BothCategories.sh

@@ -30,11 +30,13 @@ Procedure
       "jet2_puppi_msoftdrop_TheaCorr > 105 & jet2_puppi_msoftdrop_TheaCorr < 135 
        & jet2bbtag > 0.8" --Cut 0.8 --name HH_TT_QCD --log True --TT --qcd
 
+  2) There is one script, Background.c, that creates the background and Obs WS
+     from the output of 1). To run for the TT region you must change the variable
+     LLregion to false inside of the script. The command to run is:
+     
+       root -l -b Background.c 
+        
 This is for LL category only (orthogonal to TT): 
-
- 2) Create Background and Obs WS from output of 1)
-
-   root -l -b Background.c 
 
  3) Create Signal WS :
 
@@ -45,10 +47,6 @@ This is for LL category only (orthogonal to TT):
    bash runLimits_bump.sh
 
 This is for TT category only: 
-
- 2) Create Background and Obs WS from output of 1)
-
-   root -l -b Background_TT.c 
 
  3) Create Signal WS :
 

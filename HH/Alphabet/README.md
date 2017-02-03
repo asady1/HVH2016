@@ -40,7 +40,7 @@ This is for LL category only (orthogonal to TT):
 
  3) Create Signal WS :
 
-   bash runSignal.sh 
+   bash runSignal_LL.sh 
 
  4) Run limits:
 

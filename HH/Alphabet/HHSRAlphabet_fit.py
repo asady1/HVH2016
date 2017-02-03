@@ -557,7 +557,7 @@ if Options.workspace == "alphabet":
 		text_file.write("CMS_eff_bbtag_sf lnN                    %f       -\n"%(btaglnN))
 		text_file.write("CMS_JER lnN                    %f        -\n"%(FJERlnN))
 		text_file.write("CMS_PU lnN                    %f        -\n"%(PUlnN))
-		#text_file.write("CMS_eff_trig shapeN2           1.0   -\n")
+		text_file.write("CMS_eff_trig lnN           1.01   -\n")
 	 	
 		#text_file.write("CMS_scale"+Options.name+"_13TeV shapeN2                           -       1.000\n")
 		text_file.write("CMS_PDF_Scales lnN   1.02 -       \n")
@@ -608,6 +608,7 @@ if Options.workspace == "alphabet":
                 text_filea.write("CMS_eff_bbtag_sf lnN                    %f       -\n"%(btaglnN))
                 text_filea.write("CMS_JER lnN                    %f        -\n"%(FJERlnN))
                 text_filea.write("CMS_PU lnN                    %f        -\n"%(PUlnN))
+                text_file.write("CMS_eff_trig lnN           1.01   -\n")
 
                 if Options.LL_DoubleB_Region:	
 		  text_filea.write("bgSB_norm_LL rateParam HH4b "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")

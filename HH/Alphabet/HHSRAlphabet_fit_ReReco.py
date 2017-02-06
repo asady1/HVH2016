@@ -609,7 +609,7 @@ if Options.workspace == "alphabet":
                 text_filea.write("CMS_eff_bbtag_sf lnN                    %f       -\n"%(btaglnN))
                 text_filea.write("CMS_JER lnN                    %f        -\n"%(FJERlnN))
                 text_filea.write("CMS_PU lnN                    %f        -\n"%(PUlnN))
-                text_file.write("CMS_eff_trig lnN           1.01   -\n")
+                text_filea.write("CMS_eff_trig lnN           1.01   -\n")
 
                 if Options.LL_DoubleB_Region:	
 		  text_filea.write("bgSB_norm_LL rateParam HH4b "+Options.name+"EST_antitag "+str(AntitagIntegral)+"\n")

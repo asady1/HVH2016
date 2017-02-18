@@ -259,8 +259,10 @@ nevent = treeMine.GetEntries();
 
 print outputfilename
 
-h0 = ROOT.TH1F("h0", "Dijet Mass All Events", 80, 800, 3000)
-h1 = ROOT.TH1F("h1", "Dijet Mass passing PFHT800", 80, 800, 3000)
+h0 = ROOT.TH1F("h0", "HT PFHT350", 150, 0, 1500)
+h1 = ROOT.TH1F("h1", "HT PFHT350 and PFHT800", 150, 0, 1500)
+
+Weight = 0.1
 
 count = 0
 print "Number of Events:", nevent
@@ -271,6 +273,10 @@ for i in range(0, nevent) :
     if count % 100000 == 0 :
 	print "processing events", count
 
+
+
+
+    triggerpassbb[0] = treeMine.triggerpassbb
     vtype[0] = treeMine.vtype
     jet1pt[0] = treeMine.jet1pt
     jet2pt[0] = treeMine.jet2pt
@@ -279,23 +285,18 @@ for i in range(0, nevent) :
     dijetmass_corr[0] = treeMine.dijetmass_corr
     jet1pmass[0] = treeMine.jet1pmass
     jet2pmass[0] = treeMine.jet2pmass
-    jet1ID[0] = treeMine.jet1ID
-    jet2ID[0] = treeMine.jet2ID
-    jet1bbtag[0] = treeMine.jet1bbtag
-    jet2bbtag[0] = treeMine.jet2bbtag
-    jet1tau21[0] = treeMine.jet1tau21
-    jet2tau21[0] = treeMine.jet2tau21
     ht[0] = treeMine.ht
     etadiff[0] = treeMine.etadiff
     HLT_PFHT800_v[0] = treeMine.HLT_PFHT800_v
+    HLT_PFHT350_v[0] = treeMine.HLT_PFHT350_v
 
-    if jet1pt[0] < 200 or jet2pt[0] < 200 or abs(jet1eta[0]) > 2.4 or abs(jet2eta[0]) > 2.4 or abs(etadiff[0]) > 1.3 or jet1pmass[0] < 105 or jet2pmass[0] < 105 or jet1pmass[0] > 135 or jet2pmass[0] > 135 or vtype[0] > -1 or jet1tau21[0] > 0.6 or jet2tau21[0] > 0.6 or jet1bbtag[0] < 0.6 or jet2bbtag[0] < 0.6 or jet1ID[0] == 0 or jet2ID[0] == 0:
+    if HLT_PFHT350_v[0]:
 	continue
-    h0.Fill(dijetmass_corr[0])
+    h0.Fill(ht[0],Weight)
 
     if HLT_PFHT800_v[0] == 0:
 	continue
-    h1.Fill(dijetmass_corr[0])
+    h1.Fill(ht[0],Weight)
 
 
 print "done " + outputfilename

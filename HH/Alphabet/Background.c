@@ -34,7 +34,7 @@ bool blind = false;
 bool LLregion = false;
 bool isQCD = true;
 
-double rebin=1;
+double rebin = 1;
 
 std::string tags="nominal"; // MMMM
 
@@ -280,15 +280,31 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     RooRealVar nBackground((std::string("n_exp_binHH4b_proc_EST_")+std::string("_norm")).c_str(),"nbkg",normWeight2);
     
     
-    RooRealVar bg_p1((std::string("bg_p1_")).c_str(), "bg_p1",  -10, 10.);
-    RooRealVar bg_p2((std::string("bg_p2_")).c_str(), "bg_p2",  -10, 10.);
-    RooRealVar mjjlin((std::string("mjjlin_")).c_str(), "mjjlin",  -0.1, 0.1);
+    RooRealVar bg_p1_LL((std::string("bg_p1_LL_")).c_str(), "bg_p1",  -10, 10.);
+    RooRealVar bg_p2_LL((std::string("bg_p2_LL_")).c_str(), "bg_p2",  -10, 10.);
+    RooRealVar bg_p1_TT((std::string("bg_p1_TT_")).c_str(), "bg_p1",  -10, 10.);
+    RooRealVar bg_p2_TT((std::string("bg_p2_TT_")).c_str(), "bg_p2",  -10, 10.);
+    RooRealVar mjjlin_TT((std::string("mjjlin_TT_")).c_str(), "mjjlin_TT",  -0.1, 0.1);
+    RooRealVar mjjlin_LL((std::string("mjjlin_LL_")).c_str(), "mjjlin_LL",  -0.1, 0.1);
 
 
 //    RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2));
-    RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"(1 + @0*@3)*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2,mjjlin));
-    RooGenericPdf bgSB = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1,bg_p2));
-
+//    RooGenericPdf bg;
+//    RooGenericPdf bgSB;
+    RooGenericPdf bg_LL = RooGenericPdf((std::string("bg_")).c_str(),"(1 + @0*@3)*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_LL,bg_p2_LL,mjjlin_LL));
+    RooGenericPdf bg_TT = RooGenericPdf((std::string("bg_")).c_str(),"(1 + @0*@3)*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_TT,bg_p2_TT,mjjlin_TT));
+    RooGenericPdf bgSB_LL = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_LL,bg_p2_LL));
+    RooGenericPdf bgSB_TT = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_TT,bg_p2_TT));
+/*    if (LLregion){
+      bg.RooGenericPdf(bg_LL_temp);
+      bgSB.RooGenericPdf(bgSB_LL_temp);
+    }
+    else{
+      bg.RooGenericPdf(bg_TT_temp);
+      bgSB.RooGenericPdf(bgSB_TT_temp);
+    }*/
+//    RooGenericPdf bg = RooGenericPdf((std::string("bg_")).c_str(),"(1 + @0*@3)*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_LL,bg_p2_LL,mjjlin_LL));
+//    RooGenericPdf bgSB = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_LL,bg_p2_LL));
     
     string name_output = "CR_RooFit_Exp";
     
@@ -378,7 +394,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 
     RooGenericPdf fit1 = RooGenericPdf((std::string("postfit1")).c_str(),"@3*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,postfit1_1,postfit1_2,postfit1_3));
 
-    RooFitResult *r_bg=bg.fitTo(pred, RooFit::Minimizer("Minuit2"), RooFit::Range(SR_lo, SR_hi), RooFit::SumW2Error(kTRUE), RooFit::Save());
+    RooFitResult *r_bg;
+    if (LLregion){
+      r_bg = bg_LL.fitTo(pred, RooFit::Minimizer("Minuit2"), RooFit::Range(SR_lo, SR_hi), RooFit::SumW2Error(kTRUE), RooFit::Save());
+    }else{
+      r_bg = bg_TT.fitTo(pred, RooFit::Minimizer("Minuit2"), RooFit::Range(SR_lo, SR_hi), RooFit::SumW2Error(kTRUE), RooFit::Save());
+    }
+//    RooFitResult *r_bg=bg.fitTo(pred, RooFit::Minimizer("Minuit2"), RooFit::Range(SR_lo, SR_hi), RooFit::SumW2Error(kTRUE), RooFit::Save());
 
     const TMatrixDSym& cor = r_bg->covarianceMatrix();
  
@@ -392,11 +414,12 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 
 
 //  PLOTTING THE POST FIT
-//    fit0.plotOn(aC_plot, RooFit::LineColor(kGreen));
-//    fit1.plotOn(aC_plot, RooFit::LineColor(kRed));
 
-
-    bg.plotOn(aC_plot, RooFit::LineColor(kBlue));
+    if (LLregion){
+      bg_LL.plotOn(aC_plot, RooFit::LineColor(kBlue));
+    }else{
+      bg_TT.plotOn(aC_plot, RooFit::LineColor(kBlue));
+    }
     
     TGraph* error_curve[5]; //correct error bands
     TGraphAsymmErrors* dataGr = new TGraphAsymmErrors(h_SR_Prediction->GetNbinsX()); //data w/o 0 entries MARC ALSO LOOK HERE!!!
@@ -419,7 +442,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     error_curve[0]->SetLineColor(kGreen);
     error_curve[1]->SetLineColor(kYellow);
     
-    if (plotBands) {
+/*    if (plotBands) {
         RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_SR_Prediction2);
 
         error_curve[3]->SetFillStyle(1001);
@@ -499,7 +522,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
                 npois++;
             }
         }
-    }
+    }*/
     
     double xG[2] = {-10,4000};
     double yG[2] = {0.0,0.0};
@@ -696,16 +719,35 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 
 
     RooDataHist predSB("predSB", "Data from SB", RooArgList(x), h_mX_EST_antitag);
-    RooFitResult *r_bgSB=bgSB.fitTo(predSB, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
+    RooFitResult *r_bgSB;
+    if(LLregion){
+      r_bgSB=bgSB_LL.fitTo(predSB, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
+    }else{
+      r_bgSB=bgSB_TT.fitTo(predSB, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
+    }
+//    RooFitResult *r_bgSB=bgSB.fitTo(predSB, RooFit::Range(SR_lo, SR_hi), RooFit::Save());
     std::cout<<" --------------------- Building Envelope --------------------- "<<std::endl;
-    std::cout<< "bg_p1_   param   "<<bg_p1.getVal() <<  " "<<bg_p1.getError()<<std::endl;
-    std::cout<< "bg_p2_   param   "<<bg_p2.getVal() <<  " "<<bg_p2.getError()<<std::endl;
-    std::cout<< "mjjlin_  param   "<<mjjlin.getVal() <<  " "<<mjjlin.getError()<<std::endl;
+    if (LLregion){
+      std::cout<< "bg_p1_LL_   param   "<<bg_p1_LL.getVal() <<  " "<<bg_p1_LL.getError()<<std::endl;
+      std::cout<< "bg_p2_LL_   param   "<<bg_p2_LL.getVal() <<  " "<<bg_p2_LL.getError()<<std::endl;
+      std::cout<< "mjjlin_LL_  param   "<<mjjlin_LL.getVal() <<  " "<<mjjlin_LL.getError()<<std::endl;
+    }else{
+      std::cout<< "bg_p1_TT_   param   "<<bg_p1_TT.getVal() <<  " "<<bg_p1_TT.getError()<<std::endl;
+      std::cout<< "bg_p2_TT_   param   "<<bg_p2_TT.getVal() <<  " "<<bg_p2_TT.getError()<<std::endl;
+      std::cout<< "mjjlin_TT_  param   "<<mjjlin_TT.getVal() <<  " "<<mjjlin_TT.getError()<<std::endl;
+    }
 
     
     RooWorkspace *w=new RooWorkspace("HH4b");
-    w->import(bg);
-    w->import(bgSB);
+    if(LLregion){
+      w->import(bg_LL);
+      w->import(bgSB_LL);
+    }else{
+      w->import(bg_TT);
+      w->import(bgSB_TT);
+    }
+//    w->import(bg);
+//    w->import(bgSB);
 //    w->import(bg_p1);
 //    w->import(bg_p2);
 //    w->import(mjjlin);
@@ -738,79 +780,100 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     FILE *passtxt;
     if(LLregion){
 	passtxt=fopen("outputs/datacards/HH_mX_1200_HH_LL_QCD_13TeV.txt", "a");
+        fprintf(passtxt,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
     }
     else{
         passtxt=fopen("outputs/datacards/HH_mX_1200_HH_TT_QCD_13TeV.txt", "a");
+        fprintf(passtxt,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
     }
-    fprintf(passtxt,("#bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
-    fprintf(passtxt,("#bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
-    fprintf(passtxt,("mjjlin_ param " + tostr(mjjlin.getVal(),4) + " " + tostr(mjjlin.getError(),4) +"\n").c_str());
 
     FILE *passtxt2;
     if(LLregion){
         passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_LL_QCD_13TeV.txt", "a");
+        fprintf(passtxt2,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt2,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt2,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
     }
     else{
         passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_TT_QCD_13TeV.txt", "a");
+        fprintf(passtxt2,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt2,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt2,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
     }
-    fprintf(passtxt2,("#bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
-    fprintf(passtxt2,("#bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
-    fprintf(passtxt2,("mjjlin_ param " + tostr(mjjlin.getVal(),4) + " " + tostr(mjjlin.getError(),4) +"\n").c_str());
 
     FILE *passtxt3;
     if(LLregion){
         passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_LL_QCD_13TeV.txt", "a");
+        fprintf(passtxt3,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt3,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt3,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
     }
     else{
         passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_TT_QCD_13TeV.txt", "a");
+        fprintf(passtxt3,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt3,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt3,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
     }
-    fprintf(passtxt3,("#bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
-    fprintf(passtxt3,("#bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
-    fprintf(passtxt3,("mjjlin_ param " + tostr(mjjlin.getVal(),4) + " " + tostr(mjjlin.getError(),4) +"\n").c_str());
 
     FILE *passtxt4;
     if(LLregion){
         passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_LL_QCD_13TeV.txt", "a");
+        fprintf(passtxt4,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt4,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt4,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
     }
     else{
         passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_TT_QCD_13TeV.txt", "a");
+        fprintf(passtxt4,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt4,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt4,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
     }
-    fprintf(passtxt4,("#bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
-    fprintf(passtxt4,("#bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
-    fprintf(passtxt4,("mjjlin_ param " + tostr(mjjlin.getVal(),4) + " " + tostr(mjjlin.getError(),4) +"\n").c_str());
 
     FILE *passtxt5;
     if(LLregion){
         passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_LL_QCD_13TeV.txt", "a");
+        fprintf(passtxt5,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt5,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt5,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
     }
     else{
         passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_TT_QCD_13TeV.txt", "a");
+        fprintf(passtxt5,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt5,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt5,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
     }
-    fprintf(passtxt5,("#bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
-    fprintf(passtxt5,("#bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
-    fprintf(passtxt5,("mjjlin_ param " + tostr(mjjlin.getVal(),4) + " " + tostr(mjjlin.getError(),4) +"\n").c_str());
 
     FILE *passtxt6;
     if(LLregion){
         passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_LL_QCD_13TeV.txt", "a");
+        fprintf(passtxt6,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt6,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt6,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
     }
     else{
-        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_TT_QCD_13TeV.txt", "a");
+        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_TT_QCD_13TeV.txt", "a");        fprintf(passtxt6,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt6,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt6,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
+
     }
-    fprintf(passtxt6,("#bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
-    fprintf(passtxt6,("#bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
-    fprintf(passtxt6,("mjjlin_ param " + tostr(mjjlin.getVal(),4) + " " + tostr(mjjlin.getError(),4) +"\n").c_str());
 
     FILE *passtxt7;
     if(LLregion){
         passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_LL_QCD_13TeV.txt", "a");
+        fprintf(passtxt7,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt7,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
+        fprintf(passtxt7,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
     }
     else{
         passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_TT_QCD_13TeV.txt", "a");
+        fprintf(passtxt7,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt7,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
+        fprintf(passtxt7,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
     }
-    fprintf(passtxt7,("#bg_p1_ param " + tostr(bg_p1.getVal(),4) + " " + tostr(bg_p1.getError(),4) +"\n").c_str());
-    fprintf(passtxt7,("#bg_p2_ param " + tostr(bg_p2.getVal(),4) + " " + tostr(bg_p2.getError(),4) +"\n").c_str());
-    fprintf(passtxt7,("mjjlin_ param " + tostr(mjjlin.getVal(),4) + " " + tostr(mjjlin.getError(),4) +"\n").c_str());
 
     TCanvas *c_rooFit2=new TCanvas("c_rooFit2", "c_rooFit2", 900, 600);
     c_rooFit2->Divide(2,1);
@@ -822,7 +885,11 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     std::cout << "chi2(data) " <<  aC_plot->chiSquare()<<std::endl;
 
-    mjjlin.Print();
+    if(LLregion){
+      mjjlin_LL.Print();
+    }else{
+      mjjlin_TT.Print();
+    }
     
 }
 

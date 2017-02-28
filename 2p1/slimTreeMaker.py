@@ -291,7 +291,7 @@ for i in range(0, nevent) :
     jet1_ungroomed_TL.SetPtEtaPhiM(treeMine.jet1pt, treeMine.jet1eta, treeMine.jet1phi, treeMine.jet1mass)
     jet2_ungroomed_TL.SetPtEtaPhiM(treeMine.jet2pt, treeMine.jet2eta, treeMine.jet2phi, treeMine.jet2mass)
     dijetmass_softdrop_corr = (jet1_ungroomed_TL + jet2_ungroomed_TL).M() - (treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr - 125) - (treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr - 125)
-    if (treeMine.HLT_PFHT800_v > 0 or treeMine.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v > 0 or treeMine.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v > 0 or treeMine.HLT_AK8PFJet360_TrimMass30_v > 0 or treeMine.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v > 0) and (treeMine.jet1pt > 300 and treeMine.jet2pt > 300 and abs(treeMine.jet1eta) < 2.4 and abs(treeMine.jet2eta) < 2.4) and (abs(treeMine.jet1eta - treeMine.jet2eta) < 1.3) and (treeMine.jet1ID == 1 and treeMine.jet2ID == 1) and (dijetmass_softdrop_corr > 750) and (105 < treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr < 135) and (105 < treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr) and (treeMine.jet1_puppi_tau21 < 0.6 and treeMine.jet2_puppi_tau21 < 0.6):
+    if (treeMine.HLT_PFHT800_v > 0 or treeMine.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v > 0 or treeMine.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v > 0 or treeMine.HLT_AK8PFJet360_TrimMass30_v > 0 or treeMine.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v > 0) and (treeMine.jet1pt > 300 and treeMine.jet2pt > 300 and abs(treeMine.jet1eta) < 2.4 and abs(treeMine.jet2eta) < 2.4) and (abs(treeMine.jet1eta - treeMine.jet2eta) < 1.3) and (treeMine.jet1ID == 1 and treeMine.jet2ID == 1) and (dijetmass_softdrop_corr > 750) and (105 < treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr < 135) and (105 < treeMine.jet2_puppi_msoftdrop_raw*treeMine.jet2_puppi_TheaCorr < 135) and (treeMine.jet1_puppi_tau21 < 0.55 and treeMine.jet2_puppi_tau21 < 0.55):
         u1[0] = 1.
         if (treeMine.jet1bbtag > 0.8 and treeMine.jet2bbtag > 0.8):
             TT[0] = 1.
@@ -301,7 +301,52 @@ for i in range(0, nevent) :
         u1[0] = 0.
         LL[0] = 0.
         TT[0] = 0.
-    v1[0]=treeMine.passesResolved
+    ak4res = []
+    chi2_old = 200
+    foundRes = False
+    v1[0] = 0
+    for j in range(len(treeMine.ak4jet_pt)):
+        if treeMine.ak4jetCMVA[j] > 0.4432:
+            j_p4=TLorentzVector()
+            j_p4.SetPtEtaPhiM(treeMine.ak4jet_pt[j], treeMine.ak4jet_eta[j], treeMine.ak4jet_phi[j], treeMine.ak4jet_mass[j])
+            ak4res.append(j_p4[j])
+            if len(ak4res) > 3:
+                    jet1=TLorentzVector()
+                    jet2=TLorentzVector()
+                    jet3=TLorentzVector()
+                    jet4=TLorentzVector()
+                    for l in range(len(ak4res)):
+                        jet1.SetPtEtaPhiM(ak4res[l].Pt(), ak4res[l].Eta(), ak4res[l].Phi(), ak4res[l].M())
+                        for m in range(len(ak4res)):
+                            if m!=l:
+                                jet2.SetPtEtaPhiM(ak4res[m].Pt(), ak4res[m].Eta(), ak4res[m].Phi(),ak4res[m].M())
+                                for n in range(len(ak4res)):
+                                    if (n!=l and n!=m):
+                                        jet3.SetPtEtaPhiM(ak4res[n].Pt(), ak4res[n].Eta(), ak4res[n].Phi(),ak4res[n].M())
+                                        for k in range(len(ak4res)):
+                                            if (k!=l and k!=m and k!=n):
+                                                jet4.SetPtEtaPhiM(ak4res[k].Pt(),ak4res[k].Eta(), ak4res[k].Phi(),ak4res[k].M())
+
+                                                dijet1=jet1+jet2
+                                                dijet2=jet3+jet4
+                                            
+                                                deltar1=jet1.DeltaR(jet2)
+                                                deltar2=jet3.DeltaR(jet4)
+                                        
+                                                mHig1=dijet1.M()
+                                                mHig2=dijet2.M()
+                                            
+                                                chi2=((mHig1-120)/20)**2+((mHig2-120)/20)**2
+                                        
+                                                if (chi2<chi2_old and deltar1<1.5 and deltar2<1.5):
+                                                    chi2_old=chi2
+                                                    foundRes=True
+
+    if foundRes:
+        chi=chi2_old**0.5
+        if chi<1:
+            v1[0] = 1
+
     if options.ttbar == "True":
         ttHT[0] = treeMine.topHT
     fatjetPT[0] = fatjet.Pt()
@@ -321,25 +366,25 @@ for i in range(0, nevent) :
     ak4btag2[0] = ak4jet2btag
 
     if treeMine.isData < 1:
-        if fatjetPT[0] > 250 and fatjetPT[0] < 300:
-            SF[0] = 1.05 
-            SFup[0] = 1.11
+        if fatjetPT[0] <= 250:
+            SF[0] = 0.92
+            SFup[0] = 0.98
+            SFdown[0] = 0.86
+        elif fatjetPT[0] > 250 and fatjetPT[0] <= 350:
+            SF[0] = 0.92 
+            SFup[0] = 0.95
+            SFdown[0] = 0.89
+        elif fatjetPT[0] > 350 and fatjetPT[0] <= 430:
+            SF[0] = 1.01
+            SFup[0] = 1.04
             SFdown[0] = 0.97
-        elif fatjetPT[0] > 300 and fatjetPT[0] < 350:
-            SF[0] = 0.9
-            SFup[0] = 0.97
-            SFdown[0] = 0.83
-        elif fatjetPT[0] > 350 and fatjetPT[0] < 400:
-            SF[0] = 0.95
-            SFup[0] = 1.0
-            SFdown[0] = 0.9
-        elif fatjetPT[0] > 400 and fatjetPT[0] < 500:
-            SF[0] = 0.96
-            SFup[0] = 1.01
-            SFdown[0] = 0.92
-        elif fatjetPT[0] > 500:
-            SF[0] = 0.89
-            SFup[0] = 0.96
+        elif fatjetPT[0] > 430 and fatjetPT[0] <= 840:
+            SF[0] = 0.92
+            SFup[0] = 0.95
+            SFdown[0] = 0.87
+        elif fatjetPT[0] > 840:
+            SF[0] = 0.92
+            SFup[0] = 0.98
             SFdown[0] = 0.82
 
         ak4btag1SF[0] = treeMine.ak4jetCSVMSF[ak4jet1i]

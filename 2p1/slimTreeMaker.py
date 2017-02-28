@@ -309,7 +309,7 @@ for i in range(0, nevent) :
         if treeMine.ak4jetCMVA[j] > 0.4432:
             j_p4=TLorentzVector()
             j_p4.SetPtEtaPhiM(treeMine.ak4jet_pt[j], treeMine.ak4jet_eta[j], treeMine.ak4jet_phi[j], treeMine.ak4jet_mass[j])
-            ak4res.append(j_p4[j])
+            ak4res.append(j_p4)
             if len(ak4res) > 3:
                     jet1=TLorentzVector()
                     jet2=TLorentzVector()

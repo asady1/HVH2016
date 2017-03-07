@@ -167,7 +167,7 @@ def getPUPPIweight( puppipt, puppieta, puppisd_corrGEN, puppisd_corrRECO_cen, pu
             recoCorr = corrRECO_cen.Eval( puppipt )
     else:
             recoCorr = corrRECO_for.Eval( puppipt );
-    print(genCorr,recoCorr)
+#    print(genCorr,recoCorr)
     totalWeight = genCorr*recoCorr
     return totalWeight
 
@@ -419,6 +419,7 @@ class miniTreeProducer:
         self.ak4genJetMass = vector('double')()
         self.ak4genJetID = vector('double')()
         if self.saveTrig == 'True':
+	    self.HLT_PFHT900_v = array('f', [-100.0])
             self.HLT_PFHT800_v = array('f', [-100.0])
             self.HLT_PFJet80_v = array('f', [-100.0])
             self.HLT_QuadJet45_TripleBTagCSV_p087_v = array('f', [-100.0])
@@ -427,6 +428,7 @@ class miniTreeProducer:
 	    self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v = array('f', [-100.0])
 	    self.HLT_AK8PFJet360_TrimMass30_v = array('f', [-100.0])
 	    self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
+            self.HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v = array('f', [-100.0])
             self.HLT_PFJet140_v = array('f', [-100.0])
  	    self.HLT_PFJet200_v = array('f', [-100.0])
 	    self.HLT_PFJet260_v = array('f', [-100.0])
@@ -649,11 +651,13 @@ class miniTreeProducer:
         self.theTree.Branch('ak4genJetMass', self.ak4genJetMass)
         self.theTree.Branch('ak4genJetID', self.ak4genJetID)
         if self.saveTrig == 'True':
+	    self.theTree.Branch('HLT_PFHT900_v', self.HLT_PFHT900_v, 'HLT_PFHT900_v/F')
             self.theTree.Branch('HLT_PFHT800_v', self.HLT_PFHT800_v, 'HLT_PFHT800_v/F')
             self.theTree.Branch('HLT_PFJet80_v', self.HLT_PFJet80_v, 'HLT_PFJet80_v/F')
             self.theTree.Branch('HLT_QuadJet45_TripleBTagCSV_p087_v', self.HLT_QuadJet45_TripleBTagCSV_p087_v, 'HLT_QuadJet45_TripleBTagCSV_p087_v/F')
             self.theTree.Branch('HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v', self.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v, 'HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v/F')
 	    self.theTree.Branch('HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v', self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v/F')
+	    self.theTree.Branch('HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v', self.HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v, 'HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v/F')
 	    self.theTree.Branch('HLT_AK8PFJet360_TrimMass30_v', self.HLT_AK8PFJet360_TrimMass30_v, 'HLT_AK8PFJet360_TrimMass30_v/F')
 	    self.theTree.Branch('HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v', self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v, 'HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v/F')
 	    self.theTree.Branch('HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v', self.HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v, 'HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v/F')
@@ -857,6 +861,7 @@ class miniTreeProducer:
                     self.hMass = self.treeMine.GenHiggsBoson_mass
                     self.nTInt = self.treeMine.nTrueInt
                 if self.saveTrig == 'True':
+		    self.HLT_PFHT900_v[0] = self.treeMine.HLT_BIT_HLT_PFHT900_v
                     self.HLT_PFHT800_v[0] = self.treeMine.HLT_BIT_HLT_PFHT800_v
                     self.HLT_PFJet80_v[0] = self.treeMine.HLT_BIT_HLT_PFJet80_v
                     self.HLT_QuadJet45_TripleBTagCSV_p087_v[0] = self.treeMine.HLT_BIT_HLT_QuadJet45_TripleBTagCSV_p087_v
@@ -865,6 +870,7 @@ class miniTreeProducer:
                     self.HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v[0] = self.treeMine.HLT_BIT_HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v
                     self.HLT_AK8PFJet360_TrimMass30_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFJet360_TrimMass30_v
                     self.HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v
+		    self.HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v[0] = self.treeMine.HLT_BIT_HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v
                     self.HLT_PFJet140_v[0] = self.treeMine.HLT_BIT_HLT_PFJet140_v
                     self.HLT_PFJet200_v[0] = self.treeMine.HLT_BIT_HLT_PFJet200_v
                     self.HLT_PFJet260_v[0] = self.treeMine.HLT_BIT_HLT_PFJet260_v
@@ -1677,78 +1683,50 @@ class miniTreeProducer:
                 self.sf1Loosechangedown = 1000000
                 self.sf2Loosechangedown = 1000000
 
-                if self.jet1pt[0] >= 250 and self.jet1pt[0] < 300:
-                    self.sf1Tight = 1.05
-                    self.sf1Tightchangeup = 0.06
-                    self.sf1Tightchangedown = 0.08
-                    self.sf1Loose = 0.97
-                    self.sf1Loosechangeup = 0.04
-                    self.sf1Loosechangedown = 0.04
-                elif self.jet1pt[0] >= 300 and self.jet1pt[0] < 350:
-                    self.sf1Tight = 0.9
-                    self.sf1Tightchangeup = 0.07
-                    self.sf1Tightchangedown = 0.07
-                    self.sf1Loose = 0.95
-                    self.sf1Loosechangeup = 0.04
-                    self.sf1Loosechangedown = 0.04
-                elif self.jet1pt[0] >= 350 and self.jet1pt[0] < 400:
-                    self.sf1Tight = 0.94
-                    self.sf1Tightchangeup = 0.06
-                    self.sf1Tightchangedown = 0.06
-                    self.sf1Loose = 0.97
-                    self.sf1Loosechangeup = 0.04
-                    self.sf1Loosechangedown = 0.09
-                elif self.jet1pt[0] >= 400 and self.jet1pt[0] < 500:
-                    self.sf1Tight = 0.96
-                    self.sf1Tightchangeup = 0.05
-                    self.sf1Tightchangedown = 0.04
+                if self.jet1pt[0] >= 250 and self.jet1pt[0] < 350:
+                    self.sf1Tight = 0.92
+                    self.sf1Tightchangeup = 0.03
+                    self.sf1Tightchangedown = 0.03
                     self.sf1Loose = 0.96
-                    self.sf1Loosechangeup = 0.05
-                    self.sf1Loosechangedown = 0.03
-		elif self.jet1pt[0] >= 500:
-                    self.sf1Tight = 0.89
-                    self.sf1Tightchangeup = 0.07
-                    self.sf1Tightchangedown = 0.07
-                    self.sf1Loose = 0.99
+                    self.sf1Loosechangeup = 0.03
+                    self.sf1Loosechangedown = 0.02
+                elif self.jet1pt[0] >= 350 and self.jet1pt[0] < 430:
+                    self.sf1Tight = 1.01
+                    self.sf1Tightchangeup = 0.03
+                    self.sf1Tightchangedown = 0.04
+                    self.sf1Loose = 1.00
                     self.sf1Loosechangeup = 0.04
+                    self.sf1Loosechangedown = 0.03
+                elif self.jet1pt[0] >= 430:
+                    self.sf1Tight = 0.92
+                    self.sf1Tightchangeup = 0.03
+                    self.sf1Tightchangedown = 0.05
+                    self.sf1Loose = 1.01
+                    self.sf1Loosechangeup = 0.02
                     self.sf1Loosechangedown = 0.04
 
         
                 if len(self.jets) > 1:
-                    if self.jet2pt[0] >= 250 and self.jet2pt[0] < 300:
-                        self.sf2Tight = 1.05
-                        self.sf2Tightchangeup = 0.06
-                        self.sf2Tightchangedown = 0.08
-                        self.sf2Loose = 0.97
-                        self.sf2Loosechangeup = 0.04
-                        self.sf2Loosechangedown = 0.04
-                    elif self.jet2pt[0] >= 300 and self.jet2pt[0] < 350:
-                        self.sf2Tight = 0.9
-                        self.sf2Tightchangeup = 0.07
-                        self.sf2Tightchangedown = 0.07
-                        self.sf2Loose = 0.95
-                        self.sf2Loosechangeup = 0.04
-                        self.sf2Loosechangedown = 0.04
-                    elif self.jet2pt[0] >= 350 and self.jet2pt[0] < 400:
-                        self.sf2Tight = 0.94
-                        self.sf2Tightchangeup = 0.06
-                        self.sf2Tightchangedown = 0.06
-                        self.sf2Loose = 0.97
-                        self.sf2Loosechangeup = 0.04
-                        self.sf2Loosechangedown = 0.09
-                    elif self.jet2pt[0] >= 400 and self.jet2pt[0] < 500:
-                        self.sf2Tight = 0.96
-                        self.sf2Tightchangeup = 0.05
-                        self.sf2Tightchangedown = 0.04
+                    if self.jet2pt[0] >= 250 and self.jet2pt[0] < 350:
+                        self.sf2Tight = 0.92
+                        self.sf2Tightchangeup = 0.03
+                        self.sf2Tightchangedown = 0.03
                         self.sf2Loose = 0.96
-                        self.sf2Loosechangeup = 0.05
-                        self.sf2Loosechangedown = 0.03
-                    elif self.jet2pt[0] >= 500:
-                        self.sf2Tight = 0.89
-                        self.sf2Tightchangeup = 0.07
-                        self.sf2Tightchangedown = 0.07
-                        self.sf2Loose = 0.99
+                        self.sf2Loosechangeup = 0.03
+                        self.sf2Loosechangedown = 0.02
+                    elif self.jet2pt[0] >= 350 and self.jet2pt[0] < 430:
+                        self.sf2Tight = 1.01
+                        self.sf2Tightchangeup = 0.03
+                        self.sf2Tightchangedown = 0.04
+                        self.sf2Loose = 1.00
                         self.sf2Loosechangeup = 0.04
+                        self.sf2Loosechangedown = 0.03
+                    elif self.jet2pt[0] >= 430:
+                        self.sf2Tight = 0.92
+                        self.sf2Tightchangeup = 0.03
+                        self.sf2Tightchangedown = 0.05
+                        self.sf2Loose = 1.01
+                        self.sf2Loosechangeup = 0.02
                         self.sf2Loosechangedown = 0.04
 
 

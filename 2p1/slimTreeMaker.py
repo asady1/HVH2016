@@ -23,6 +23,8 @@ parser.add_option("-t", "--saveTrig", dest="saveTrig",
                   help="trigger info saved")
 parser.add_option("-b", "--ttbar", dest="ttbar",
                   help="isttbar")
+parser.add_option("-d", "--data", dest="data",
+                  help="isdata")
 (options, args) = parser.parse_args()
 outputfilename = options.outName
 
@@ -155,8 +157,9 @@ tpo6 = ROOT.TH1F("tpo6", "After mass cuts", 8, -1, 7)
 tpo7 = ROOT.TH1F("tpo7", "After double b 0.8", 8, -1, 7)
 tpo8 = ROOT.TH1F("tpo8", "After double b 0.9", 8, -1, 7) 
 tpo9 = ROOT.TH1F("tpo9", "After double b 0.6", 8, -1, 7)
-CountWeightedmc = ROOT.TH1F("CountWeighted","Count with sign(gen weight) and pu weight",1,0,2)
-CountWeightedmc.Add(f.Get("CountWeighted"))
+if options.data == "False":
+    CountWeightedmc = ROOT.TH1F("CountWeighted","Count with sign(gen weight) and pu weight",1,0,2)
+    CountWeightedmc.Add(f.Get("CountWeighted"))
 
 counter = 0
 for i in range(0, nevent) :
@@ -348,7 +351,7 @@ for i in range(0, nevent) :
             v1[0] = 1
 
     if options.ttbar == "True":
-        ttHT[0] = treeMine.topHT
+        ttHT[0] = treeMine.tPtsum
     fatjetPT[0] = fatjet.Pt()
     fatjetETA[0] = fatjet.Eta()
     fatjetPHI[0] = fatjet.Phi()

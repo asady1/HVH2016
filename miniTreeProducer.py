@@ -1895,7 +1895,7 @@ class miniTreeProducer:
                 self.foundRes = False
                 self.passesResolved[0] = 0
                 for j in range(len(self.akjets)):
-                    if self.ak4jetCMVA[j] > 0.185:
+                    if self.ak4jetCMVA[j] > 0.4432:
                         self.ak4res.append(self.akjets[j])
                 if len(self.ak4res) > 3:
                     self.jet1=TLorentzVector()
@@ -1923,7 +1923,7 @@ class miniTreeProducer:
                                                 self.mH1=self.dijet1.M()
                                                 self.mH2=self.dijet2.M()
                                             
-                                                self.chi2=((self.mH1-115)/23)**2+((self.mH2-115)/23)**2
+                                                self.chi2=((self.mH1-120)/20)**2+((self.mH2-120)/20)**2
                                         
                                                 if (self.chi2<self.chi2_old and self.deltar1<1.5 and self.deltar2<1.5):
                                                     self.chi2_old=self.chi2

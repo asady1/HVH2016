@@ -239,7 +239,13 @@ class miniTreeProducer:
         self.dijetmass_reg = array('f', [-100.0])
         self.dijetmass_corr_punc = array('f', [-100.0])
         self.jet1tau21 = array('f', [-100.0])
+        self.jet1tau1 = array('f', [-100.0])
+        self.jet1tau2 = array('f', [-100.0])
+        self.jet1tau3 = array('f', [-100.0])
         self.jet2tau21 = array('f', [-100.0])
+        self.jet2tau1 = array('f', [-100.0])
+        self.jet2tau2 = array('f', [-100.0])
+        self.jet2tau3 = array('f', [-100.0])
         self.jet1pmass = array('f', [-100.0])
         self.jet2pmass = array('f', [-100.0])
         self.jet1pmass_noL2L3 = array('f', [-100.0])
@@ -406,6 +412,8 @@ class miniTreeProducer:
         self.ak4jetCMVATSF_Up = vector('double')()
         self.ak4jetCMVATSF_Down = vector('double')()
         self.ak4jetCSV = vector('double')()
+        self.ak4jetDeepCSVb = vector('double')()
+        self.ak4jetDeepCSVbb = vector('double')()
         self.ak4jetCMVA = vector('double')()
         self.ak4jetCorr = vector('double')()
         self.ak4jetCorrJECUp = vector('double')()
@@ -468,7 +476,13 @@ class miniTreeProducer:
         self.theTree.Branch('dijetmass_reg', self.dijetmass_reg, 'dijetmass_reg/F')
         self.theTree.Branch('dijetmass_corr_punc', self.dijetmass_corr_punc, 'dijetmass_corr_punc/F')
         self.theTree.Branch('jet1tau21', self.jet1tau21, 'jet1tau21/F')
+        self.theTree.Branch('jet1tau1', self.jet1tau1, 'jet1tau1/F')
+        self.theTree.Branch('jet1tau2', self.jet1tau2, 'jet1tau2/F')
+        self.theTree.Branch('jet1tau3', self.jet1tau3, 'jet1tau3/F')
         self.theTree.Branch('jet2tau21', self.jet2tau21, 'jet2tau21/F')
+        self.theTree.Branch('jet2tau1', self.jet2tau1, 'jet2tau1/F')
+        self.theTree.Branch('jet2tau2', self.jet2tau2, 'jet2tau2/F')
+        self.theTree.Branch('jet2tau3', self.jet2tau3, 'jet2tau3/F')
         self.theTree.Branch('jet1pmass', self.jet1pmass, 'jet1pmass/F')
         self.theTree.Branch('jet2pmass', self.jet2pmass, 'jet2pmass/F')
         self.theTree.Branch('jet1pmass_noL2L3', self.jet1pmass_noL2L3, 'jet1pmass_noL2L3/F')
@@ -638,6 +652,8 @@ class miniTreeProducer:
         self.theTree.Branch('ak4jetCMVATSF_Up', self.ak4jetCMVATSF_Up)
         self.theTree.Branch('ak4jetCMVATSF_Down', self.ak4jetCMVATSF_Down)
         self.theTree.Branch('ak4jetCSV', self.ak4jetCSV)
+        self.theTree.Branch('ak4jetDeepCSVb', self.ak4jetDeepCSVb)
+        self.theTree.Branch('ak4jetDeepCSVbb', self.ak4jetDeepCSVbb)
         self.theTree.Branch('ak4jetCMVA', self.ak4jetCMVA)
         self.theTree.Branch('ak4jetCorr', self.ak4jetCorr)
         self.theTree.Branch('ak4jetCorrJECUp', self.ak4jetCorrJECUp)
@@ -775,6 +791,8 @@ class miniTreeProducer:
                 self.fJetMass = self.treeMine.Jet_mass
                 self.fJetID = self.treeMine.Jet_id
                 self.fJetCSV = self.treeMine.Jet_btagCSVV0
+                self.fJetDeepCSVb = self.treeMine.Jet_btagDeepCSVb
+                self.fJetDeepCSVbb = self.treeMine.Jet_btagDeepCSVbb
                 self.fJetCMVA = self.treeMine.Jet_btagCMVAV2
                 self.fJetCorr = self.treeMine.Jet_corr
                 self.fJetCorrJECUp = self.treeMine.Jet_corr_JECUp
@@ -796,6 +814,7 @@ class miniTreeProducer:
                 self.fjUngroomedSDMass = self.treeMine.FatjetAK08ungroomed_msoftdrop
                 self.fjUngroomedTau1 = self.treeMine.FatjetAK08ungroomed_tau1
                 self.fjUngroomedTau2 = self.treeMine.FatjetAK08ungroomed_tau2
+                self.fjUngroomedTau3 = self.treeMine.FatjetAK08ungroomed_tau3
                 self.fjUngroomedBbTag = self.treeMine.FatjetAK08ungroomed_bbtag
                 self.fjUngroomedJetID = self.treeMine.FatjetAK08ungroomed_id_Tight
                 self.fjUngroomedPrunedMass = self.treeMine.FatjetAK08ungroomed_mprunedcorr
@@ -1158,6 +1177,9 @@ class miniTreeProducer:
                 self.jets = []
                 self.jets_noL2L3 = []
                 self.jet_tau = []
+                self.jet_tau1 = []
+                self.jet_tau2 = []
+                self.jet_tau3 = []
                 self.jet_bbtag = []
                 self.jet_pmass = []
                 self.jet_pmass_noL2L3 = []
@@ -1213,6 +1235,9 @@ class miniTreeProducer:
                             self.jet_tau.append(self.fjUngroomedTau2[j]/self.fjUngroomedTau1[j])
                         else:
                             self.jet_tau.append(100)
+                        self.jet_tau1.append(self.fjUngroomedTau1[j])
+                        self.jet_tau2.append(self.fjUngroomedTau2[j])
+                        self.jet_tau3.append(self.fjUngroomedTau3[j])
                         self.mpruned_syst=self.fjUngroomedPrunedMass[j]
                         if (self.syst=="MJEC_Down"):
                             self.sigma=self.treeMine.FatjetAK08ungroomed_JEC_L2L3_UP[j]-self.treeMine.FatjetAK08ungroomed_JEC_L2L3[j]
@@ -1418,8 +1443,14 @@ class miniTreeProducer:
                 if len(self.jets) > 1:
                     self.jet2ID[0] = self.jet_id[self.idxH2]
                 self.jet1tau21[0] = self.jet_tau[self.idxH1]# fjUngroomedTau2[j1]/fjUngroomedTau1[j1]
+                self.jet1tau1[0] = self.jet_tau1[self.idxH1]
+                self.jet1tau2[0] = self.jet_tau2[self.idxH1]
+                self.jet1tau3[0] = self.jet_tau3[self.idxH1]
                 if len(self.jets) > 1:
                     self.jet2tau21[0] = self.jet_tau[self.idxH2]# fjUngroomedTau2[j2]/fjUngroomedTau1[j2]
+                    self.jet2tau1[0] = self.jet_tau1[self.idxH2]
+                    self.jet2tau2[0] = self.jet_tau2[self.idxH2]
+                    self.jet2tau3[0] = self.jet_tau3[self.idxH2]
                 if self.isMC == 'True':
                     self.jet1nbHadron[0] = self.jet_nb[self.idxH1]
                     if len(self.jets) > 1:
@@ -1796,6 +1827,8 @@ class miniTreeProducer:
                 self.ak4jetCMVATSF_Up.clear()
                 self.ak4jetCMVATSF_Down.clear()
                 self.ak4jetCSV.clear()
+                self.ak4jetDeepCSVb.clear()
+                self.ak4jetDeepCSVbb.clear()
                 self.ak4jetCMVA.clear()
                 self.ak4jetCorr.clear()
                 self.ak4jetCorrJECUp.clear()
@@ -1855,6 +1888,8 @@ class miniTreeProducer:
                             self.ak4jetCorrJERUp.push_back(self.fJetCorrJERUp[j])
                             self.ak4jetCorrJERDown.push_back(self.fJetCorrJERDown[j])
                         self.ak4jetCSV.push_back(self.fJetCSV[j])
+                        self.ak4jetDeepCSVb.push_back(self.fJetDeepCSVb[j])
+                        self.ak4jetDeepCSVbb.push_back(self.fJetDeepCSVbb[j])
                         self.ak4jetCMVA.push_back(self.fJetCMVA[j])
 
                         if self.isMC == 'True':

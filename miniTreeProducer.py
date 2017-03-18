@@ -304,6 +304,14 @@ class miniTreeProducer:
         self.gen2Eta = array('f', [-100.0])
         self.gen2Mass = array('f', [-100.0])
         self.gen2ID = array('f', [-100.0])
+        self.CA15jet1pt = array('f', [-100.0])
+        self.CA15jet2pt = array('f', [-100.0])
+        self.CA15jet1eta = array('f', [-100.0])
+        self.CA15jet2eta = array('f', [-100.0])
+        self.CA15jet1phi = array('f', [-100.0])
+        self.CA15jet2phi = array('f', [-100.0])
+        self.CA15jet1mass = array('f', [-100.0])
+        self.CA15jet2mass = array('f', [-100.0])
         self.jet1l1l2l3 = array('f', [-100.0])
         self.jet1l2l3 = array('f', [-100.0])
         self.jet2l1l2l3 = array('f', [-100.0])
@@ -545,6 +553,14 @@ class miniTreeProducer:
         self.theTree.Branch('gen2Eta', self.gen2Eta, 'gen2Eta/F')
         self.theTree.Branch('gen2Mass', self.gen2Mass, 'gen2Mass/F')
         self.theTree.Branch('gen2ID', self.gen2ID, 'gen2ID/F')
+        self.theTree.Branch('CA15jet1pt', self.CA15jet1pt,'CA15jet1pt/F')
+        self.theTree.Branch('CA15jet1eta', self.CA15jet1eta,'CA15jet1eta/F')
+        self.theTree.Branch('CA15jet1phi', self.CA15jet1phi,'CA15jet1phi/F')
+        self.theTree.Branch('CA15jet1mass', self.CA15jet1mass,'CA15jet1mass/F')
+        self.theTree.Branch('CA15jet2pt', self.CA15jet2pt,'CA15jet2pt/F')
+        self.theTree.Branch('CA15jet2eta', self.CA15jet2eta,'CA15jet2eta/F')
+        self.theTree.Branch('CA15jet2phi', self.CA15jet2phi,'CA15jet2phi/F')
+        self.theTree.Branch('CA15jet2mass', self.CA15jet2mass,'CA15jet2mass/F')
         self.theTree.Branch('jet1l1l2l3', self.jet1l1l2l3, 'jet1l1l2l3/F')
         self.theTree.Branch('jet1l2l3', self.jet1l2l3, 'jet1l2l3/F')
         self.theTree.Branch('jet2l1l2l3', self.jet2l1l2l3, 'jet2l1l2l3/F')
@@ -824,6 +840,10 @@ class miniTreeProducer:
                 self.FatjetCA15pruned_eta = self.treeMine.FatjetCA15pruned_eta
                 self.FatjetCA15pruned_phi = self.treeMine.FatjetCA15pruned_phi
                 self.FatjetCA15pruned_mass = self.treeMine.FatjetCA15pruned_mass
+                self.FatjetCA15ungroomed_pt = self.treeMine.FatjetCA15ungroomed_pt
+                self.FatjetCA15ungroomed_eta = self.treeMine.FatjetCA15ungroomed_eta
+                self.FatjetCA15ungroomed_phi = self.treeMine.FatjetCA15ungroomed_phi
+                self.FatjetCA15ungroomed_mass = self.treeMine.FatjetCA15ungroomed_mass
                 self.fjL2L3 = self.treeMine.FatjetAK08ungroomed_JEC_L2L3
                 self.fjL1L2L3 = self.treeMine.FatjetAK08ungroomed_JEC_L1L2L3
                 self.sjPrunedPt = self.treeMine.SubjetAK08softdrop_pt
@@ -1471,6 +1491,25 @@ class miniTreeProducer:
                 if len(self.jets) > 1:
                     self.jet2l2l3[0] = self.jet_23[self.idxH2]
 
+                self.CA15jets = []
+                for j in range(len(self.FatjetCA15ungroomed_pt)):
+                    self.jettemp = ROOT.TLorentzVector()
+                    self.jettemp.SetPtEtaPhiM(self.FatjetCA15ungroomed_pt[j], self.FatjetCA15ungroomed_eta[j], self.FatjetCA15ungroomed_phi[j], self.FatjetCA15ungroomed_mass[j])
+                    self.CA15jets.append(self.jettemp)
+                self.cajet1 = MatchCollection(self.CA15jets, self.jets[self.idxH1])
+                if len(self.jets) > 1:
+                    self.cajet2 = MatchCollection2(self.CA15jets, self.jets[self.idxH2],self.cajet1)
+                if self.cajet1 > -1:
+                    self.CA15jet1pt[0] = self.CA15jets[self.cajet1].Pt()
+                    self.CA15jet1eta[0] = self.CA15jets[self.cajet1].Eta()
+                    self.CA15jet1phi[0] = self.CA15jets[self.cajet1].Phi()
+                    self.CA15jet1mass[0] = self.CA15jets[self.cajet1].M()
+                if len(self.jets) > 1:
+                    if self.cajet2 > -1:
+                        self.CA15jet2pt[0] = self.CA15jets[self.cajet2].Pt()
+                        self.CA15jet2eta[0] = self.CA15jets[self.cajet2].Eta()
+                        self.CA15jet2phi[0] = self.CA15jets[self.cajet2].Phi()
+                        self.CA15jet2mass[0] = self.CA15jets[self.cajet2].M()
                 #finding gen jets to match higgs jets
                 if self.isMC == 'True':
                     self.ujets = []

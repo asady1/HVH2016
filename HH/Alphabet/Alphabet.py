@@ -35,11 +35,11 @@ class Alphabetizer:
 		 quick2dplot(j.File, j.Tree, self.Mplots, var_array[0], var_array[1], presel, j.weight)
 	self.TwoDPlot = self.Pplots.Clone("TwoDPlot_"+self.name)
 	self.TwoDPlot.Add(self.Mplots, -1.)
-    def GetRates(self, cut, bins, truthbins, center, FIT):
+    def GetRates(self, cut, bins, truthbins, center, FIT, selfAT):
 	self.center = center
-	self.G = AlphabetSlicer(self.TwoDPlot, bins, cut[0], cut[1], center) # makes the A/B slices
+	self.G = AlphabetSlicer(self.TwoDPlot, bins, cut[0], cut[1], cut[2], center, selfAT.TwoDPlot) # makes the A/B slices
 	if len(truthbins)>0:
-	    self.truthG = AlphabetSlicer(self.TwoDPlot, truthbins, cut[0], cut[1], center) # makes the A/B slices
+	    self.truthG = AlphabetSlicer(self.TwoDPlot, truthbins, cut[0], cut[1], cut[2], center, selfAT.TwoDPlot) # makes the A/B slices
 	else:
 	    self.truthG = None
 	self.Fit = FIT # reads the right class in, should be initialized and set up already

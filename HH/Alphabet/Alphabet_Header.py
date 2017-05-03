@@ -30,17 +30,26 @@ def binCalc(start,end,blindstart,blindend,binsize):
 	while thisend < end:
 		thisstart = thisend
 		thisend = thisend + int(binsize)
+#                if thisstart > 170.:
+		if thisstart > 160.:
+			thisend = end 
 		B.append([thisstart,thisend])
 	print str(B)
 	print str(TB)
 	return [B, TB]
 
-def AlphabetSlicer(plot, bins, cut, which, center): # Takes a 2D plot and measures the Pass/Fail ratios in given bins
+def AlphabetSlicer(plot, bins, passcut, failcut, which, center, plotAT): # Takes a 2D plot and measures the Pass/Fail ratios in given bins
 	# plot = 2D plot to perform the measurment on
 	# bins = list of bins to measure the P/F ratio in (each bin will yield a A/B point
 	# cut = Value to differentiate pass from fail. Should be on the y-axis of plot
 	# which = ">" or "<", to tell you which way the cut goes
 	# center = the x-var is recentered about the middle of the blinded region. This tells you where. You can leave it as 0 if you want.
+	print "TEST"
+	print len(bins)
+	if len(bins) > 2:
+		name = "Bins"
+	else:
+		name = "TruthBins"
         x = []
         y = []
         exl = []
@@ -60,15 +69,19 @@ def AlphabetSlicer(plot, bins, cut, which, center): # Takes a 2D plot and measur
                         for j in range(plot.GetNbinsY()):
                                 if plot.GetXaxis().GetBinCenter(i) < b[1] and plot.GetXaxis().GetBinCenter(i) > b[0]:
 				    if which == ">":
-                                        if plot.GetYaxis().GetBinCenter(j) < cut:
-                                                failed = failed + plot.GetBinContent(i,j)
-                                        else:
+                                        #if plot.GetYaxis().GetBinCenter(j) < failcut:
+                                                #failed = failed + plot.GetBinContent(i,j)
+                                        if plot.GetYaxis().GetBinCenter(j) > passcut:
                                                 passed = passed + plot.GetBinContent(i,j)
+					if plotAT.GetYaxis().GetBinCenter(j) < failcut:
+						failed = failed + plotAT.GetBinContent(i,j)
 				    if which == "<":
-                                        if plot.GetYaxis().GetBinCenter(j) > cut:
-                                                failed = failed + plot.GetBinContent(i,j)
-                                        else:
+                                        #if plot.GetYaxis().GetBinCenter(j) > failcut:
+                                                #failed = failed + plot.GetBinContent(i,j)
+                                        if plot.GetYaxis().GetBinCenter(j) < passcut:
                                                 passed = passed + plot.GetBinContent(i,j)
+                                        if plotAT.GetYaxis().GetBinCenter(j) > failcut:
+                                                failed = failed + plotAT.GetBinContent(i,j)					
                 if passed < 0:
                         passed = 0
                 if failed < 0:
@@ -92,13 +105,16 @@ def AlphabetSlicer(plot, bins, cut, which, center): # Takes a 2D plot and measur
                 exh.append(float((b[1]-b[0])/2.))
                 y.append(passed/(failed))      # NOTE: negative bins are not corrected, if you're getting negative values your bins are too fine.
                 eyh.append(err)
+		print str(ep) + " passed error"
+                print str(ef) + " failed error"
+		print str(err) + " error bar"
                 if (passed/failed) - err > 0.:
                         eyl.append(err)
                 else:
                         eyl.append(passed/failed)
 	if len(x) > 0:
-       		G = TGraphAsymmErrors(len(x), scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array
-(eyl), scipy.array(eyh))
+       		G = TGraphAsymmErrors(len(x), scipy.array(x), scipy.array(y), scipy.array(exl), scipy.array(exh), scipy.array(eyl), scipy.array(eyh))
+		G.SetName("Rpf_"+name)
 	else:
 		G = TGraphAsymmErrors()
         return G  # Returns a TGAE which you can fit or plot.
@@ -151,6 +167,8 @@ def FillPlots(Alphabet, V, N, NU, ND, A, variable, binBoundaries, AT, T):
 		u = NU.GetBinContent(i) - N.GetBinContent(i)
 		d = N.GetBinContent(i) - ND.GetBinContent(i)
 		x1 = Pull.GetBinCenter(i) - (0.5*Pull.GetBinWidth(i))
+#		if x1 > 3000.:
+#		  break
 		y1 = N.GetBinContent(i) - math.sqrt((d*d) + (a*a))
 		s1 = N.GetBinContent(i) - a
 		f1 = N.GetBinContent(i) - d

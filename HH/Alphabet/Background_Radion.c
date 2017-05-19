@@ -31,10 +31,10 @@ int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 7=7+8+13TeV
 int iPos =11;
 bool bias= false;
 bool blind = false;
-bool LLregion = false;
+bool LLregion = true;
 bool isQCD = false;
 
-double rebin = 1;
+int rebin = 1;
 std::string tags="nominal"; // MMMM
 
 double SR_lo=1100.;
@@ -133,7 +133,7 @@ TCanvas* comparePlots2(RooPlot *plot_bC, RooPlot *plot_bS, TH1F *data, TH1F *qcd
     return c;
 }
 
-void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool plotBands = false)
+void Background_Radion(int rebin_factor=rebin,int model_number = 0,int imass=750, bool plotBands = false)
 {
 /*    if(LLregion){
       SR_hi = 2843.;
@@ -145,20 +145,20 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     std::string fname;
     if (LLregion) {
       if(isQCD){
-	fname.assign("outputs/HHSR_LL.root");
+	fname.assign("outputs/HHSR_LL_Radion.root");
 	cout << "QCD LL" << endl;
       }
       else{
-	fname.assign("outputs/HHSR_LL_Data.root");
+	fname.assign("outputs/HHSR_LL_Data_Radion.root");
 	cout << "Data LL" << endl;
       }
     }else{
       if(isQCD){
-	fname.assign("outputs/HHSR_TT.root");
+	fname.assign("outputs/HHSR_TT_Radion.root");
 	cout << "QCD TT" << endl;
       }
       else{
-	fname.assign("outputs/HHSR_TT_Data.root");
+	fname.assign("outputs/HHSR_TT_Data_Radion.root");
 	cout << "Data TT" << endl;
       }
     }
@@ -264,10 +264,10 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
          else normWeight = rnd > fabs(resid) ?  intPart+0. : intPart+0.;
        }
        h_mX_EST_antitag->SetBinContent(i, normWeight);
-//       std::cout << "normWeight: " << normWeight << std::endl;
+       std::cout << "normWeight: " << normWeight << std::endl;
 /*       if(normWeight == 0){
-	 std::cout << "0 Error, bin: " << i << std::endl;
-	 h_mX_EST_antitag->SetBinError(i,0.);
+       std::cout << "0 Error, bin: " << i << std::endl;
+       h_mX_EST_antitag->SetBinError(i,0.);
        }*/
      }
 
@@ -279,10 +279,10 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
        resid = intPart - M;	
        double rnd = R.Uniform(1.);
        if (resid > 0) normWeight2 = rnd > resid ? intPart : intPart-1.;
-//       else normWeight2 = rnd > fabs(resid) ?  intPart+0. : intPart+0.;
        else normWeight2 = rnd > fabs(resid) ?  intPart+0. : intPart+1.;	
        h_mX_EST->SetBinContent(i, normWeight2);
      }
+     
 
      normWeight = h_mX_EST_antitag->Integral();
      normWeight2 = h_mX_EST->Integral();
@@ -308,7 +308,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     RooGenericPdf bg_TT = RooGenericPdf((std::string("bg_")).c_str(),"(1 + @0*@3)*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_TT,bg_p2_TT,mjjlin_TT));
     RooGenericPdf bgSB_LL = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_LL,bg_p2_LL));
     RooGenericPdf bgSB_TT = RooGenericPdf((std::string("bgSB_")).c_str(),"exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,bg_p1_TT,bg_p2_TT));
-    
+
     string name_output = "CR_RooFit_Exp";
     
     std::cout<<"Nevents "<<nEventsSR<<std::endl;
@@ -330,10 +330,10 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 // Post Fit Info
 ////////////////////////////////////////////////////////////
     Fit0 = TF1("Fit0","(1 + x*[3])*[2]*exp(-x*[1]/(1+(x*[0]*[1])))",1100.,4000.);
-    Fit0.SetParameter(0,0.0310333263812);
-    Fit0.SetParameter(1,0.0217788676762);
+    Fit0.SetParameter(0,0.0303868843789);
+    Fit0.SetParameter(1,0.0143760376205);
     Fit0.SetParameter(2,1);
-    Fit0.SetParameter(3,0.000980255896473);
+    Fit0.SetParameter(3,0.0000360527817108);
 /*    Fit0.SetParameter(0,0.0299220373437);
     Fit0.SetParameter(1,0.0204806652832);
     Fit0.SetParameter(2,1);
@@ -343,23 +343,23 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     std::cout <<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
     std::cout <<"integral = " << integral << std::endl;
 
-    Fit0.SetParameter(2,1028.71516053/integral);
-//    Fit0.SetParameter(2,2716.43071359/integral);
+//    Fit0.SetParameter(2,1028.71516053/integral);
+    Fit0.SetParameter(2,5657.76867962/integral);
     Fit0.SetLineColor(kGreen);
 
     RooRealVar postfit_1((std::string("postfit_1")).c_str(), "bg_p1",  -10, 10.);
     RooRealVar postfit_2((std::string("postfit_2")).c_str(), "bg_p2",  -10, 10.);
     RooRealVar postfit_3((std::string("postfit_3")).c_str(), "bg_norm",  -10, 30000.);
     RooRealVar postfit_4((std::string("postfit_4")).c_str(), "mjjlin",  -10, 10.);
-    postfit_1.setVal(0.0310333263812);
+/*    postfit_1.setVal(0.0310333263812);
     postfit_2.setVal(0.0217788676762);
     postfit_3.setVal(1028.71516053/integral);
-    postfit_4.setVal(0.000980255896473);
+    postfit_4.setVal(0.000980255896473);*/
 
-/*    postfit_1.setVal(0.0299220373437);
-    postfit_2.setVal(0.0204806652832);
-    postfit_3.setVal(2716.43071359/integral);
-    postfit_4.setVal(0.0000424480907891);*/
+    postfit_1.setVal(0.0303868843789);
+    postfit_2.setVal(0.0143760376205);
+    postfit_3.setVal(5657.76867962/integral);
+    postfit_4.setVal(0.0000360527817108);
 
 
     RooGenericPdf fit0 = RooGenericPdf((std::string("postfit")).c_str(),"(1 + @0*@4)*@3*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,postfit_1,postfit_2,postfit_3,postfit_4));
@@ -389,30 +389,30 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 // Post Fit With No Correction
 ///////////////////////////////////////////////////////////
     Fit1 = TF1("Fit1","[2]*exp(-x*[1]/(1+(x*[0]*[1])))",1100.,4000.);
-    Fit1.SetParameter(0,0.0310333263812);
-    Fit1.SetParameter(1,0.0217788676762);
-    Fit1.SetParameter(2,1);
-
-/*    Fit1.SetParameter(0,0.0299220373437);
-    Fit1.SetParameter(1,0.0204806652832);
+/*    Fit1.SetParameter(0,0.030408080199);
+    Fit1.SetParameter(1,0.0143763150691);
     Fit1.SetParameter(2,1);*/
+
+    Fit1.SetParameter(0,0.0299220373437);
+    Fit1.SetParameter(1,0.0204806652832);
+    Fit1.SetParameter(2,1);
 
     integral2 = Fit1.Integral(1100,SR_hi);
 
-    Fit1.SetParameter(2,1028.71516053/integral2);
-//    Fit1.SetParameter(2,2716.43071359/integral2);
+    Fit1.SetParameter(2,2716.43071359/integral2);
+//    Fit1.SetParameter(2,5657.82088054/integral2);
     Fit1.SetLineColor(kGreen);
 
     RooRealVar postfit1_1((std::string("postfit1_1")).c_str(), "bg_p1",  -10, 10.);
     RooRealVar postfit1_2((std::string("postfit1_2")).c_str(), "bg_p2",  -10, 10.);
     RooRealVar postfit1_3((std::string("postfit1_3")).c_str(), "bg_norm",  -10, 30000.);
-    postfit1_1.setVal(0.0310333263812);
-    postfit1_2.setVal(0.0217788676762);
-    postfit1_3.setVal(1028.71516053/integral2);
+/*    postfit1_1.setVal(0.030408080199);
+    postfit1_2.setVal(0.0143763150691);
+    postfit1_3.setVal(5657.82088054/integral2);*/
 
-/*    postfit1_1.setVal(0.0299220373437);
+    postfit1_1.setVal(0.0299220373437);
     postfit1_2.setVal(0.0204806652832);
-    postfit1_3.setVal(2716.43071359/integral2);*/
+    postfit1_3.setVal(2716.43071359/integral2);
 
     RooGenericPdf fit1 = RooGenericPdf((std::string("postfit1")).c_str(),"@3*exp(-@0*@2/(1+(@0*@1*@2)))",RooArgList(x,postfit1_1,postfit1_2,postfit1_3));
 
@@ -447,7 +447,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
       }else{
         bg_TT.plotOn(aC_plot, RooFit::LineColor(kBlue));
       }
-    }  
+    }
 //    fit0.plotOn(aC_plot, RooFit::LineColor(kRed));
     
     TGraph* error_curve[5]; //correct error bands
@@ -471,8 +471,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     error_curve[0]->SetLineColor(kGreen);
     error_curve[1]->SetLineColor(kYellow);
     
-    if (plotBands) {
-//        RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_SR_Prediction);
+/*    if (plotBands) {
         RooDataHist pred2("pred2", "Prediction from SB", RooArgList(x), h_SR_Prediction2);
 
         error_curve[3]->SetFillStyle(1001);
@@ -492,10 +491,8 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
         for (int i=0; i!=nPoints; ++i) {
             double x0,y0, x1,y1;
             error_curve[2]->GetPoint(i,x0,y0);
-	    std::cout << "x0: " << x0 << std::endl;
-            std::cout << "y0: " << y0 << std::endl;
-    
-            RooAbsReal* nlim = new RooRealVar("nlim","y0",y0,-1000,1000);
+            
+            RooAbsReal* nlim = new RooRealVar("nlim","y0",y0,-100000,100000);
             //double lowedge = x0 - (SR_hi - SR_lo)/double(2*nPoints);
             //double upedge = x0 + (SR_hi - SR_lo)/double(2*nPoints);
             
@@ -504,7 +501,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
             
             x.setRange("errRange",lowedge,upedge);
             
-            RooExtendPdf* epdf = new RooExtendPdf("epdf","extpdf",bg_LL, *nlim,"errRange");
+//            RooExtendPdf* epdf = new RooExtendPdf("epdf","extpdf",bg, *nlim,"errRange");
             
             // Construct unbinned likelihood
             RooAbsReal* nll = epdf->createNLL(pred2,NumCPU(2));
@@ -514,7 +511,6 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
             minim->setStrategy(2);
             minim->setPrintLevel(-1);
             minim->migrad();
-//            minim->minos();
             
             minim->hesse();
             RooFitResult* result = minim->lastMinuitFit();
@@ -533,54 +529,6 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
             
             error_curve[4]->SetPoint(i,x0,-2*errm/sqrt(y0));
             error_curve[4]->SetPoint(2*nPoints-i-1,x0,2*errm/sqrt(y0));
-
-/*      RooAbsPdf *cpdf; cpdf = &bg_LL;
-      TGraphAsymmErrors *onesigma = new TGraphAsymmErrors();
-      TGraphAsymmErrors *twosigma = new TGraphAsymmErrors();
-      
-      RooRealVar *nlim = new RooRealVar(TString::Format("nlim"),"",0.0,0.0,10.0);
-      nlim->removeRange();
-      
-      RooCurve *nomcurve = dynamic_cast<RooCurve*>(aC_plot->getObject(1));
-      
-      for (int i=1; i<(aC_plot->GetXaxis()->GetNbins()+1); ++i) {
-	double lowedge = aC_plot->GetXaxis()->GetBinLowEdge(i);
-	double upedge  = aC_plot->GetXaxis()->GetBinUpEdge(i);
-	double center  = aC_plot->GetXaxis()->GetBinCenter(i);
-	
-	double nombkg = nomcurve->interpolate(center);
-	nlim->setVal(nombkg);
-	x.setRange("errRange",lowedge,upedge);
-	RooAbsPdf *epdf = 0;
-	epdf = new RooExtendPdf("epdf","",*cpdf,*nlim,"errRange");
-	
-	RooAbsReal *nll = epdf->createNLL(pred2,Extended());
-	RooMinimizer minim(*nll);
-	minim.setStrategy(0);
-	double clone = 1.0 - 2.0*RooStats::SignificanceToPValue(1.0);
-	double cltwo = 1.0 - 2.0*RooStats::SignificanceToPValue(2.0);
-	
-	minim.migrad();
-	minim.minos(*nlim);
-	// printf("errlo = %5f, errhi = %5f\n",nlim->getErrorLo(),nlim->getErrorHi());
-		
-	onesigma->SetPoint(i-1,center,nombkg);
-	if (fabs(nlim->getErrorLo())>1e-5) onesigma->SetPointError(i-1,0.,0.,-nlim->getErrorLo(),nlim->getErrorHi());
-	else onesigma->SetPointError(i-1,0.,0.,nlim->getErrorHi(),nlim->getErrorHi());
-	minim.setErrorLevel(0.5*pow(ROOT::Math::normal_quantile(1-0.5*(1-cltwo),1.0), 2)); // the 0.5 is because qmu is -2*NLL
-	// eventually if cl = 0.95 this is the usual 1.92!      
-	
-			
-	minim.migrad();
-	minim.minos(*nlim);
-									
-	twosigma->SetPoint(i-1,center,nombkg);
-	if (fabs(nlim->getErrorLo())>1e-5) twosigma->SetPointError(i-1,0.,0.,-nlim->getErrorLo(),nlim->getErrorHi());
-	else twosigma->SetPointError(i-1,0.,0.,nlim->getErrorHi(),nlim->getErrorHi());
-									
-										
-	delete nll;
-	delete epdf;*/
             
         }
         
@@ -603,7 +551,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
                 npois++;
             }
         }
-    }
+    }*/
     
     double xG[2] = {-10,4000};
     double yG[2] = {0.0,0.0};
@@ -643,7 +591,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     
     aC_plot->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     aC_plot->GetXaxis()->SetLabelOffset(0.02);
-    aC_plot->GetYaxis()->SetRangeUser(0.5, 1000.);
+    aC_plot->GetYaxis()->SetRangeUser(0.001, 1000.);
     h_SR_Prediction->GetXaxis()->SetRangeUser(SR_lo, SR_hi);
     string rebin_ = itoa(rebin);
     
@@ -671,12 +619,9 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     pave->SetFillColor(0);
     pave->SetFillStyle(0);
     char name[1000];
-    sprintf(name,"#chi^{2}/n = %.2f",0.56);
-//    sprintf(name,"#chi^{2}/n = %.2f",0.67);
-//    sprintf(name,"#chi^{2}/n = %.2f",0.92);
-//    sprintf(name,"#chi^{2}/n = %.2f",0.685701);
+    sprintf(name,"#chi^{2}/n = %.2f",1.47569);
     pave->AddText(name);
-    pave->Draw();
+    //pave->Draw();
     
     TLegend *leg = new TLegend(0.88,0.65,0.55,0.90,NULL,"brNDC");
     leg->SetBorderSize(0);
@@ -713,7 +658,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     Fake1->SetLineWidth(2);
 
     Fake2 = new TLine(0,1,0,1);
-    Fake2->SetLineColor(kRed);
+    Fake2->SetLineColor(kGreen);
     Fake2->SetLineWidth(2);
 
     Fake3 = new TLine(0,1,0,1);
@@ -721,7 +666,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     Fake3->SetLineWidth(2);
 
     leg->AddEntry(Fake1, "Pre-Fit", "l");
-    leg->AddEntry(Fake2, "Post-Fit", "l");
+//    leg->AddEntry(Fake2, "Post-Fit", "l");
 //    leg->AddEntry(Fake3, "Post-Fit No Mjj Corr", "l");
 //    leg->AddEntry(error_curve[0], "Fit #pm1#sigma", "f");
 //    leg->AddEntry(error_curve[1], "Fit #pm2#sigma", "f");
@@ -743,7 +688,7 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     pave->Draw();
     
     frameP->addPlotable(hpull,"P");
-    frameP->GetYaxis()->SetRangeUser(-3,3);
+    frameP->GetYaxis()->SetRangeUser(-7,7);
     frameP->GetYaxis()->SetNdivisions(505);
     frameP->GetYaxis()->SetTitle("#frac{(data-fit)}{#sigma_{stat}}");
     
@@ -857,10 +802,10 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
 //    w->import(nBackgroundSB);	
 //    w->import(nBackground);
     if(LLregion){    
-	w->SaveAs((dirName+"/w_background_LL.root").c_str());
+	w->SaveAs((dirName+"/w_background_LL_Radion.root").c_str());
     }
     else{
-	w->SaveAs((dirName+"/w_background_TT.root").c_str());
+	w->SaveAs((dirName+"/w_background_TT_Radion.root").c_str());
     }
     w->Print();
     
@@ -874,22 +819,22 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     w_data->import(data_obs_sb);
    // w->import(nBackground);
     if(LLregion){
-	w_data->SaveAs((dirName+"/w_data_LL.root").c_str());
+	w_data->SaveAs((dirName+"/w_data_LL_Radion.root").c_str());
     }
     else{
-        w_data->SaveAs((dirName+"/w_data_TT.root").c_str());
+        w_data->SaveAs((dirName+"/w_data_TT_Radion.root").c_str());
     }
 
     FILE *passtxt;
     if(isQCD){
       if(LLregion){
-	passtxt=fopen("outputs/datacards/HH_mX_1200_HH_LL_QCD_13TeV.txt", "a");
+  	passtxt=fopen("outputs/datacards/HH_mX_1200_HH_LL_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
-      else{
-        passtxt=fopen("outputs/datacards/HH_mX_1200_HH_TT_QCD_13TeV.txt", "a");
+    else{
+        passtxt=fopen("outputs/datacards/HH_mX_1200_HH_TT_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -897,29 +842,30 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     }
     else{
       if(LLregion){
-        passtxt=fopen("outputs/datacards/HH_mX_1200_HH_LL_Data_13TeV.txt", "a");
+        passtxt=fopen("outputs/datacards/HH_mX_1200_HH_LL_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt=fopen("outputs/datacards/HH_mX_1200_HH_TT_Data_13TeV.txt", "a");
+        passtxt=fopen("outputs/datacards/HH_mX_1200_HH_TT_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
       }
+
     }
 
     FILE *passtxt2;
     if(isQCD){
       if(LLregion){
-        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_LL_QCD_13TeV.txt", "a");
+        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_LL_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt2,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_TT_QCD_13TeV.txt", "a");
+        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_TT_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt2,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -927,13 +873,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     }
     else{
       if(LLregion){
-        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_LL_Data_13TeV.txt", "a");
+        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_LL_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt2,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_TT_Data_13TeV.txt", "a");
+        passtxt2=fopen("outputs/datacards/HH_mX_1400_HH_TT_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt2,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt2,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -943,13 +889,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     FILE *passtxt3;
     if(isQCD){
       if(LLregion){
-        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_LL_QCD_13TeV.txt", "a");
+        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_LL_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt3,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_TT_QCD_13TeV.txt", "a");
+        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_TT_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt3,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -957,13 +903,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     }
     else{
       if(LLregion){
-        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_LL_Data_13TeV.txt", "a");
+        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_LL_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt3,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_TT_Data_13TeV.txt", "a");
+        passtxt3=fopen("outputs/datacards/HH_mX_1600_HH_TT_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt3,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt3,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -973,13 +919,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     FILE *passtxt4;
     if(isQCD){
       if(LLregion){
-        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_LL_QCD_13TeV.txt", "a");
+        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_LL_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt4,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_TT_QCD_13TeV.txt", "a");
+        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_TT_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt4,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -987,29 +933,29 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     }
     else{
       if(LLregion){
-        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_LL_Data_13TeV.txt", "a");
+        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_LL_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt4,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_TT_Data_13TeV.txt", "a");
+        passtxt4=fopen("outputs/datacards/HH_mX_1800_HH_TT_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt4,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt4,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
       }
-    }
+    }  
 
     FILE *passtxt5;
     if(isQCD){
       if(LLregion){
-        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_LL_QCD_13TeV.txt", "a");
+        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_LL_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt5,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_TT_QCD_13TeV.txt", "a");
+        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_TT_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt5,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -1017,13 +963,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     }
     else{
       if(LLregion){
-        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_LL_Data_13TeV.txt", "a");
+        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_LL_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt5,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_TT_Data_13TeV.txt", "a");
+        passtxt5=fopen("outputs/datacards/HH_mX_2000_HH_TT_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt5,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt5,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -1033,13 +979,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     FILE *passtxt6;
     if(isQCD){
       if(LLregion){
-        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_LL_QCD_13TeV.txt", "a");
+        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_LL_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt6,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_TT_QCD_13TeV.txt", "a");
+        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_TT_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt6,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -1047,13 +993,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     }
     else{
       if(LLregion){
-        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_LL_Data_13TeV.txt", "a");
+        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_LL_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt6,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_TT_Data_13TeV.txt", "a");
+        passtxt6=fopen("outputs/datacards/HH_mX_2500_HH_TT_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt6,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt6,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -1063,13 +1009,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     FILE *passtxt7;
     if(isQCD){
       if(LLregion){
-        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_LL_QCD_13TeV.txt", "a");
+        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_LL_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt7,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_TT_QCD_13TeV.txt", "a");
+        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_TT_QCD_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt7,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());
@@ -1077,13 +1023,13 @@ void Background(int rebin_factor=rebin,int model_number = 0,int imass=750, bool 
     }
     else{
       if(LLregion){
-        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_LL_Data_13TeV.txt", "a");
+        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_LL_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt7,("#bg_p1_LL_ param " + tostr(bg_p1_LL.getVal(),4) + " " + tostr(bg_p1_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("#bg_p2_LL_ param " + tostr(bg_p2_LL.getVal(),4) + " " + tostr(bg_p2_LL.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("mjjlin_LL_ param " + tostr(mjjlin_LL.getVal(),4) + " " + tostr(mjjlin_LL.getError(),4) +"\n").c_str());
       }
       else{
-        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_TT_Data_13TeV.txt", "a");
+        passtxt7=fopen("outputs/datacards/HH_mX_3000_HH_TT_Data_RadionRadion_13TeV.txt", "a");
         fprintf(passtxt7,("#bg_p1_TT_ param " + tostr(bg_p1_TT.getVal(),4) + " " + tostr(bg_p1_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("#bg_p2_TT_ param " + tostr(bg_p2_TT.getVal(),4) + " " + tostr(bg_p2_TT.getError(),4) +"\n").c_str());
         fprintf(passtxt7,("mjjlin_TT_ param " + tostr(mjjlin_TT.getVal(),4) + " " + tostr(mjjlin_TT.getError(),4) +"\n").c_str());

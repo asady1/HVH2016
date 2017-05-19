@@ -316,6 +316,10 @@ class miniTreeProducer:
         self.jet1l2l3 = array('f', [-100.0])
         self.jet2l1l2l3 = array('f', [-100.0])
         self.jet2l2l3 = array('f', [-100.0])
+        self.jet1l1l2l3Unc = array('f', [-100.0])
+        self.jet1l2l3Unc = array('f', [-100.0])
+        self.jet2l1l2l3Unc = array('f', [-100.0])
+        self.jet2l2l3Unc = array('f', [-100.0])
         self.jet1JER = array('f', [-100.0])
         self.jet2JER = array('f', [-100.0])
         self.puWeights = array('f', [-100.0])
@@ -565,6 +569,10 @@ class miniTreeProducer:
         self.theTree.Branch('jet1l2l3', self.jet1l2l3, 'jet1l2l3/F')
         self.theTree.Branch('jet2l1l2l3', self.jet2l1l2l3, 'jet2l1l2l3/F')
         self.theTree.Branch('jet2l2l3', self.jet2l2l3, 'jet2l2l3/F')
+        self.theTree.Branch('jet1l1l2l3Unc', self.jet1l1l2l3Unc, 'jet1l1l2l3Unc/F')
+        self.theTree.Branch('jet1l2l3Unc', self.jet1l2l3Unc, 'jet1l2l3Unc/F')
+        self.theTree.Branch('jet2l1l2l3Unc', self.jet2l1l2l3Unc, 'jet2l1l2l3Unc/F')
+        self.theTree.Branch('jet2l2l3Unc', self.jet2l2l3Unc, 'jet2l2l3Unc/F')
         self.theTree.Branch('jet1JER', self.jet1JER, 'jet1JER/F')
         self.theTree.Branch('jet2JER', self.jet2JER, 'jet2JER/F')
         self.theTree.Branch('json', self.json, 'json/F')
@@ -846,6 +854,8 @@ class miniTreeProducer:
                 self.FatjetCA15ungroomed_mass = self.treeMine.FatjetCA15ungroomed_mass
                 self.fjL2L3 = self.treeMine.FatjetAK08ungroomed_JEC_L2L3
                 self.fjL1L2L3 = self.treeMine.FatjetAK08ungroomed_JEC_L1L2L3
+                self.fjL2L3Unc = self.treeMine.FatjetAK08ungroomed_JEC_L2L3Unc
+                self.fjL1L2L3Unc = self.treeMine.FatjetAK08ungroomed_JEC_L1L2L3Unc
                 self.sjPrunedPt = self.treeMine.SubjetAK08softdrop_pt
                 self.sjPrunedEta = self.treeMine.SubjetAK08softdrop_eta
                 self.sjPrunedPhi = self.treeMine.SubjetAK08softdrop_phi
@@ -1210,6 +1220,8 @@ class miniTreeProducer:
                 self.jet_flav = []
                 self.jet_123 = []
                 self.jet_23 = []
+                self.jet_123Unc = []
+                self.jet_23Unc = []
                 self.jet_JER = []
                 self.jet_mass = []
                 self.jet_eta = []
@@ -1296,6 +1308,9 @@ class miniTreeProducer:
                             self.jet_JER.append(self.fjUngroomedJER[j])
                         self.jet_123.append(self.fjL1L2L3[j])
                         self.jet_23.append(self.fjL2L3[j])
+                        self.jet_123Unc.append(self.fjL1L2L3Unc[j])
+                        self.jet_23Unc.append(self.fjL2L3Unc[j])
+
                         
                         
                             
@@ -1490,6 +1505,12 @@ class miniTreeProducer:
                 self.jet1l2l3[0] = self.jet_23[self.idxH1]
                 if len(self.jets) > 1:
                     self.jet2l2l3[0] = self.jet_23[self.idxH2]
+                self.jet1l1l2l3Unc[0] = self.jet_123Unc[self.idxH1]
+                if len(self.jets) > 1:
+                    self.jet2l1l2l3Unc[0] = self.jet_123Unc[self.idxH2]
+                self.jet1l2l3Unc[0] = self.jet_23Unc[self.idxH1]
+                if len(self.jets) > 1:
+                    self.jet2l2l3Unc[0] = self.jet_23Unc[self.idxH2]
 
                 self.CA15jets = []
                 for j in range(len(self.FatjetCA15ungroomed_pt)):

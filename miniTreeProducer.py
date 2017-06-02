@@ -1260,7 +1260,7 @@ class miniTreeProducer:
                             self.jettemp*=self.correction_factor
 	
 	
-                    if self.jettemp.Pt() > 250. and abs(self.jettemp.Eta()) < 2.4:
+                    if self.jettemp.Pt() > 225. and abs(self.jettemp.Eta()) < 2.4:
                         self.jets.append(self.jettemp)
                         self.jets_noL2L3.append(self.jettemp_noL2L3)
                         if self.fjUngroomedTau1[j] > 0:
@@ -1911,7 +1911,7 @@ class miniTreeProducer:
                     else: self.jet_pT = self.treeMine.Jet_pt[j]
                     self.jettemp = ROOT.TLorentzVector()
                     self.jettemp.SetPtEtaPhiM(self.jet_pT, self.fJetEta[j], self.fJetPhi[j], self.fJetMass[j])
-                    if abs(self.jettemp.Eta()) < 2.4 and self.jet_pT > 30:
+                    if abs(self.jettemp.Eta()) < 2.4 and self.jet_pT > 25:
                         self.akjets.append(self.jettemp)
                         self.ak4jet_pt.push_back(self.jet_pT)
                         self.ak4jet_eta.push_back(self.fJetEta[j])

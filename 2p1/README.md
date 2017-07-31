@@ -22,8 +22,13 @@ background estimate + limits: three sets of code for three different signal cate
 3) brazilianFlag13TeV_X.py makes limit plot and prints out limits, ex for running: python brazilianFlag13TeV_X.py
 
 reweighing non resonant samples to make new miniTrees from current hadded miniTree of nodes 2-13 + box + SM, with per event weight: nonResonant_test_v0.py, used in conjunction with the following package: https://github.com/cms-hh/HHStatAnalysis, run inside the following directory HHStatAnalysis/AnalyticalModels/test/, ex for running:  python nonResonant_test_v0.py --kl 1 --kt 1 (SM) other parameter values for the 12 BSM samples are:
+
 klJHEP=[1.0,  7.5,  1.0,  1.0,  -3.5, 1.0, 2.4, 5.0, 15.0, 1.0, 10.0, 2.4, 15.0]
+
 ktJHEP=[1.0,  1.0,  1.0,  1.0,  1.5,  1.0, 1.0, 1.0, 1.0,  1.0, 1.5,  1.0, 1.0]
+
 c2JHEP=[0.0,  -1.0, 0.5, -1.5, -3.0,  0.0, 0.0, 0.0, 0.0,  1.0, -1.0, 0.0, 1.0]
+
 cgJHEP=[0.0,  0.0, -0.8,  0.0, 0.0,   0.8, 0.2, 0.2, -1.0, -0.6, 0.0, 1.0, 0.0]
-c2gJHEP=[0.0, 0.0, 0.6, -0.8, 0.0, -1.0, -0.2,-0.2,  1.0,  0.6, 0.0, -1.0, 0.0]dEta1 name=
+
+c2gJHEP=[0.0, 0.0, 0.6, -0.8, 0.0, -1.0, -0.2,-0.2,  1.0,  0.6, 0.0, -1.0, 0.0]

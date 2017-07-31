@@ -184,18 +184,20 @@ def getPUPPIweight( puppipt, puppieta, puppisd_corrGEN, puppisd_corrRECO_cen, pu
 
 #    return totalWeight
 
-
+#the class - this produces the miniTrees
 class miniTreeProducer:
     def __init__(self, isMC, saveTrig, syst, tree, xsec):
+        #options fed to getMiniTrees.py through the command line
         self.isMC = isMC
         self.saveTrig = saveTrig
         self.theTree = tree
         self.syst = syst
         self.xsecs = xsec
 
-
+        
     def runProducer(self,location,inputfile, num1, num2, histo1, histo2, histo3, histo4, histo5, histo6, histo7, histo8):
-
+        #making the miniTrees
+        #histos
         self.histo_efficiency= histo1
         self.histo_efficiency_up= histo2
         self.histo_efficiency_down= histo3
@@ -206,6 +208,7 @@ class miniTreeProducer:
         self.puppisd_corrRECO_cen = histo7
         self.puppisd_corrRECO_for = histo8
 
+        #branches
         self.regressedJetpT_0 = array('f', [-100.0])
         self.regressedJetpT_1 = array('f', [-100.0])
         self.jet1pt = array('f', [-100.0])
@@ -258,6 +261,9 @@ class miniTreeProducer:
         self.jet2s1csv = array('f', [-100.0])
         self.jet1s2csv = array('f', [-100.0])
         self.jet2s2csv = array('f', [-100.0])
+
+        self.mhh = array('f', [-100.0])
+        self.costhetast = array('f', [-100.0])
 
         self.jet1_puppi_pt = array('f', [-100.0])
         self.jet2_puppi_pt = array('f', [-100.0])
@@ -527,6 +533,9 @@ class miniTreeProducer:
         self.theTree.Branch('jet1_puppi_msoftdrop_raw', self.jet1_puppi_msoftdrop_raw, 'jet1_puppi_msoftdrop_raw/F')
         self.theTree.Branch('jet2_puppi_msoftdrop_raw', self.jet2_puppi_msoftdrop_raw, 'jet2_puppi_msoftdrop_raw/F')
 
+        self.theTree.Branch('mhh', self.mhh, 'mhh/F')
+        self.theTree.Branch('costhetast', self.costhetast, 'costhetast/F')
+
         self.theTree.Branch('nAK08Jets', self.nAK08Jets, 'nAK08Jets/F')
         self.theTree.Branch('nAK04Jets', self.nAK04Jets, 'nAK04Jets/F')
         self.theTree.Branch('nAK04btagsMWP', self.nAK04btagsMWP, 'nAK04btagsMWP/F')
@@ -708,15 +717,14 @@ class miniTreeProducer:
             self.theTree.Branch('HLT_Mu27_v', self.HLT_Mu27_v, 'HLT_Mu27_v/F')
             self.theTree.Branch('HLT_Ele105_CaloIdVT_GsfTrkIdT_v', self.HLT_Ele105_CaloIdVT_GsfTrkIdT_v, 'HLT_Ele105_CaloIdVT_GsfTrkIdT_v/F')
 
-
+        #getting input files
         self.Files_list	= open_files( inputfile, location )
 
         #list of histograms for cuts
         self.bbj = ROOT.TH1F("bbj", "Before any cuts", 3, -0.5, 1.5)
         self.bb0 = ROOT.TH1F("bb0", "After Json", 3, -0.5, 1.5)
         self.bb1 = ROOT.TH1F("bb2", "After jet cuts", 3, -0.5, 1.5)
-
-
+        #histograms needed for later
         if self.isMC == 'True':
             self.CountMC = ROOT.TH1F("Count","Count",1,0,2)
             self.CountFullWeightedMC = ROOT.TH1F("CountFullWeighted","Count with gen weight and pu weight",1,0,2)
@@ -726,7 +734,7 @@ class miniTreeProducer:
             self.CountWeightedLHEWeightScalemc = ROOT.TH1F("CountWeightedLHEWeightScale","Count with gen weight x LHE_weights_scale and pu weight", 6, -0.5, 5.5)
             self.CountWeightedLHEWeightPdfMC = ROOT.TH1F("CountWeightedLHEWeightPdf","Count with gen weight x LHE_weights_pdf and pu weight", 103, -0.5, 102.5)
 
-
+        #TMVA regression
         self.this_pt=array( 'f', [ 0 ] )
         self.this_pv=array( 'f', [ 0 ] )
         self.this_eta=array( 'f', [ 0 ] )
@@ -1376,7 +1384,23 @@ class miniTreeProducer:
                         if len(self.jets) > 1:
                             if self.h2 > -1:
                                 self.nHiggsTags[0] += 1
-        
+         
+                    if len(self.hPt) > 1:
+                        self.genh1 = ROOT.TLorentzVector()
+                        self.genh2 = ROOT.TLorentzVector()
+                        self.genh1.SetPtEtaPhiM(self.hPt[0], self.hEta[0], self.hPhi[0], self.hMass[0])
+                        self.genh2.SetPtEtaPhiM(self.hPt[1], self.hEta[1], self.hPhi[1], self.hMass[1])
+                        self.genmhh = (self.genh1 + self.genh2).M()
+                    
+                        self.mhh[0] = self.genmhh
+                        self.P1boost = self.genh1
+                        self.P12 = self.genh1 + self.genh2
+                        self.P1boost.Boost(-self.P12.BoostVector()) 
+                        self.thetast = self.P1boost.Theta()
+                        self.costhetastvar = self.P1boost.CosTheta()
+                        self.costhetast[0] = abs(self.costhetastvar)
+                        
+
                 self.maxcsv1 = -100
                 self.maxcmva1 = -100
                 self.maxcsv2 = -100

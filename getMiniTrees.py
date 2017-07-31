@@ -70,6 +70,7 @@ outputfilename = d1 + d2 + options.min + '.root'
 print outputfilename
 
 import copy
+#important files and histograms
 File_tr=ROOT.TFile.Open("trigger_objects.root", "R")
 histo_efficiency=copy.copy(File_tr.Get("histo_efficiency"))
 histo_efficiency_up=copy.copy(File_tr.Get("histo_efficiency_upper"))
@@ -92,7 +93,7 @@ f =  ROOT.TFile(outputfilename, 'recreate')
 f.cd()
 
 myTree =  ROOT.TTree('myTree', 'myTree')
-
+#running miniTree Producer
 test = miniTreeProducer(options.isMC, options.saveTrig, options.syst, myTree, options.xsec)
 test.runProducer(options.inputFile, inputfile, num1, num2,histo_efficiency, histo_efficiency_up, histo_efficiency_down, histo_efficiency_2up, histo_efficiency_2down, puppisd_corrGEN, puppisd_corrRECO_cen, puppisd_corrRECO_for)
 

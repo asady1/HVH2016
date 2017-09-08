@@ -184,20 +184,18 @@ def getPUPPIweight( puppipt, puppieta, puppisd_corrGEN, puppisd_corrRECO_cen, pu
 
 #    return totalWeight
 
-#the class - this produces the miniTrees
+
 class miniTreeProducer:
     def __init__(self, isMC, saveTrig, syst, tree, xsec):
-        #options fed to getMiniTrees.py through the command line
         self.isMC = isMC
         self.saveTrig = saveTrig
         self.theTree = tree
         self.syst = syst
         self.xsecs = xsec
 
-        
+
     def runProducer(self,location,inputfile, num1, num2, histo1, histo2, histo3, histo4, histo5, histo6, histo7, histo8):
-        #making the miniTrees
-        #histos
+
         self.histo_efficiency= histo1
         self.histo_efficiency_up= histo2
         self.histo_efficiency_down= histo3
@@ -208,7 +206,6 @@ class miniTreeProducer:
         self.puppisd_corrRECO_cen = histo7
         self.puppisd_corrRECO_for = histo8
 
-        #branches
         self.regressedJetpT_0 = array('f', [-100.0])
         self.regressedJetpT_1 = array('f', [-100.0])
         self.jet1pt = array('f', [-100.0])
@@ -444,6 +441,17 @@ class miniTreeProducer:
         self.ak4genJetEta = vector('double')()
         self.ak4genJetMass = vector('double')()
         self.ak4genJetID = vector('double')()
+        self.ak4jetLeadTrackPt = vector('double')()
+        self.ak4jetLeptonPtRel  =vector('double')()
+        self.ak4jetLeptonPt  =vector('double')()
+        self.ak4jetLeptonDeltaR  =vector('double')()
+        self.ak4jetNeHEF  =vector('double')()
+        self.ak4jetNeEmEF  =vector('double')()
+        self.ak4jetVtxPt  =vector('double')()
+        self.ak4jetVtxMass  =vector('double')()
+        self.ak4jetVtx3dL  =vector('double')()
+        self.ak4jetVtxNtrk  =vector('double')()
+        self.ak4jetVtx3deL  =vector('double')()
         if self.saveTrig == 'True':
 	    self.HLT_PFHT900_v = array('f', [-100.0])
             self.HLT_PFHT800_v = array('f', [-100.0])
@@ -699,6 +707,17 @@ class miniTreeProducer:
         self.theTree.Branch('ak4genJetEta', self.ak4genJetEta)
         self.theTree.Branch('ak4genJetMass', self.ak4genJetMass)
         self.theTree.Branch('ak4genJetID', self.ak4genJetID)
+        self.theTree.Branch('ak4jetLeadTrackPt', self.ak4jetLeadTrackPt)
+        self.theTree.Branch('ak4jetLeptonPtRel', self.ak4jetLeptonPtRel)
+        self.theTree.Branch('ak4jetLeptonPt', self.ak4jetLeptonPt)
+        self.theTree.Branch('ak4jetLeptonDeltaR', self.ak4jetLeptonDeltaR)
+        self.theTree.Branch('ak4jetNeHEF', self.ak4jetNeHEF)
+        self.theTree.Branch('ak4jetNeEmEF', self.ak4jetNeEmEF)
+        self.theTree.Branch('ak4jetVtxPt', self.ak4jetVtxPt)
+        self.theTree.Branch('ak4jetVtxMass', self.ak4jetVtxMass)
+        self.theTree.Branch('ak4jetVtx3dL', self.ak4jetVtx3dL)
+        self.theTree.Branch('ak4jetVtxNtrk', self.ak4jetVtxNtrk)
+        self.theTree.Branch('ak4jetVtx3deL', self.ak4jetVtx3deL)
         if self.saveTrig == 'True':
 	    self.theTree.Branch('HLT_PFHT900_v', self.HLT_PFHT900_v, 'HLT_PFHT900_v/F')
             self.theTree.Branch('HLT_PFHT800_v', self.HLT_PFHT800_v, 'HLT_PFHT800_v/F')
@@ -717,14 +736,14 @@ class miniTreeProducer:
             self.theTree.Branch('HLT_Mu27_v', self.HLT_Mu27_v, 'HLT_Mu27_v/F')
             self.theTree.Branch('HLT_Ele105_CaloIdVT_GsfTrkIdT_v', self.HLT_Ele105_CaloIdVT_GsfTrkIdT_v, 'HLT_Ele105_CaloIdVT_GsfTrkIdT_v/F')
 
-        #getting input files
+
         self.Files_list	= open_files( inputfile, location )
 
         #list of histograms for cuts
         self.bbj = ROOT.TH1F("bbj", "Before any cuts", 3, -0.5, 1.5)
         self.bb0 = ROOT.TH1F("bb0", "After Json", 3, -0.5, 1.5)
         self.bb1 = ROOT.TH1F("bb2", "After jet cuts", 3, -0.5, 1.5)
-        #histograms needed for later
+
         if self.isMC == 'True':
             self.CountMC = ROOT.TH1F("Count","Count",1,0,2)
             self.CountFullWeightedMC = ROOT.TH1F("CountFullWeighted","Count with gen weight and pu weight",1,0,2)
@@ -734,7 +753,7 @@ class miniTreeProducer:
             self.CountWeightedLHEWeightScalemc = ROOT.TH1F("CountWeightedLHEWeightScale","Count with gen weight x LHE_weights_scale and pu weight", 6, -0.5, 5.5)
             self.CountWeightedLHEWeightPdfMC = ROOT.TH1F("CountWeightedLHEWeightPdf","Count with gen weight x LHE_weights_pdf and pu weight", 103, -0.5, 102.5)
 
-        #TMVA regression
+
         self.this_pt=array( 'f', [ 0 ] )
         self.this_pv=array( 'f', [ 0 ] )
         self.this_eta=array( 'f', [ 0 ] )
@@ -829,6 +848,17 @@ class miniTreeProducer:
                 self.fJetCorr = self.treeMine.Jet_corr
                 self.fJetCorrJECUp = self.treeMine.Jet_corr_JECUp
                 self.fJetCorrJECDown = self.treeMine.Jet_corr_JECDown
+                self.fJetLeadTrackPt = self.treeMine.Jet_leadTrackPt
+                self.fJetLeptonPtRel = self.treeMine.Jet_leptonPtRel
+                self.fJetLeptonPt = self.treeMine.Jet_leptonPt
+                self.fJetLeptonDeltaR = self.treeMine.Jet_leptonDeltaR
+                self.fJetNeHEF = self.treeMine.Jet_neHEF
+                self.fJetNeEmEF = self.treeMine.Jet_neEmEF
+                self.fJetVtxPt = self.treeMine.Jet_vtxPt
+                self.fJetVtxMass = self.treeMine.Jet_vtxMass
+                self.fJetVtx3dL = self.treeMine.Jet_vtx3DVal
+                self.fJetVtxNtrk = self.treeMine.Jet_vtxNtracks
+                self.fJetVtx3deL = self.treeMine.Jet_vtx3DSig
                 self.fNJets = self.treeMine.nJet
                 self.nAK04Jets[0] = self.fNJets
                 self.genPt = self.treeMine.GenJet_pt
@@ -1925,7 +1955,18 @@ class miniTreeProducer:
                 self.ak4genJetEta.clear()
                 self.ak4genJetMass.clear()
                 self.ak4genJetID.clear()
-  
+                self.ak4jetLeadTrackPt.clear()
+                self.ak4jetLeptonPtRel.clear()
+                self.ak4jetLeptonPt.clear()
+                self.ak4jetLeptonDeltaR.clear()
+                self.ak4jetNeHEF.clear()
+                self.ak4jetNeEmEF.clear()
+                self.ak4jetVtxPt.clear()
+                self.ak4jetVtxMass.clear()
+                self.ak4jetVtx3dL.clear()
+                self.ak4jetVtxNtrk.clear()
+                self.ak4jetVtx3deL.clear()  
+
                 self.akjets = []
                 for j in range(len(self.fJetPt)):
                     if (self.syst=="JEC_Up"): self.jet_pT = self.treeMine.Jet_pt[j]*self.treeMine.Jet_corr_JECUp[j]/self.treeMine.Jet_corr[j]
@@ -1975,6 +2016,17 @@ class miniTreeProducer:
                         self.ak4jetDeepCSVb.push_back(self.fJetDeepCSVb[j])
                         self.ak4jetDeepCSVbb.push_back(self.fJetDeepCSVbb[j])
                         self.ak4jetCMVA.push_back(self.fJetCMVA[j])
+                        self.ak4jetLeadTrackPt.push_back(self.fJetLeadTrackPt[j])
+                        self.ak4jetLeptonPtRel.push_back(self.fJetLeptonPtRel[j])
+                        self.ak4jetLeptonPt.push_back(self.fJetLeptonPt[j])
+                        self.ak4jetLeptonDeltaR.push_back(self.fJetLeptonDeltaR[j])
+                        self.ak4jetNeHEF.push_back(self.fJetNeHEF[j])
+                        self.ak4jetNeEmEF.push_back(self.fJetNeHEF[j])
+                        self.ak4jetVtxPt.push_back(self.fJetVtxPt[j])
+                        self.ak4jetVtxMass.push_back(self.fJetVtxMass[j])
+                        self.ak4jetVtx3dL.push_back(self.fJetVtx3dL[j])
+                        self.ak4jetVtxNtrk.push_back(self.fJetVtxNtrk[j])
+                        self.ak4jetVtx3deL.push_back(self.fJetVtx3deL[j])
 
                         if self.isMC == 'True':
                             if len(self.ujets) > 0:

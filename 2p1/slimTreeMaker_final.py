@@ -17,7 +17,7 @@ from array import *
 
 from optparse import OptionParser
 parser = OptionParser()
-#command line options
+
 parser.add_option("-o", "--outName", dest="outName",
                   help="output file name")
 parser.add_option("-t", "--saveTrig", dest="saveTrig",
@@ -34,6 +34,8 @@ parser.add_option("-k", "--JECUp", dest="JECUp",
                   help="JECUp")
 parser.add_option("-l", "--JECDown", dest="JECDown",
                   help="JECDown")
+parser.add_option("-r", "--useReg", dest="useReg",
+                  help="use regression for AK4 jets")
 (options, args) = parser.parse_args()
 outputfilename = options.outName
 
@@ -189,6 +191,40 @@ def ApplyJERp4(eta, jerShift):
   
   return jerscale  
 
+#tmva regression AK4
+this_pt=array( 'f', [ 0 ] )
+this_pv=array( 'f', [ 0 ] )
+this_eta=array( 'f', [ 0 ] )
+this_mt=array( 'f', [ 0 ] )
+this_leadTrackPt=array( 'f', [ 0 ] )
+this_leptonPtRel=array( 'f', [ 0 ] )
+this_leptonPt=array( 'f', [ 0 ] )
+this_LeptonDeltaR=array( 'f', [ 0 ] )
+this_neHEF=array( 'f', [ 0 ] )
+this_neEmEF=array( 'f', [ 0 ] )
+this_vtxPt=array( 'f', [ 0 ] )
+this_vtxMass=array( 'f', [ 0 ] )
+this_vtx3dL=array( 'f', [ 0 ] )
+this_vtxNtrk=array( 'f', [ 0 ] )
+this_vtx3deL=array( 'f', [ 0 ] )
+
+reader = ROOT.TMVA.Reader("!Color:!Silent" )
+reader.AddVariable( "Jet_pt", this_pt)
+reader.AddVariable( "nPVs", this_pv)
+reader.AddVariable( "Jet_eta", this_eta)
+reader.AddVariable( "Jet_mt", this_mt)
+reader.AddVariable( "Jet_leadTrackPt", this_leadTrackPt)
+reader.AddVariable( "Jet_leptonPtRel", this_leptonPtRel)
+reader.AddVariable( "Jet_leptonPt", this_leptonPt)
+reader.AddVariable( "Jet_leptonDeltaR", this_LeptonDeltaR)
+reader.AddVariable( "Jet_neHEF", this_neHEF)
+reader.AddVariable( "Jet_neEmEF", this_neEmEF)
+reader.AddVariable( "Jet_vtxPt", this_vtxPt)
+reader.AddVariable( "Jet_vtxMass", this_vtxMass)
+reader.AddVariable( "Jet_vtx3dL", this_vtx3dL)
+reader.AddVariable( "Jet_vtxNtrk", this_vtxNtrk)
+reader.AddVariable( "Jet_vtx3deL", this_vtx3deL)
+reader.BookMVA("BDTG method", "gravall-v25.weights.xml")
 
 #trigger SFs
 #trigSF = [0.6357615894039734, 0.6857142857142856, 0.7441860465116279, 0.8135593220338982, 0.8971962616822429, 1.0, 1.1294117647058823, 1.0194552529182879, 1.0136674259681093, 0.9372496662216289, 0.9688644688644689, 0.9646535282898919, 1.1915057300509337, 1.0488215488215489, 0.8915477064713152, 0.9703428418374179, 0.9689652366874557, 0.9762512064977283, 0.973422758855812, 1.0010830128885444, 0.9923695117964079, 0.9075827726095381, 0.9943284508440914, 0.9510941853464571, 0.9546363594807095, 0.9291468202685571, 0.9930416577957561, 0.9386372902227362, 0.9473785412126651, 1.0367265469061875, 0.9665803178715022, 0.9858860428646106, 1.0014807813484563, 0.9412416851441242, 0.9607551787431169, 0.9134463558547329, 1.0055803571428572, 1.0418041804180418, 1.015850144092219, 1.0, 1.0, 0.9601209601209602, 1.072, 1.0150375939849625, 1.026128266033254, 1.0337423312883436, 0.8199170124481329, 1.018450184501845, 1.029126213592233, 1.0, 1.0, 1.0273224043715847, 1.045045045045045, 1.0]
@@ -222,11 +258,11 @@ f2.cd()
 treeMine  = f.Get('myTree')
 
 mynewTree = ROOT.TTree('mynewTree', 'mynewTree')
-#branches
+
 #run = array('f', [-100.0])
 #evt = array('f', [-100.0])
 #lumi = array('f', [-100.0])
-weightSig = array('f', [-100.0])
+#weightSig = array('f', [-100.0])
 deltaEta = array('f', [-100.0])
 f1 = array('f', [-100.0])
 Red_mass = array('f', [-100.0])
@@ -271,10 +307,12 @@ fatjetCAETA = array('f', [-100.0])
 fatjetCAPHI = array('f', [-100.0])
 fatjetCAM = array('f', [-100.0])
 bjet1PT = array('f', [-100.0])
+bjet1regPT = array('f', [-100.0])
 bjet1ETA = array('f', [-100.0])
 bjet1PHI = array('f', [-100.0])
 bjet1M = array('f', [-100.0])
 bjet2PT = array('f', [-100.0])
+bjet2regPT = array('f', [-100.0])
 bjet2ETA = array('f', [-100.0])
 bjet2PHI = array('f', [-100.0])
 bjet2M = array('f', [-100.0])
@@ -352,7 +390,7 @@ if options.saveTrig == 'True':
 #mynewTree.Branch("run", run, "run")
 #mynewTree.Branch("evt", evt, "evt")
 #mynewTree.Branch("lumi", lumi, "lumi")
-mynewTree.Branch("weightSig", weightSig, "weightSig")
+#mynewTree.Branch("weightSig", weightSig, "weightSig")
 mynewTree.Branch("deltaEta", deltaEta, "deltaEta")
 mynewTree.Branch("Inv_mass", f1, "Invariant mass")
 mynewTree.Branch("Red_mass", Red_mass, "Red_mass")
@@ -400,10 +438,12 @@ mynewTree.Branch("nAK4", nAK4, "nAK4")
 mynewTree.Branch("nAK4near1", nAK4near1, "nAK4near1")
 mynewTree.Branch("nAK4near2", nAK4near2, "nAK4near2")
 mynewTree.Branch("bjet1PT", bjet1PT, "bjet1PT")
+mynewTree.Branch("bjet1regPT", bjet1regPT, "bjet1regPT")
 mynewTree.Branch("bjet1ETA", bjet1ETA, "bjet1ETA")
 mynewTree.Branch("bjet1PHI", bjet1PHI, "bjet1PHI")
 mynewTree.Branch("bjet1M", bjet1M, "bjet1M")
 mynewTree.Branch("bjet2PT", bjet2PT, "bjet2PT")
+mynewTree.Branch("bjet2regPT", bjet2regPT, "bjet2regPT")
 mynewTree.Branch("bjet2ETA", bjet2ETA, "bjet2ETA")
 mynewTree.Branch("bjet2PHI", bjet2PHI, "bjet2PHI")
 mynewTree.Branch("bjet2M", bjet2M, "bjet2M")
@@ -476,7 +516,6 @@ if options.saveTrig == 'True':
     
 nevent = treeMine.GetEntries();
 
-#histograms
 tpo1 = ROOT.TH1F("tpo1", "After jet kinematic cuts", 8,-1, 7)
 tpo2 = ROOT.TH1F("tpo2", "After trigger", 8, -1, 7)
 tpo3 = ROOT.TH1F("tpo3", "After v-type cut", 8, -1, 7)
@@ -495,7 +534,7 @@ for i in range(0, nevent) :
     counter = counter + 1
     treeMine.GetEntry(i)
     triggerpass = 1
-    weightSig[0] = treeMine.weightSig
+    #weightSig[0] = treeMine.weightSig
     if options.saveTrig == 'True':
         triggerpass = treeMine.HLT_PFHT800_v + treeMine.HLT_QuadJet45_TripleBTagCSV_p087_v + treeMine.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v
         btagtrigs = treeMine.HLT_QuadJet45_TripleBTagCSV_p087_v + treeMine.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v
@@ -511,7 +550,7 @@ for i in range(0, nevent) :
     tpo1.Fill(triggerpass)
     if triggerpass > 0:
         tpo2.Fill(triggerpass) 
-    #requiring lepton veto
+
     passesVtype = 0
     if treeMine.vtype == -1 or treeMine.vtype == 4:
         passesVtype = 1
@@ -526,7 +565,7 @@ for i in range(0, nevent) :
 
     ak8Jet2 = TLorentzVector()
     ak8Jet2.SetPtEtaPhiM(treeMine.jet2pt, treeMine.jet2eta, treeMine.jet2phi, treeMine.jet2mass)
-    #handling JER
+
     if treeMine.isData < 1:
         jer1scale = ApplyJERp4(ak8Jet1.Eta(), 1)
         jer1scaleUp = ApplyJERp4(ak8Jet1.Eta(), 2)
@@ -618,12 +657,16 @@ for i in range(0, nevent) :
     ak4jerup2 = []
     ak4jerdown2 = []
     ak4flav2 = []
+    ak4ptreg1 = []
+    ak4ptreg2 = []
 
-    nAK4[0] = len(treeMine.ak4jet_pt)
-    #handling AK4 jets
+    nAK4jets = 0 
+    
     for j in range(len(treeMine.ak4jet_pt)):
-        j_p4=TLorentzVector()
-        j_p4.SetPtEtaPhiM(treeMine.ak4jet_pt[j], treeMine.ak4jet_eta[j], treeMine.ak4jet_phi[j], treeMine.ak4jet_mass[j])
+        if treeMine.ak4jet_pt[j] > 30 and abs(treeMine.ak4jet_eta[j]) < 2.4 and treeMine.ak4jetCMVA[j] > 0.4432:
+          nAK4jets += 1 
+        prej_p4=TLorentzVector()
+        prej_p4.SetPtEtaPhiM(treeMine.ak4jet_pt[j], treeMine.ak4jet_eta[j], treeMine.ak4jet_phi[j], treeMine.ak4jet_mass[j])
         if treeMine.isData < 1:
           if treeMine.ak4jetCorrJER[j] < 2 and treeMine.ak4jetCorrJER[j] > 0:
             ak4ptJER = treeMine.ak4jetCorrJER[j]
@@ -640,17 +683,40 @@ for i in range(0, nevent) :
             ak4ptJERUp = randUp.Gaus(treeMine.ak4jet_pt[j], sqrt(jerscaleUp*jerscaleUp -1)*0.2)/treeMine.ak4jet_pt[j]
             ak4ptJERDown = randDown.Gaus(treeMine.ak4jet_pt[j], sqrt(jerscaleDown*jerscaleDown -1)*0.2)/treeMine.ak4jet_pt[j] 
         if options.JERUp == "True":
-          j_p4*=ak4ptJERUp/ak4ptJER
+          prej_p4*=ak4ptJERUp/ak4ptJER
         if options.JERDown == "True":
-          j_p4*=ak4ptJERDown/ak4ptJER
+          prej_p4*=ak4ptJERDown/ak4ptJER
         if options.JECUp == "True":
-          j_p4*=(treeMine.ak4jetCorrJECUp[j]/treeMine.ak4jetCorr[j])
+          prej_p4*=(treeMine.ak4jetCorrJECUp[j]/treeMine.ak4jetCorr[j])
         if options.JECDown == "True":
-          j_p4*=(treeMine.ak4jetCorrJECDown[j]/treeMine.ak4jetCorr[j])
+          prej_p4*=(treeMine.ak4jetCorrJECDown[j]/treeMine.ak4jetCorr[j])
+        
+        this_pt[0] = prej_p4.Pt()
+        this_pv[0] = treeMine.nPVs
+        this_eta[0] = prej_p4.Eta()
+        this_mt[0] = prej_p4.Mt()
+        this_leadTrackPt[0] = treeMine.ak4jetLeadTrackPt[j]
+        this_leptonPtRel[0] = treeMine.ak4jetLeadTrackPt[j]
+        this_leptonPt[0] = treeMine.ak4jetLeptonPt[j]
+        this_LeptonDeltaR[0] = treeMine.ak4jetLeptonDeltaR[j]
+        this_neHEF[0] = treeMine.ak4jetNeHEF[j]
+        this_neEmEF[0] = treeMine.ak4jetNeEmEF[j]
+        this_vtxPt[0] = treeMine.ak4jetVtxPt[j]
+        this_vtxMass[0] = treeMine.ak4jetVtxMass[j]
+        this_vtx3dL[0] = treeMine.ak4jetVtx3dL[j]
+        this_vtxNtrk[0] = treeMine.ak4jetVtxNtrk[j]
+        this_vtx3deL[0] = treeMine.ak4jetVtx3deL[j]
+        ptreg = (reader.EvaluateRegression("BDTG method"))[0]
+        
+        j_p4=TLorentzVector()
+        if options.useReg == "True":
+          j_p4.SetPtEtaPhiM(ptreg, prej_p4.Eta(), prej_p4.Phi(), prej_p4.M())
+        else:
+          j_p4.SetPtEtaPhiM(prej_p4.Pt(), prej_p4.Eta(), prej_p4.Phi(), prej_p4.M())
+          
         deltaR1=j_p4.DeltaR(ak8Jet1)
         deltaR2=j_p4.DeltaR(ak8Jet2)
         deepCSV = treeMine.ak4jetDeepCSVb[j] + treeMine.ak4jetDeepCSVbb[j]
-        #keeping all AK4 jets with deltaR > 0.8 away from fatjet, deepCSV > LWP and pt > 30, for each fatjet
         if deltaR1 > 0.8 and deepCSV > 0.2219 and j_p4.Pt() > 30:
             ak4jets1Pre.append(j_p4)
             ak4jets1csv.append(deepCSV)
@@ -663,6 +729,7 @@ for i in range(0, nevent) :
                 ak4jerup1.append(ak4ptJERUp)
                 ak4jerdown1.append(ak4ptJERDown)
                 ak4flav1.append(treeMine.ak4jetMCflavour[j])
+                ak4ptreg1.append(ptreg)
         if deltaR2 > 0.8 and deepCSV > 0.2219 and j_p4.Pt() > 30:
             ak4jets2Pre.append(j_p4)
             ak4jets2csv.append(deepCSV)
@@ -675,6 +742,12 @@ for i in range(0, nevent) :
                 ak4jerup2.append(ak4ptJERUp)
                 ak4jerdown2.append(ak4ptJERDown)
                 ak4flav2.append(treeMine.ak4jetMCflavour[j])
+                ak4ptreg2.append(ptreg)
+
+    hhres = 0
+    if nAK4jets > 3 and (treeMine.HLT_QuadJet45_TripleBTagCSV_p087_v + treeMine.HLT_DoubleJet90_Double30_TripleBTagCSV_p087_v) > 0:
+      hhres = 1
+    nAK4[0] = hhres
 
     ak4jet1 = TLorentzVector()
     ak4jet2 = TLorentzVector()
@@ -687,7 +760,6 @@ for i in range(0, nevent) :
         tpo4.Fill(triggerpass)
 
     b_min = 0
-    #running through and finding the pair of AK4 jets that satisifies requirements with an AK8 jet, prioritizing AK8 jet pt and then AK4 jet deep CSV value
     if len(ak4jets1Pre) > 1 and ak8Jet1.Pt() > 250 and treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr > 40:
         fatjet = ak8Jet1
         pmass = treeMine.jet1_puppi_msoftdrop_raw*treeMine.jet1_puppi_TheaCorr
@@ -826,7 +898,7 @@ for i in range(0, nevent) :
     
     if triggerpass > 0:
         tpo5.Fill(triggerpass)
-    #filling branches
+
     pTH1=(fatjet).Pt()
     pTH2=(ak4jet1+ak4jet2).Pt()
     mH1=pmass
@@ -1070,7 +1142,7 @@ for i in range(0, nevent) :
             SF[0] = 0.92
             SFup[0] = 0.98
             SFdown[0] = 0.82
-        #deep csv SFs
+
         if abs(ak4jetflav1[0]) == 5:
             ak4jet1sf = readerb.eval_auto_bounds(
                 'central',      

@@ -1,11 +1,11 @@
 universe = vanilla
-Executable = run_PDF_multi.sh
+Executable = run_PDF.sh
 Requirements = OpSys == "LINUX"&& (Arch != "DUMMY" )
 request_disk = 10000000
 request_memory = 10000
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/cmsset_default.sh, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/pdfUncert.py, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR1.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR2.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR3.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR4.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR5.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR6.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR7.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR8.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR9.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR10.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR11.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NR12.txt, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/NRSM.txt
+Transfer_Input_Files = /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/cmsset_default.sh, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/pdfUncert1.py
 use_x509userproxy = true
 x509userproxy = /tmp/x509up_u48034
 Output = PDF_dif.stdout

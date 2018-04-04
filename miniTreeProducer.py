@@ -745,6 +745,7 @@ class miniTreeProducer:
         self.bb1 = ROOT.TH1F("bb2", "After jet cuts", 3, -0.5, 1.5)
 
         if self.isMC == 'True':
+#Histograms that tell us how many events were in the sample
             self.CountMC = ROOT.TH1F("Count","Count",1,0,2)
             self.CountFullWeightedMC = ROOT.TH1F("CountFullWeighted","Count with gen weight and pu weight",1,0,2)
             self.CountWeightedmc = ROOT.TH1F("CountWeighted","Count with sign(gen weight) and pu weight",1,0,2)
@@ -811,6 +812,7 @@ class miniTreeProducer:
 
             #getting the norm and other useful histos
             if self.isMC == 'True':
+#storing those same histograms that save number of events
                 self.histo_weight=self.f1.Get("CountWeighted")
                 self.CountMC.Add(self.f1.Get("Count"))
                 self.CountFullWeightedMC.Add(self.f1.Get("CountFullWeighted"))
@@ -831,79 +833,119 @@ class miniTreeProducer:
 	
     
                 #variables we need from the heppy ntuple
+                    #whether an event is data or MC
                 self.Data = self.treeMine.isData
+                #information related to leton veto
                 self.vType = self.treeMine.Vtype
+                #value related to event number
                 self.EVT = self.treeMine.evt
+                #generator top pt
                 self.genTopPts = self.treeMine.GenTop_pt
+                #whether an event passes json 
                 self.JSON = self.treeMine.json
+                #AK4 jet information
                 self.fJetPt  = self.treeMine.Jet_pt
                 self.fJetEta  = self.treeMine.Jet_eta
                 self.fJetPhi = self.treeMine.Jet_phi
                 self.fJetMass = self.treeMine.Jet_mass
                 self.fJetID = self.treeMine.Jet_id
+                #AK4 jet csvv0
                 self.fJetCSV = self.treeMine.Jet_btagCSVV0
+                #AK4 jet deepCSVb + bb = deepCSV
                 self.fJetDeepCSVb = self.treeMine.Jet_btagDeepCSVb
                 self.fJetDeepCSVbb = self.treeMine.Jet_btagDeepCSVbb
+                #AK4 jet CMVAv2
                 self.fJetCMVA = self.treeMine.Jet_btagCMVAV2
+                #AK4 jet jet energy correction + correction up and down
                 self.fJetCorr = self.treeMine.Jet_corr
                 self.fJetCorrJECUp = self.treeMine.Jet_corr_JECUp
                 self.fJetCorrJECDown = self.treeMine.Jet_corr_JECDown
+                #AK4 jet leading tracking pt
                 self.fJetLeadTrackPt = self.treeMine.Jet_leadTrackPt
+                #AK4 jet pt rel for lepton
                 self.fJetLeptonPtRel = self.treeMine.Jet_leptonPtRel
+                #Ak4 jet pt of lepton
                 self.fJetLeptonPt = self.treeMine.Jet_leptonPt
+                #AK4 jet deltaR of lepton
                 self.fJetLeptonDeltaR = self.treeMine.Jet_leptonDeltaR
+                #AK4 jet hadron energy fraction
                 self.fJetNeHEF = self.treeMine.Jet_neHEF
+                #AK4 jet electromagnetic energy fraction
                 self.fJetNeEmEF = self.treeMine.Jet_neEmEF
+                #AK4 jet vertex pt, mass, 3dL, number of tracks, 3 deL
                 self.fJetVtxPt = self.treeMine.Jet_vtxPt
                 self.fJetVtxMass = self.treeMine.Jet_vtxMass
                 self.fJetVtx3dL = self.treeMine.Jet_vtx3DVal
                 self.fJetVtxNtrk = self.treeMine.Jet_vtxNtracks
                 self.fJetVtx3deL = self.treeMine.Jet_vtx3DSig
+                #number of AK4 jets
                 self.fNJets = self.treeMine.nJet
                 self.nAK04Jets[0] = self.fNJets
+                #generator jet infromation
                 self.genPt = self.treeMine.GenJet_pt
                 self.genEta = self.treeMine.GenJet_eta
                 self.genPhi = self.treeMine.GenJet_phi
                 self.genMass = self.treeMine.GenJet_mass
+                #ht jet 30
                 self.htJet30[0] = self.treeMine.htJet30
+                #met pt
                 self.MET[0] = self.treeMine.met_pt
+                #number ungroomed AK8 jets
                 self.fjUngroomedN = self.treeMine.nFatjetAK08ungroomed
                 self.nAK08Jets[0] = self.fjUngroomedN
+                #ungroomed AK8 jet information
                 self.fjUngroomedPt = self.treeMine.FatjetAK08ungroomed_pt
                 self.fjUngroomedEta = self.treeMine.FatjetAK08ungroomed_eta
                 self.fjUngroomedPhi = self.treeMine.FatjetAK08ungroomed_phi
                 self.fjUngroomedMass = self.treeMine.FatjetAK08ungroomed_mass
+                #ungroomed AK8 jet softdrop mass
                 self.fjUngroomedSDMass = self.treeMine.FatjetAK08ungroomed_msoftdrop
+                #ungroomed AK8 jet tau1 2 and 3
                 self.fjUngroomedTau1 = self.treeMine.FatjetAK08ungroomed_tau1
                 self.fjUngroomedTau2 = self.treeMine.FatjetAK08ungroomed_tau2
                 self.fjUngroomedTau3 = self.treeMine.FatjetAK08ungroomed_tau3
+                #ungroomed AK8 jet double b tagger
                 self.fjUngroomedBbTag = self.treeMine.FatjetAK08ungroomed_bbtag
+                #ungroomed AK8 jet tight id
                 self.fjUngroomedJetID = self.treeMine.FatjetAK08ungroomed_id_Tight
+                #ungroomed AK8 jet corrected pruned mass
                 self.fjUngroomedPrunedMass = self.treeMine.FatjetAK08ungroomed_mprunedcorr
+                #ungroomed AK8 jet pruned mass
                 self.fjUngroomedPrunedMass_Unc = self.treeMine.FatjetAK08ungroomed_mpruned
+                #number of pruned CA15 jets
                 self.nFatjetCA15pruned = self.treeMine.nFatjetCA15pruned
+                #pruned CA15 jet information
                 self.FatjetCA15pruned_pt = self.treeMine.FatjetCA15pruned_pt
                 self.FatjetCA15pruned_eta = self.treeMine.FatjetCA15pruned_eta
                 self.FatjetCA15pruned_phi = self.treeMine.FatjetCA15pruned_phi
                 self.FatjetCA15pruned_mass = self.treeMine.FatjetCA15pruned_mass
+                #ungroomed CA15 jet information
                 self.FatjetCA15ungroomed_pt = self.treeMine.FatjetCA15ungroomed_pt
                 self.FatjetCA15ungroomed_eta = self.treeMine.FatjetCA15ungroomed_eta
                 self.FatjetCA15ungroomed_phi = self.treeMine.FatjetCA15ungroomed_phi
                 self.FatjetCA15ungroomed_mass = self.treeMine.FatjetCA15ungroomed_mass
+                #ungroomed AK8 jet jet energy corrections (L2L3, L1L2L3, uncertainty on both)
                 self.fjL2L3 = self.treeMine.FatjetAK08ungroomed_JEC_L2L3
                 self.fjL1L2L3 = self.treeMine.FatjetAK08ungroomed_JEC_L1L2L3
                 self.fjL2L3Unc = self.treeMine.FatjetAK08ungroomed_JEC_L2L3Unc
                 self.fjL1L2L3Unc = self.treeMine.FatjetAK08ungroomed_JEC_L1L2L3Unc
+                #softdrop AK8 subjet information
                 self.sjPrunedPt = self.treeMine.SubjetAK08softdrop_pt
                 self.sjPrunedEta = self.treeMine.SubjetAK08softdrop_eta
                 self.sjPrunedPhi = self.treeMine.SubjetAK08softdrop_phi
                 self.sjPrunedMass = self.treeMine.SubjetAK08softdrop_mass
+                #softdrop AK8 subjet btag
                 self.sjPrunedBtag = self.treeMine.SubjetAK08softdrop_btag
                 if self.isMC == 'True':
+                    #AK4 jet heppy flavour
                     self.fJetHeppyFlavour = self.treeMine.Jet_heppyFlavour
+                    #AK4 jet mc flavour
                     self.fJetMCflavour = self.treeMine.Jet_mcFlavour
+                    #AK4 jet parton flavour
                     self.fJetPartonFlavour = self.treeMine.Jet_partonFlavour
+                    #AK4 jet hadron flavour
                     self.fJetHadronFlavour = self.treeMine.Jet_hadronFlavour
+                    #Ak4 jet CSV scale factors
                     self.fJetCSVLSF = self.treeMine.Jet_btagCSVL_SF
                     self.fJetCSVLSF_Up = self.treeMine.Jet_btagCSVL_SF_up
                     self.fJetCSVLSF_Down = self.treeMine.Jet_btagCSVL_SF_down
@@ -913,6 +955,7 @@ class miniTreeProducer:
                     self.fJetCSVTSF = self.treeMine.Jet_btagCSVT_SF
                     self.fJetCSVTSF_Up = self.treeMine.Jet_btagCSVT_SF_up
                     self.fJetCSVTSF_Down = self.treeMine.Jet_btagCSVT_SF_down
+                    #AK4 jet CMVA scale factors
                     self.fJetCMVALSF = self.treeMine.Jet_btagCMVAV2L_SF
                     self.fJetCMVALSF_Up = self.treeMine.Jet_btagCMVAV2L_SF_up
                     self.fJetCMVALSF_Down = self.treeMine.Jet_btagCMVAV2L_SF_down
@@ -922,10 +965,13 @@ class miniTreeProducer:
                     self.fJetCMVATSF = self.treeMine.Jet_btagCMVAV2T_SF
                     self.fJetCMVATSF_Up = self.treeMine.Jet_btagCMVAV2T_SF_up
                     self.fJetCMVATSF_Down = self.treeMine.Jet_btagCMVAV2T_SF_down
+                    #AK4 jet jet energy resolution correction + up and down
                     self.fJetCorrJER = self.treeMine.Jet_corr_JER
                     self.fJetCorrJERUp = self.treeMine.Jet_corr_JERUp
                     self.fJetCorrJERDown = self.treeMine.Jet_corr_JERDown
+                    #generator jet number of b hadrons
                     self.genBH = self.treeMine.GenJet_numBHadrons
+                    #generator jet number of c hadrons
                     self.genCH = self.treeMine.GenJet_numCHadrons
                     if len(self.genBH) > 0:
                         self.genJet1BH[0] = self.genBH[0]
@@ -935,19 +981,27 @@ class miniTreeProducer:
                         self.genjet2BH[0] = self.genBH[1]
                     if len(self.genCH) > 1:
                         self.genjet2CH[0] = self.genCH[1]
+                    #ungroomed AK8 jet flavour
                     self.fjUngroomedFlavour = self.treeMine.FatjetAK08ungroomed_Flavour
+                    #ungroomed AK8 jet b hadron flavour
                     self.fjUngroomedBHadron = self.treeMine.FatjetAK08ungroomed_BhadronFlavour
+                    #ungroomed Ak8 jet c hadron flavour
                     self.fjUngroomedCHadron = self.treeMine.FatjetAK08ungroomed_ChadronFlavour
+                    #ungroomed AK8 jet matched generator jet pt
                     self.fjUngroomedJER = self.treeMine.FatjetAK08ungroomed_GenPt
+                    #pileup weight + up and down
                     self.puweight = self.treeMine.puWeight
                     self.puweightUp = self.treeMine.puWeightUp
                     self.puweightDown = self.treeMine.puWeightDown
+                    #generator level higgs boson information
                     self.hPt = self.treeMine.GenHiggsBoson_pt
                     self.hEta = self.treeMine.GenHiggsBoson_eta
                     self.hPhi = self.treeMine.GenHiggsBoson_phi
                     self.hMass = self.treeMine.GenHiggsBoson_mass
+                    #number of true interactions
                     self.nTInt = self.treeMine.nTrueInt
                 if self.saveTrig == 'True':
+                    #several different triggers
 		    self.HLT_PFHT900_v[0] = self.treeMine.HLT_BIT_HLT_PFHT900_v
                     self.HLT_PFHT800_v[0] = self.treeMine.HLT_BIT_HLT_PFHT800_v
                     self.HLT_PFJet80_v[0] = self.treeMine.HLT_BIT_HLT_PFJet80_v

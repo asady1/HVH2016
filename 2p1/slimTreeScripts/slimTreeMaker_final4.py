@@ -543,7 +543,8 @@ if options.data == "False":
     CountWeightedmc.Add(f.Get("CountWeighted"))
 
 counter = 0
-for i in range(0, nevent) :
+#for i in range(0, nevent) :
+for i in range(48000000, nevent) :
     counter = counter + 1
     treeMine.GetEntry(i)
     triggerpass = 1

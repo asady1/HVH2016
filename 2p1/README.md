@@ -3,6 +3,8 @@ making miniTrees: miniTreeProducer.py, ex for running: python getMiniTrees.py --
 making slimTrees: slimTreeMaker_final.py, ex for running: python  slimTreeMaker_finalBG.py root://cmsxrootd.fnal.gov//store/user/asady1/V25/BG500_0.root --saveTrig="True" --ttbar="False" --data="False" --JECUp="False" --JECDown="False" --JERUp="False" --JERDown="False"  --outName=BG_500_tree_final.root 
 NB: needs to be run 5 times, once for nominal, once for JERUp/Down and JECUp/Down each
 
+slimTreesScripts directory has all .py and .sh files needed to run full slimTree production, as well as the add on .py script that runs on slimTrees to produce altered slimTrees (faster but only possible if information is being changed in trees, but not added), and also condor scripts (NB - condor ID must be changed to your condor ID)
+
 calculating trigger efficiency: trigHistoMaker.py, triggerEfficiency.py, and triggerSF.C
 1) trigHistoMaker.py makes histograms for QCD and data for calculating trigger efficiency from slimTrees, ex for running: python trigHistoMaker.py root://cmsxrootd.fnal.gov//store/user/asady1/V25/QCD_300_tree_final.root --outName=QCD_300_trig.root
 2) triggerEfficiency.py takes all QCD files and hadded data file run in step 1 and makes efficiency plots and calculates SFs, ex for running: python triggerEfficiency.py

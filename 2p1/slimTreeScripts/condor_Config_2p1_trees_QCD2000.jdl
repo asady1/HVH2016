@@ -1,0 +1,14 @@
+universe = vanilla
+Executable = run_2p1_trees_QCD2000.sh
+Requirements = OpSys == "LINUX"&& (Arch != "DUMMY" )
+request_disk = 10000000
+request_memory = 10000
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/cmsset_default.sh, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/slimTreeMaker_final.py, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/DeepCSV_Moriond17_B_H.csv, /uscms_data/d3/asady1/HHcode/CMSSW_8_0_12/src/HH2016/V25miniTrees/gravall-v25.weights.xml
+use_x509userproxy = true
+x509userproxy = /tmp/x509up_u48034
+Output = 2p1_ttrees_QCD2000_dif.stdout
+Error =2p1_ttrees_QCD2000_dif.stderr
+Log =2p1_ttrees_QCD2000_dif.log
+Queue 1

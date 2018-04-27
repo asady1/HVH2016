@@ -86,7 +86,8 @@ for i in range(0, nevent) :
     deltaEta = abs(fatjet.Eta() - (bjet1 + bjet2).Eta())
     reducedMass = treeMine.Inv_mass - (treeMine.fatjet_mass - 125.) - (treeMine.dijet_mass - 125.)
     #pass preselection
-    if 105 < treeMine.fatjet_mass < 135 and 90 < treeMine.dijet_mass < 140 and treeMine.fatjetPT > 300 and treeMine.bjet1PT > 30 and treeMine.bjet2PT > 30 and reducedMass > 700 and 1.0 <= deltaEta < 2.0:
+    if 105 < treeMine.fatjet_mass < 135 and 90 < treeMine.dijet_mass < 140 and treeMine.fatjetPT > 300 and treeMine.bjet1PT > 30 and treeMine.bjet2PT > 30 and reducedMass > 750 and 1.0 <= deltaEta < 2.0 and treeMine.ak4btag1 > 0.6324 and treeMine.ak4btag2 > 0.6324:
+#    if 105 < treeMine.fatjet_mass < 135 and 90 < treeMine.dijet_mass < 140 and treeMine.fatjetPT > 300 and treeMine.bjet1PT > 30 and treeMine.bjet2PT > 30 and reducedMass > 750 and deltaEta < 1.0 and treeMine.ak4btag1 > 0.6324 and treeMine.ak4btag2 > 0.6324:
         htes.Fill(treeMine.HT)
         invmes.Fill(treeMine.Inv_mass)
         redmes.Fill(treeMine.Inv_mass - (treeMine.fatjet_mass - 125.) - (treeMine.dijet_mass - 125.))

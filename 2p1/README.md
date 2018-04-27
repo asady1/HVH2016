@@ -28,8 +28,3 @@ making cutflow: cutflowHistos.py and cutflowTable.py
 1) cutflowHistos.py makes cutflow histos cut by cut, ex for running: python cutflowHistos.py root://cmsxrootd.fnal.gov//store/user/asady1/V25/QCD_300_tree_final.root --outName=QCD_300_cut.root
 2) cutflowTable.py takes the output of cutflowHistos.py and makes a cutflow table in Latex format, ex for running: python cutflowTable.py
 
-background estimate + limits: three sets of code for three different signal categories (bulk graviton, radion, non resonant) - 2p1Alphabet_X.py, runLimits_X.sh, brazilianFlag13TeV_X.py
-1) 2p1Alphabet_X.py: to produce background estimate and data cards, run for different deltaEta regions, run for different selections (no rejection, rejecting boosted events, rejecting boosted and resolved events), run for signal region vs control region, ex for running: python 2p1Alphabet_X.py --Selection="dijet_mass < 70 && ak4btag1 > 0.6324 && ak4btag2 > 0.6324 && LL < 1 && TT < 1 && LT < 1 && resolved < 1 && fatjetptau21 < 0.55 && invmAK4 > 200 && bjet2PT > 30 && fatjetPT > 300 && deltaEta >= 1.0 && deltaEta < 2.0 && Red_mass > 700" --BG_both_ 
-2) runLimits_X.sh runs combine, combining different deltaEta regions and calculating limits, ex for running: sh runLimits_X.sh
-3) brazilianFlag13TeV_X.py makes limit plot and prints out limits, ex for running: python brazilianFlag13TeV_X.py
-

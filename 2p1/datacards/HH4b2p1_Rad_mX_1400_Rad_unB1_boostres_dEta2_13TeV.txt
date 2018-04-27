@@ -1,0 +1,40 @@
+max    1     number of categories
+jmax   2     number of samples minus one
+kmax    *     number of nuisance parameters
+-------------------------------------------------------------------------------
+shapes * * HH4b2p1_Rad_mX_1400_Rad_unB1_boostres_dEta2_13TeV.root vh/$PROCESS vh/$PROCESS_$SYSTEMATIC
+-------------------------------------------------------------------------------
+bin                                            vh4b
+observation                                    226.000000
+-------------------------------------------------------------------------------
+bin                                             vh4b              vh4b       vh4b
+process                                          0                 1          2  
+process                                 Signal_mX_1400_Rad_unB1_boostres_dEta2   Rad_unB1_boostres_dEta2EST    ttbar
+rate                                             4.648784                225.942712         33.492401
+-------------------------------------------------------------------------------
+lumi_13TeV lnN                                   1.025             -          1.025
+ttbar_xsec lnN                                   -                 -           1.048/0.945
+AK4_invariant_mass lnN                           1.005             -          1.005
+CMS_eff_tau21_sf lnN                             1.136/0.864       -          1.136/0.864
+CMS_eff_Htag lnN                              1.075605                -          - 
+CMS_JEC lnN 		                          1.004018                -          1.002949
+CMS_massJEC lnN                                  1.02              -        1.02
+CMS_eff_bbtag_sf lnN                             1.080336                -          1.134421
+CMS_JER lnN                                      1.006572                -          1.009963
+CMS_PU lnN                                       1.013222                -          1.020017
+CMS_eff_trig shapeN2                             1.000             -         1.000
+CMS_scaleRad_unB1_boostres_dEta2_13TeV shapeN2          -                 1.000      -
+CMS_PDF_Scales lnN                               0.986000/0.983000         -         0.987857/1.000155
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin0 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin1 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin2 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin3 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin4 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin5 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin6 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin7 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin8 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin9 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin10 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin11 shapeN2      -       1.000      -
+CMS_statRad_unB1_boostres_dEta2_13TeV_bin12 shapeN2      -       1.000      -

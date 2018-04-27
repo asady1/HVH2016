@@ -23,6 +23,10 @@ add in Selection for rejecting resolved non-resonant events: nAK4 < 1
 
 add in Selection for legend header (only on NRSM): --leghead="#Delta#eta 0-1"
 
+limit calculations are in limitCode (.sh files for running combine, .py files for making brazilian flag plots)
+
+datacards in directory, "retain" means 2p1 by itself, "boost" means rejecting boosted events, "boostres" means rejecting boosted and resolved events, NB the Radion retain files have a misnomer of "BG" in the title but this is just a typo 
+
 calculating trigger efficiency: trigHistoMaker.py, triggerEfficiency.py, and triggerSF.C
 1) trigHistoMaker.py makes histograms for QCD and data for calculating trigger efficiency from slimTrees, ex for running: python trigHistoMaker.py root://cmsxrootd.fnal.gov//store/user/asady1/V25/QCD_300_tree_final.root --outName=QCD_300_trig.root
 2) triggerEfficiency.py takes all QCD files and hadded data file run in step 1 and makes efficiency plots and calculates SFs, ex for running: python triggerEfficiency.py

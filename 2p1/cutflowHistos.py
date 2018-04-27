@@ -93,7 +93,7 @@ for i in range(0, nevent) :
                                         if treeMine.deltaEta < 2.0:
                                             tpo10.Fill(treeMine.Inv_mass + 250 - treeMine.fatjet_mass - treeMine.dijet_mass)
                                             #passing full selection + no boosted 
-                                            if treeMine.LL < 1 and treeMine.LT < 1 and treeMine.TT < 1:
+                                            if not (treeMine.boosted > 0 and treeMine.b2 > 0.3)
                                                 tpo11.Fill(treeMine.Inv_mass + 250 - treeMine.fatjet_mass - treeMine.dijet_mass)
                                             #passing full selection + no resolved
                                             if treeMine.resolved < 1:

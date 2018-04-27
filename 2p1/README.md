@@ -27,3 +27,68 @@ making cutflow: cutflowHistos.py and cutflowTable.py
 1) cutflowHistos.py makes cutflow histos cut by cut, ex for running: python cutflowHistos.py root://cmsxrootd.fnal.gov//store/user/asady1/V25/QCD_300_tree_final.root --outName=QCD_300_cut.root
 2) cutflowTable.py takes the output of cutflowHistos.py and makes a cutflow table in Latex format, ex for running: python cutflowTable.py
 ***
+current slimTrees:
+
+data:
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/JetHT_B_tree_finally1p1b.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/JetHT_C_tree_finally1p1b.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/JetHT_D_tree_finally1p1b.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/JetHT_E_tree_finally1p1b.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/JetHT_F_tree_finally1p1b.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/JetHT_G_tree_finally1p1b.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/JetHT_H_tree_finally1p1b.root
+
+ttbar:
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/TT_tree_bfinallybSF.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/TT_tree_bfinallybSF_JECDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/TT_tree_bfinallybSF_JECUp.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/TT_tree_bfinallybSF_JERDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/TT_tree_bfinallybSF_JERUp.root
+
+bulk graviton (X = mass):
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/BG_X_tree_bfinallyb.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/BG_X_tree_bfinallyb__JECDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/BG_X_tree_bfinallyb__JECUp.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/BG_X_tree_bfinallyb__JERDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/BG_X_tree_bfinallyb__JERUp.root
+
+radion (X = mass):
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/Rad_X_tree_bfinallyb.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/Rad_X_tree_bfinallyb__JECDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/Rad_X_tree_bfinallyb__JECUp.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/Rad_X_tree_bfinallyb__JERDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/Rad_X_tree_bfinallyb__JERUp.root
+
+Non-resonant (X = node, (1-2 BSM, 100 SM)):
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/NRv1_nodeX_tree_bfinallyb.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/NRv1_nodeX_tree_bfinallyb_JECDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/NRv1_nodeX_tree_bfinallyb_JECUp.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/NRv1_nodeX_tree_bfinallyb_JERDown.root
+
+root://cmsxrootd.fnal.gov//store/user/asady1/V25/NRv1_nodeX_tree_bfinallyb_JERUp.root

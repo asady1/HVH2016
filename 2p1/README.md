@@ -3,7 +3,17 @@ making miniTrees: miniTreeProducer.py, ex for running: python getMiniTrees.py --
 making slimTrees: slimTreeMaker_final.py, ex for running: python  slimTreeMaker_finalBG.py root://cmsxrootd.fnal.gov//store/user/asady1/V25/BG500_0.root --saveTrig="True" --ttbar="False" --data="False" --JECUp="False" --JECDown="False" --JERUp="False" --JERDown="False"  --outName=BG_500_tree_final.root 
 NB: needs to be run 5 times, once for nominal, once for JERUp/Down and JECUp/Down each
 
-slimTreesScripts directory has all .py and .sh files needed to run full slimTree production, as well as the add on .py script that runs on slimTrees to produce altered slimTrees (faster but only possible if information is being changed in trees, but not added), and also condor scripts (NB - condor ID must be changed to your condor ID)
+slimTreesScripts directory has all .py and .sh files needed to run full slimTree production, as well as the add on .py script that runs on slimTrees to produce altered slimTrees (faster but only possible if information is being changed in trees, but not added), and also condor scripts (NB - condor ID must be changed to your condor ID) - extra files needed to run can be found here: https://drive.google.com/drive/folders/1aifwYPkXgqJwzNclGZFa578nRDrh2O74?usp=sharing
+
+finalAlphabet directory has scripts needed to make datacards (final.py is for bulk graviton, finalRad.py is for radion, NRSM.py is for non-resonant) - run as follows:
+category 1:
+python -i 2p1Alphabet_NRSM.py --Selection="dijet_mass < 140 && dijet_mass > 90 && ak4btag1 > 0.6324 && ak4btag2 > 0.6324 && fatjetptau21 < 0.55 && invmAK4 > 200 && bjet2PT > 30 && fatjetPT > 300 && deltaEta < 1.0 && Red_mass > 750"
+category 2:
+python -i 2p1Alphabet_NRSM.py --Selection="dijet_mass < 140 && dijet_mass > 90 && ak4btag1 > 0.6324 && ak4btag2 > 0.6324 && fatjetptau21 < 0.55 && invmAK4 > 200 && bjet2PT > 30 && fatjetPT > 300 && deltaEta < 2.0 && deltaEta >= 1.0 && Red_mass > 750"
+add in Selection for rejecting boosted events: !(boosted > 0 && b2 > 0.3)
+add in Selection for rejecting resolved resonant events: resolved < 1
+add in Selection for rejecting resolved non-resonant events: nAK4 < 1
+add in Selection for legend header (only on NRSM): --leghead="#Delta#eta 0-1"
 
 calculating trigger efficiency: trigHistoMaker.py, triggerEfficiency.py, and triggerSF.C
 1) trigHistoMaker.py makes histograms for QCD and data for calculating trigger efficiency from slimTrees, ex for running: python trigHistoMaker.py root://cmsxrootd.fnal.gov//store/user/asady1/V25/QCD_300_tree_final.root --outName=QCD_300_trig.root
@@ -23,14 +33,3 @@ background estimate + limits: three sets of code for three different signal cate
 2) runLimits_X.sh runs combine, combining different deltaEta regions and calculating limits, ex for running: sh runLimits_X.sh
 3) brazilianFlag13TeV_X.py makes limit plot and prints out limits, ex for running: python brazilianFlag13TeV_X.py
 
-reweighing non resonant samples to make new miniTrees from current hadded miniTree of nodes 2-13 + box + SM, with per event weight: nonResonant_test_v0.py, used in conjunction with the following package: https://github.com/cms-hh/HHStatAnalysis, run inside the following directory HHStatAnalysis/AnalyticalModels/test/, ex for running:  python nonResonant_test_v0.py --kl 1 --kt 1 (SM) other parameter values for the 12 BSM samples are:
-
-klJHEP=[1.0,  7.5,  1.0,  1.0,  -3.5, 1.0, 2.4, 5.0, 15.0, 1.0, 10.0, 2.4, 15.0]
-
-ktJHEP=[1.0,  1.0,  1.0,  1.0,  1.5,  1.0, 1.0, 1.0, 1.0,  1.0, 1.5,  1.0, 1.0]
-
-c2JHEP=[0.0,  -1.0, 0.5, -1.5, -3.0,  0.0, 0.0, 0.0, 0.0,  1.0, -1.0, 0.0, 1.0]
-
-cgJHEP=[0.0,  0.0, -0.8,  0.0, 0.0,   0.8, 0.2, 0.2, -1.0, -0.6, 0.0, 1.0, 0.0]
-
-c2gJHEP=[0.0, 0.0, 0.6, -0.8, 0.0, -1.0, -0.2,-0.2,  1.0,  0.6, 0.0, -1.0, 0.0]

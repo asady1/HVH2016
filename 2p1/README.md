@@ -6,13 +6,21 @@ NB: needs to be run 5 times, once for nominal, once for JERUp/Down and JECUp/Dow
 slimTreesScripts directory has all .py and .sh files needed to run full slimTree production, as well as the add on .py script that runs on slimTrees to produce altered slimTrees (faster but only possible if information is being changed in trees, but not added), and also condor scripts (NB - condor ID must be changed to your condor ID) - extra files needed to run can be found here: https://drive.google.com/drive/folders/1aifwYPkXgqJwzNclGZFa578nRDrh2O74?usp=sharing
 
 finalAlphabet directory has scripts needed to make datacards (final.py is for bulk graviton, finalRad.py is for radion, NRSM.py is for non-resonant) - run as follows:
+
 category 1:
+
 python -i 2p1Alphabet_NRSM.py --Selection="dijet_mass < 140 && dijet_mass > 90 && ak4btag1 > 0.6324 && ak4btag2 > 0.6324 && fatjetptau21 < 0.55 && invmAK4 > 200 && bjet2PT > 30 && fatjetPT > 300 && deltaEta < 1.0 && Red_mass > 750"
+
 category 2:
+
 python -i 2p1Alphabet_NRSM.py --Selection="dijet_mass < 140 && dijet_mass > 90 && ak4btag1 > 0.6324 && ak4btag2 > 0.6324 && fatjetptau21 < 0.55 && invmAK4 > 200 && bjet2PT > 30 && fatjetPT > 300 && deltaEta < 2.0 && deltaEta >= 1.0 && Red_mass > 750"
+
 add in Selection for rejecting boosted events: !(boosted > 0 && b2 > 0.3)
+
 add in Selection for rejecting resolved resonant events: resolved < 1
+
 add in Selection for rejecting resolved non-resonant events: nAK4 < 1
+
 add in Selection for legend header (only on NRSM): --leghead="#Delta#eta 0-1"
 
 calculating trigger efficiency: trigHistoMaker.py, triggerEfficiency.py, and triggerSF.C
